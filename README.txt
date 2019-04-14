@@ -12,3 +12,8 @@ npm install -g @angular/cli
 
 Clonar projeto https://github.com/zaccaron07/dieta-flex
 executar npm install
+
+
+
+
+https://firebase.google.com Criar conta

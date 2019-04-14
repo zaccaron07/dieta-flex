@@ -3,7 +3,15 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebase: {
+    apiKey: "AIzaSyCl2fFVUsGtbfWwWfmH-xPpriWHtfWBago",
+    authDomain: "dieta-flex-f3f97.firebaseapp.com",
+    databaseURL: "https://dieta-flex-f3f97.firebaseio.com",
+    projectId: "dieta-flex-f3f97",
+    storageBucket: "dieta-flex-f3f97.appspot.com",
+    messagingSenderId: "823021087810"
+  }
 };
 
 /*
