@@ -12,6 +12,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,11 +23,13 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
     IonicModule.forRoot(),
     AppRoutingModule,
     AngularFireAuthModule,
+    AuthModule,
     AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    AuthService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
