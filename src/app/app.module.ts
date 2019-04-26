@@ -14,11 +14,20 @@ import { environment } from 'src/environments/environment';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
+import { UserProfileComponent } from './user-profile/user-profile.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent, 
+    UserProfileComponent
+  ],
   entryComponents: [],
   imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    CommonModule,
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
