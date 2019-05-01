@@ -17,13 +17,13 @@ import { AuthService } from './auth/auth.service';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
-import { CommonModule } from '@angular/common';
+import { NotificationComponent } from './notification/notification.component';
 
 @NgModule({
   declarations: [
     AppComponent, 
-    UserProfileComponent
+    UserProfileComponent,
+    NotificationComponent
   ],
   entryComponents: [],
   imports: [
