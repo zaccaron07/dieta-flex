@@ -15,12 +15,15 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
 
+import { CommonModule } from '@angular/common';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
+    CommonModule,
     AppRoutingModule,
     AngularFireAuthModule,
     AuthModule,

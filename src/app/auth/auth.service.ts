@@ -12,13 +12,11 @@ export class AuthService {
   constructor(private afAuth: AngularFireAuth) { }
 
   registerUser(authData: AuthData) {
-    this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)
-      .then(result => {
-
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    return new Promise((resolve, reject) => {
+      this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)
+        .then(userData => resolve(userData),
+          err => reject(err));
+    });
   }
 
   login(authData: AuthData) {
@@ -26,16 +24,18 @@ export class AuthService {
       this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)
         .then(userData => resolve(userData),
           err => reject(err));
-    })
+    });
   }
 
-  loginWithGoogle() {
-    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider);
-  }
-
-  geAuth(){
+  geAuth() {
     return this.afAuth.authState.pipe(
       map(auth => auth)
     )
+  }
+
+  logout() {
+    this.afAuth.auth.signOut().then(() => {
+      location.reload();
+    });
   }
 }

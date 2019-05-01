@@ -1,0 +1,7 @@
+{
+  "appId": "com.tcc.dietaflex",
+  "appName": "dieta-flex",
+  "bundledWebRuntime": false,
+  "webDir": "www",
+  "windowsAndroidStudioPath": "D:\\Android\\Android Studio\\bin\\studio64.exe"
+}

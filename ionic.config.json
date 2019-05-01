@@ -1,5 +1,8 @@
 {
   "name": "dieta-flex",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
   "type": "angular"
 }

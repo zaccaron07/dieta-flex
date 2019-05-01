@@ -35,7 +35,10 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
-
+android/
+resources/
+plugins/
+www/
 # TypeScript v1 declaration files
 typings/
 

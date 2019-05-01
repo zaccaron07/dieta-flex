@@ -5,6 +5,8 @@ import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { AuthRoutingModule } from "./auth-routing.module";
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { IonicModule } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
 
 @NgModule({
     declarations: [
@@ -13,12 +15,15 @@ import { IonicModule } from '@ionic/angular';
     ],
     imports: [
         FormsModule,
+        CommonModule,
         IonicModule.forRoot(),
         ReactiveFormsModule,
         AngularFireAuthModule,
         AuthRoutingModule
     ],
-    exports: []
+    providers: [
+        GooglePlus
+    ]
 })
 export class AuthModule {
 
