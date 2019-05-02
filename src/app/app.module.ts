@@ -18,12 +18,18 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NotificationComponent } from './notification/notification.component';
+import { DietComponent } from './diet/diet.component';
+import { ContactComponent } from './contact/contact.component';
+import { DietDetailComponent } from './diet/diet-detail/diet-detail.component';
 
 @NgModule({
   declarations: [
-    AppComponent, 
+    AppComponent,
     UserProfileComponent,
-    NotificationComponent
+    NotificationComponent,
+    DietComponent,
+    ContactComponent,
+    DietDetailComponent
   ],
   entryComponents: [],
   imports: [

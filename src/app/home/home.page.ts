@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
 import { Plugins } from '@capacitor/core';
 import { Router } from '@angular/router';
 import { NotificationService } from '../notification/notification.service';
@@ -12,8 +11,7 @@ const { LocalNotifications } = Plugins;
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  constructor(
-    private afAuth: AuthService,
+  constructor(    
     private router: Router,
     private notificationService: NotificationService) { }
 
@@ -24,10 +22,6 @@ export class HomePage {
       this.notificationService.setNotification(notification);
       this.router.navigate(["/notification"]);
     });
-  }
-
-  lg() {
-    this.afAuth.logout();
   }
 
   scheduleNotification() {
