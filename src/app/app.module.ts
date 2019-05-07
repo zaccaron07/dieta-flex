@@ -21,6 +21,7 @@ import { NotificationComponent } from './notification/notification.component';
 import { DietComponent } from './diet/diet.component';
 import { ContactComponent } from './contact/contact.component';
 import { DietDetailComponent } from './diet/diet-detail/diet-detail.component';
+import { TipsComponent } from './tips/tips.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { DietDetailComponent } from './diet/diet-detail/diet-detail.component';
     NotificationComponent,
     DietComponent,
     ContactComponent,
-    DietDetailComponent
+    DietDetailComponent,
+    TipsComponent
   ],
   entryComponents: [],
   imports: [
