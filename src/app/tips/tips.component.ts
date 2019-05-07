@@ -15,9 +15,9 @@ export class TipsComponent implements OnInit {
     this.initTipsProfileForm();
   }
 
-  private initTipsProfileForm(){
+  private initTipsProfileForm() {
     this.tipsProfileForm = new FormGroup({
-      'text': new FormControl( "", Validators.required),
+      'text': new FormControl("", Validators.required),
     });
   }
 }
