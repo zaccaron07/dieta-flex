@@ -1,6 +1,5 @@
 Baixar VSCode https://code.visualstudio.com/Download
-Baixar Nodejs https://nodejs.org/en/ versão Latest Features
-https://about.gitlab.com Criar conta
+Baixar Nodejs https://nodejs.org/en/ versão estavel
 https://desktop.github.com Baixar Instalar e Logar
 
 depois de instalar tudo
