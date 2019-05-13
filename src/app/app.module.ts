@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
 import { UserProfileComponent } from './user-profile/user-profile.component';
@@ -44,6 +45,7 @@ import { TipsComponent } from './tips/tips.component';
     AppRoutingModule,
     AngularFireAuthModule,
     AuthModule,
+    AngularFirestoreModule,
     AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [

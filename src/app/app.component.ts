@@ -4,12 +4,16 @@ import { Platform, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './auth/auth.service';
+import { AuthData } from './auth/auth-data.model';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
+
+  user: AuthData;
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -23,6 +27,10 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+    });
+
+    this.afAuth.userChanged.subscribe((user) => {
+      this.user = user;
     });
   }
 
