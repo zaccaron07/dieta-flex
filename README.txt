@@ -12,7 +12,11 @@ npm install -g @angular/cli
 Clonar projeto https://github.com/zaccaron07/dieta-flex
 executar npm install
 
+Executar android:
 
+npx cap add android
+npx cap sync
+ionic capacitor run android
 
 
 https://firebase.google.com Criar conta
