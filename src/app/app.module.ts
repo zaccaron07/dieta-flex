@@ -23,6 +23,7 @@ import { DietComponent } from './diet/diet.component';
 import { ContactComponent } from './contact/contact.component';
 import { DietDetailComponent } from './diet/diet-detail/diet-detail.component';
 import { TipsComponent } from './tips/tips.component';
+import { FoodComponent } from './food/food.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { TipsComponent } from './tips/tips.component';
     DietComponent,
     ContactComponent,
     DietDetailComponent,
-    TipsComponent
+    TipsComponent,
+    FoodComponent
   ],
   entryComponents: [],
   imports: [

@@ -7,6 +7,7 @@ import { DietComponent } from './diet/diet.component';
 import { ContactComponent } from './contact/contact.component';
 import { DietDetailComponent } from './diet/diet-detail/diet-detail.component';
 import { TipsComponent } from './tips/tips.component';
+import { FoodComponent } from './food/food.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -16,7 +17,8 @@ const routes: Routes = [
   { path: 'notification', component: NotificationComponent, canActivate: [AuthGuard] },
   { path: 'diet', component: DietComponent, canActivate: [AuthGuard] },
   { path: 'diet/dietDetail', component: DietDetailComponent, canActivate: [AuthGuard] },
-  { path: 'contact', component: ContactComponent, canActivate: [AuthGuard] }
+  { path: 'contact', component: ContactComponent, canActivate: [AuthGuard] },
+  { path: 'food', component: FoodComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

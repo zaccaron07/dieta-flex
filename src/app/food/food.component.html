@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Alimentos
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="foodForm" (ngSubmit)="onSubmit()">
+    <ion-grid>
+      <ion-row color="primary" justify-content-center>
+        <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+          <div padding>
+            <ion-item>
+              <ion-input formControlName="name" type="text" placeholder="Alimento"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input formControlName="calorie" type="number" placeholder="Calorias"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input formControlName="carbohydrate" type="number" placeholder="Carboitrados"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input formControlName="protein" type="number" placeholder="Proteinas"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input formControlName="fat" type="number" placeholder="Percentual de gordura"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Porção</ion-label>
+              <ion-checkbox formControlName="portion"></ion-checkbox>
+            </ion-item>
+          </div>
+          <div padding>
+            <ion-button type="submit" expand="block">Gravar</ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
