@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
-import { UserProfileComponent } from './user-profile/user-profile.component';
+import { UserProfileComponent } from './user-profile/component-add/user-profile.component';
 import { NotificationComponent } from './notification/notification.component';
 import { DietComponent } from './diet/diet.component';
 import { ContactComponent } from './contact/contact.component';
 import { DietDetailComponent } from './diet/diet-detail/diet-detail.component';
-import { TipsComponent } from './tips/tips.component';
+import { TipsComponent } from './tips/component-add/tips.component';
 import { FoodComponent } from './food/food.component';
 
 const routes: Routes = [
