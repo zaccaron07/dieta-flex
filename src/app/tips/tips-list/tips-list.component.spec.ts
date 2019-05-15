@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TipsComponent } from './tips.component';
+import { TipsListComponent } from './tips-list.component';
 
-describe('TipsComponent', () => {
-  let component: TipsComponent;
-  let fixture: ComponentFixture<TipsComponent>;
+describe('TipsListComponent', () => {
+  let component: TipsListComponent;
+  let fixture: ComponentFixture<TipsListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TipsComponent ],
+      declarations: [ TipsListComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TipsComponent);
+    fixture = TestBed.createComponent(TipsListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

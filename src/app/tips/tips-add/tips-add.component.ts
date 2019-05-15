@@ -4,11 +4,11 @@ import { TipsService } from '../tips.service';
 import { ToastController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-tips',
-  templateUrl: './tips.component.html',
-  styleUrls: ['./tips.component.scss'],
+  selector: 'app-tips-add',
+  templateUrl: './tips-add.component.html',
+  styleUrls: ['./tips-add.component.scss'],
 })
-export class TipsComponent implements OnInit {
+export class TipsAddComponent implements OnInit {
 
   constructor(
     private tipsService: TipsService,

@@ -15,15 +15,16 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
-import { UserProfileComponent } from './user-profile/component-add/user-profile.component';
+import { UserProfileComponent } from './user-profile/user-profile-add/user-profile.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NotificationComponent } from './notification/notification.component';
 import { DietComponent } from './diet/diet.component';
 import { ContactComponent } from './contact/contact.component';
 import { DietDetailComponent } from './diet/diet-detail/diet-detail.component';
-import { TipsComponent } from './tips/component-add/tips.component';
+import { TipsAddComponent } from './tips/tips-add/tips-add.component';
 import { FoodComponent } from './food/food.component';
+import { TipsListComponent } from './tips/tips-list/tips-list.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { FoodComponent } from './food/food.component';
     DietComponent,
     ContactComponent,
     DietDetailComponent,
-    TipsComponent,
+    TipsAddComponent,
+    TipsListComponent,
     FoodComponent
   ],
   entryComponents: [],
