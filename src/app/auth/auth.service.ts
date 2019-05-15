@@ -3,7 +3,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AuthData } from './auth-data.model';
 import { map } from "rxjs/operators";
 import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore'
-import {  Subject } from 'rxjs';
+import { Subject } from 'rxjs';
+import { UserProfileData } from '../user-profile/user-profile.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class AuthService {
 
   userCollection: AngularFirestoreCollection<any>;
 
-  private user: AuthData;
+  private user: UserProfileData;
   userChanged = new Subject<AuthData>();
 
   constructor(
@@ -47,23 +48,43 @@ export class AuthService {
     });
   }
 
-  geAuth() {
+  getAuth() {
     return this.afAuth.authState.pipe(
       map(auth => auth)
     )
   }
 
-  private setUser(user: AuthData) {
+  private setUser(user: UserProfileData) {
     this.user = user;
 
     this.userChanged.next(this.user);
   }
 
-  getUser(user: AuthData) {
+  getUser() {
     return this.user;
   }
 
   retrieveUser(userEmail: string) {
+    console.log('email' + userEmail)
+    /* this.afFirestore.collection('user', ref => {
+       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+       if (userEmail) {
+         query = query.where('email', '==', userEmail);
+       }
+ 
+       return query;
+     })
+       .valueChanges()
+       .subscribe((user) => {
+         console.log(user)
+         let lUser = {} as AuthData;
+ 
+         lUser.email = user[0]['email'];
+         lUser.name = user[0]['name'];
+         lUser.password = user[0]['password'];
+ 
+         this.setUser(lUser);
+       });*/
     this.afFirestore.collection('user', ref => {
       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
       if (userEmail) {
@@ -71,17 +92,21 @@ export class AuthService {
       }
 
       return query;
-    })
-      .valueChanges()
-      .subscribe((user) => {
-        let lUser = {} as AuthData;
+    }).snapshotChanges().pipe(
+      map(a => {
+        return a.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
+      })
+    ).subscribe((user) => {
+      console.log(user)
+      let lUser = {} as UserProfileData;
 
-        lUser.email = user[0]['email'];
-        lUser.name = user[0]['name'];
-        lUser.password = user[0]['password'];
+      lUser.id = user[0]['id'];
+      lUser.email = user[0]['email'];
+      lUser.name = user[0]['name'];
+      lUser.password = user[0]['password'];
 
-        this.setUser(lUser);
-      });
+      this.setUser(lUser);
+    });
   }
 
   logout() {

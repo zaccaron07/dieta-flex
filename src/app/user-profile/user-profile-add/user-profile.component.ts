@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
 import { UserProfileService } from '../user-profile.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import { UserProfileData } from '../user-profile.model';
 
 @Component({
   selector: 'app-user-profile',
@@ -12,7 +14,8 @@ export class UserProfileComponent implements OnInit {
 
   constructor(
     private userProfileService: UserProfileService,
-    public toastController: ToastController
+    public toastController: ToastController,
+    private authService: AuthService
   ) { }
 
   userProfileForm: FormGroup;
@@ -22,6 +25,12 @@ export class UserProfileComponent implements OnInit {
   }
 
   private initUserProfileForm() {
+    let lUser = {} as UserProfileData;
+
+    this.authService.userChanged.subscribe(user => {
+      
+    })
+    console.log(lUser) 
     this.userProfileForm = new FormGroup({
       'name': new FormControl(""),
       'email': new FormControl("", Validators.required),
@@ -37,10 +46,6 @@ export class UserProfileComponent implements OnInit {
 
   onSubmit() {
     this.userProfileService.createUserProfile(this.userProfileForm.value)
-      .then(succes => {
-        this.presentToast();
-        this.initUserProfileForm();
-      })
   }
 
   async presentToast() {

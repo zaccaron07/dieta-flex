@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
     private platform: Platform) { }
 
   ngOnInit() {
-    this.authService.geAuth().subscribe(auth => {
+    this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.router.navigate(['/home']);
       }
