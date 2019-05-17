@@ -14,6 +14,7 @@ export class UserProfileService {
     let lUserId: string;
 
     lUserId = this.authService.getUser().id;
-    this.afFirestore.collection('user').doc(lUserId).update(userProfile);
+
+    return this.afFirestore.collection('user').doc(lUserId).update(userProfile);
   }
 }

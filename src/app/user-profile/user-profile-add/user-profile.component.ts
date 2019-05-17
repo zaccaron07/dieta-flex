@@ -4,6 +4,7 @@ import { ToastController } from '@ionic/angular';
 import { UserProfileService } from '../user-profile.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { UserProfileData } from '../user-profile.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
@@ -14,8 +15,9 @@ export class UserProfileComponent implements OnInit {
 
   constructor(
     private userProfileService: UserProfileService,
-    public toastController: ToastController,
-    private authService: AuthService
+    private toastController: ToastController,
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   userProfileForm: FormGroup;
@@ -27,10 +29,6 @@ export class UserProfileComponent implements OnInit {
   private initUserProfileForm() {
     let lUser = {} as UserProfileData;
 
-    this.authService.userChanged.subscribe(user => {
-      
-    })
-    console.log(lUser) 
     this.userProfileForm = new FormGroup({
       'name': new FormControl(""),
       'email': new FormControl("", Validators.required),
@@ -42,17 +40,29 @@ export class UserProfileComponent implements OnInit {
       'exercise_intensity': new FormControl("", Validators.required),
       'work_intensity': new FormControl("", Validators.required)
     });
+
+    this.authService.userChanged.subscribe(user => {
+      lUser = user;
+
+      this.userProfileForm.patchValue(lUser);
+    });
   }
 
   onSubmit() {
     this.userProfileService.createUserProfile(this.userProfileForm.value)
+      .then(() => {
+        this.presentToast().then(() => {
+          this.router.navigate(['home']);
+        });
+      });
   }
 
   async presentToast() {
     const toast = await this.toastController.create({
       message: 'Dados cadastrados com sucesso!',
       duration: 2000
-    })
+    });
+
     toast.present();
   }
 

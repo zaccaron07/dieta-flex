@@ -14,7 +14,7 @@ export class AuthService {
   userCollection: AngularFirestoreCollection<any>;
 
   private user: UserProfileData;
-  userChanged = new Subject<AuthData>();
+  userChanged = new Subject<UserProfileData>();
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -65,48 +65,28 @@ export class AuthService {
   }
 
   retrieveUser(userEmail: string) {
-    console.log('email' + userEmail)
-    /* this.afFirestore.collection('user', ref => {
-       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
-       if (userEmail) {
-         query = query.where('email', '==', userEmail);
-       }
- 
-       return query;
-     })
-       .valueChanges()
-       .subscribe((user) => {
-         console.log(user)
-         let lUser = {} as AuthData;
- 
-         lUser.email = user[0]['email'];
-         lUser.name = user[0]['name'];
-         lUser.password = user[0]['password'];
- 
-         this.setUser(lUser);
-       });*/
     this.afFirestore.collection('user', ref => {
       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+
       if (userEmail) {
         query = query.where('email', '==', userEmail);
       }
 
       return query;
-    }).snapshotChanges().pipe(
-      map(a => {
-        return a.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
-      })
-    ).subscribe((user) => {
-      console.log(user)
-      let lUser = {} as UserProfileData;
+    })
+      .snapshotChanges()
+      .pipe(
+        map(data => {
+          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
+        })
+      )
+      .subscribe((user) => {
+        let lUser = {} as UserProfileData;
 
-      lUser.id = user[0]['id'];
-      lUser.email = user[0]['email'];
-      lUser.name = user[0]['name'];
-      lUser.password = user[0]['password'];
+        lUser = user[0] as UserProfileData;
 
-      this.setUser(lUser);
-    });
+        this.setUser(lUser);
+      });
   }
 
   logout() {
