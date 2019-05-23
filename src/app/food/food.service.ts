@@ -12,4 +12,7 @@ export class FoodService {
   createFood(foodData: FoodData) {
     return this.afFirestore.collection('food').add(foodData);
   }
+  getFood() {
+    return this.afFirestore.collection('food').valueChanges();
+  }
 }

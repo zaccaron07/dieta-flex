@@ -10,6 +10,7 @@ import { TipsAddComponent } from './tips/tips-add/tips-add.component';
 import { FoodComponent } from './food/food.component';
 import { TipsListComponent } from './tips/tips-list/tips-list.component';
 import { MyContactsComponent } from './my-contacts/my-contacts.component';
+import { FoodListComponent } from './food/food-list/food-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -20,8 +21,9 @@ const routes: Routes = [
   { path: 'notification', component: NotificationComponent, canActivate: [AuthGuard] },
   { path: 'diet', component: DietComponent, canActivate: [AuthGuard] },
   { path: 'diet/dietDetail', component: DietDetailComponent, canActivate: [AuthGuard] },
-  { path: 'contact', component: ContactComponent, canActivate: [AuthGuard] },
-  { path: 'food', component: FoodComponent, canActivate: [AuthGuard] },
+  { path: 'mycontacts/contact', component: ContactComponent, canActivate: [AuthGuard] },
+  { path: 'food-list', component: FoodListComponent, canActivate: [AuthGuard] },
+  { path: 'food-list/food-add', component: FoodComponent, canActivate: [AuthGuard] },
   { path: 'mycontacts', component: MyContactsComponent, canActivate: [AuthGuard] }
 ];
 

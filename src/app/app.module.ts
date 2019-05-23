@@ -27,6 +27,7 @@ import { FoodComponent } from './food/food.component';
 import { TipsListComponent } from './tips/tips-list/tips-list.component';
 import { ContactService } from './contact/contact.service';
 import { MyContactsComponent } from './my-contacts/my-contacts.component';
+import { FoodListComponent } from './food/food-list/food-list.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { MyContactsComponent } from './my-contacts/my-contacts.component';
     TipsAddComponent,
     TipsListComponent,
     FoodComponent,
-    MyContactsComponent
+    MyContactsComponent,
+    FoodListComponent
   ],
   entryComponents: [],
   imports: [
