@@ -30,17 +30,13 @@ export class TipsListComponent implements OnInit {
       });
   }
 
-  openEditTips(aTips: TipsData) {
-    //-- open page with the dados
-  }
-
   getListTips() {
     this.listTips = this.tipsService.getTips();
-    this.listTipsBase = this.tipsService.getTips();
+    this.listTipsBase = this.listTips;
   }
 
   setFilteredItems(searchTerm) {
-    
+
     if (!searchTerm) {
       return this.listTips = this.listTipsBase;
     }
