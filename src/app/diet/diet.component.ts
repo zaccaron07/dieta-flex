@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NewDietService } from './new-diet.service';
+import { NewDietService, DietResult } from './new-diet.service';
 
 @Component({
   selector: 'app-diet',
@@ -7,6 +7,8 @@ import { NewDietService } from './new-diet.service';
   styleUrls: ['./diet.component.scss'],
 })
 export class DietComponent implements OnInit {
+
+  public dietResult: DietResult[];
 
   constructor(
     private dietService: NewDietService
@@ -16,6 +18,11 @@ export class DietComponent implements OnInit {
 
   generateDiet() {
     this.dietService.generateDiet();
+
+    this.dietService.resultO.subscribe((result) => {
+      this.dietResult = result as DietResult[];
+      console.log(result);
+    });
   }
 
 }
