@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'notification', component: NotificationComponent, canActivate: [AuthGuard] },
   { path: 'diet', component: DietComponent, canActivate: [AuthGuard] },
   { path: 'diet/dietDetail', component: DietDetailComponent, canActivate: [AuthGuard] },
-  { path: 'contact', component: ContactComponent, canActivate: [AuthGuard] },
+  { path: 'mycontacts/contact', component: ContactComponent, canActivate: [AuthGuard] },
   { path: 'food', component: FoodComponent, canActivate: [AuthGuard] },
   { path: 'mycontacts', component: MyContactsComponent, canActivate: [AuthGuard] }
 ];
