@@ -14,7 +14,7 @@
 
   <ion-list>
     <ion-card *ngFor="let contact of contacts" (click)="addContact(contact)">
-      <ion-card-header routerLink="tips-add" color="dark">{{ contact.name }}</ion-card-header>
+      <ion-card-header routerLink="../" color="dark">{{ contact.name }}</ion-card-header>
     </ion-card>
   </ion-list>
 </ion-content>
