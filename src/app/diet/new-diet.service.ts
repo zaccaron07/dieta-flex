@@ -12,7 +12,9 @@ export class NewDietService {
 
   private userProfile: UserProfileData;
   private result = [] as DietResult[];
+  public dietAmount = {} as DietAmount;
   public resultO = new Subject<DietResult[]>();
+  public resultOO = new Subject<DietAmount>();
 
   constructor(
     private authService: AuthService,
@@ -29,7 +31,9 @@ export class NewDietService {
 
   private calcMinCalories() {
     this.result = [] as DietResult[];
+    this.dietAmount = {} as DietAmount;
     this.resultO = new Subject<DietResult[]>();
+    this.resultOO = new Subject<DietAmount>();
 
     let lMinCalories: number = 0;
 
@@ -84,13 +88,24 @@ export class NewDietService {
 
     lDayProtein = this.userProfile.weight * 2;
 
+    this.dietAmount.totalProtein = lDayProtein;
+
     lTotalCalorires = lDayProtein * 4;
 
     lTotalCalorires += this.userProfile.weight * 9;
 
+    this.dietAmount.totalFat = this.userProfile.weight;
+
     lMinCalories = lMinCalories - lTotalCalorires;
 
     lDayCarbohydrate = lMinCalories / 4;
+    this.dietAmount.totalCarbohydrate = lDayCarbohydrate;
+
+    this.dietAmount.totalCalories = this.dietAmount.totalProtein * 4 + this.dietAmount.totalFat * 9 + this.dietAmount.totalCarbohydrate * 4;
+    console.log(this.dietAmount)
+    this.resultOO.next(this.dietAmount);
+    this.resultOO.next(this.dietAmount);
+
     console.log("Protein" + lDayProtein)
     console.log("Carbo" + lDayCarbohydrate)
 
@@ -127,6 +142,7 @@ export class NewDietService {
 
         lResultMeal.name = lFood.name;
         lResultMeal.amount = lAmountFood;
+        lResultMeal.calorie = lFood.calorie;
         lResultMeal.fat = lFat;
         lResultMeal.protein = lProtein;
         lResultMeal.carbohydrate = lCarbohydrates;
@@ -168,6 +184,7 @@ export class NewDietService {
 
         lResultMeal.name = lFood.name;
         lResultMeal.amount = lAmountFood;
+        lResultMeal.calorie = lFood.calorie;
         lResultMeal.fat = lFat;
         lResultMeal.protein = lProtein;
         lResultMeal.carbohydrate = lCarbohydrates;
@@ -217,6 +234,7 @@ export class NewDietService {
           lResultMeal.name = lFood.name;
           lResultMeal.amount = 1;
           lResultMeal.fat = lFood.fat;
+          lResultMeal.calorie = lFood.calorie;
           lResultMeal.protein = lFood.protein;
           lResultMeal.carbohydrate = lFood.carbohydrate;
           lResultMeal.portion = true;
@@ -232,9 +250,21 @@ export class NewDietService {
 
 export interface DietResult {
   name: string;
+  portion: boolean;
+  fat: number;
   amount: number;
+  calorie: number;
   protein: number;
   carbohydrate: number;
+}
+
+export interface DietAmount {
   fat: number;
-  portion: boolean;
+  protein: number;
+  calories: number;
+  carbohydrate: number;
+  totalFat: number;
+  totalProtein: number;
+  totalCalories: number;
+  totalCarbohydrate: number;
 }

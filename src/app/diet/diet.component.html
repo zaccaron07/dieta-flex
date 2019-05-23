@@ -26,12 +26,18 @@
           <ion-card-content>
             <ion-grid>
               <span *ngIf="!item.portion">Gramas: {{ item.amount | number: '1.2-2' }}g</span>
-              <span *ngIf="item.portion">Porção: {{ item.amount }}</span> - Proteina: {{ item.protein | number: '1.2-2' }}g -
+              <span *ngIf="item.portion">Porção: {{ item.amount }}</span> - Proteina:
+              {{ item.protein | number: '1.2-2' }}g -
               Carboidrato: {{ item.carbohydrate | number: '1.2-2' }}g - Gordura: {{ item.fat | number: '1.2-2'}}g
             </ion-grid>
           </ion-card-content>
         </ion-card>
       </ion-list>
+
+      Calorias: {{ dietAmount.calories | number: '1.2-2' }}KCal / {{ totalDietAmount.totalCalories | number: '1.2-2' }}KCal<br>
+      Proteinas: {{ dietAmount.protein | number: '1.2-2' }}g / {{ totalDietAmount.totalProtein | number: '1.2-2' }}g<br>
+      Carboidratos: {{ dietAmount.carbohydrate | number: '1.2-2' }}g / {{ totalDietAmount.totalCarbohydrate | number: '1.2-2' }}g<br>
+      Gordura: {{ dietAmount.fat | number: '1.2-2' }}g / {{ totalDietAmount.totalFat | number: '1.2-2' }}g<br>
     </ion-card-content>
   </ion-card>
 </ion-content>
