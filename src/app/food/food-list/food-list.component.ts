@@ -35,7 +35,7 @@ export class FoodListComponent implements OnInit {
   }
 
   setFilteredItems(searchTerm) {
-    
+
     if (!searchTerm) {
       return this.listFood = this.listFoodBase;
     }
