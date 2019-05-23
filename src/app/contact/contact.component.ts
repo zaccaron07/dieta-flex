@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
+import { ContactService } from './contact.service';
 
 @Component({
   selector: 'app-contact',
@@ -7,8 +10,32 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ContactComponent implements OnInit {
 
-  constructor() { }
+  public searchControl: FormControl;
+  public contacts: any;
 
-  ngOnInit() {}
+  constructor(private contactService: ContactService) {
+    this.searchControl = new FormControl();
+  }
 
+  ngOnInit() {
+    this.setFilteredItems("");
+
+    this.searchControl.valueChanges
+      .pipe(debounceTime(700))
+      .subscribe(search => {
+        this.setFilteredItems(search);
+      });
+  }
+
+  addContact(contact) {
+    this.contactService.addContact(contact);
+  }
+
+  setFilteredItems(searchTerm) {
+    this.contactService.retrieveContacts(searchTerm);
+
+    this.contactService.contactChanged.subscribe(users => {
+      this.contacts = users;
+    })
+  }
 }

@@ -33,10 +33,11 @@ export class UserProfileComponent implements OnInit {
       'name': new FormControl(""),
       'email': new FormControl("", Validators.required),
       'password': new FormControl("", Validators.required),
+      'gender': new FormControl(1, Validators.required),
       'age': new FormControl("", Validators.required),
-      'goal': new FormControl("", Validators.required),
-      'weigth': new FormControl("", Validators.required),
-      'heigth': new FormControl("", Validators.required),
+      'goal': new FormControl(0, Validators.required),
+      'weight': new FormControl("", Validators.required),
+      'height': new FormControl("", Validators.required),
       'exercise_intensity': new FormControl("", Validators.required),
       'work_intensity': new FormControl("", Validators.required)
     });

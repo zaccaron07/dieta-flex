@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NewDietService } from './new-diet.service';
 
 @Component({
   selector: 'app-diet',
@@ -7,8 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DietComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private dietService: NewDietService
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
+
+  generateDiet() {
+    this.dietService.generateDiet();
+  }
 
 }

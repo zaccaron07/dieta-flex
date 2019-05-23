@@ -3,6 +3,7 @@ export interface UserProfileData {
     name: string;
     email: string;
     password: string;
+    gender?: number;
     age?: number;
     goal?: number;
     weight?: number;

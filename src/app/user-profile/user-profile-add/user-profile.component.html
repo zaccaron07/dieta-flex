@@ -23,18 +23,48 @@
             <ion-item>
               <ion-input formControlName="age" type="number" placeholder="sua idade"></ion-input>
             </ion-item>
+            <ion-radio-group formControlName="gender">
+              <ion-item>
+                <ion-label>Masculino</ion-label>
+                <ion-radio slot="start" value="1"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label>Feminino</ion-label>
+                <ion-radio slot="start" value="2"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
             <ion-item>
-              <ion-input formControlName="weigth" type="number" placeholder="peso"></ion-input>
+              <ion-input formControlName="weight" type="number" placeholder="peso"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input formControlName="heigth" type="number" placeholder="altura"></ion-input>
+              <ion-input formControlName="height" type="number" placeholder="altura em cm"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input formControlName="goal" type="string" placeholder="Objetivo"></ion-input>
+              <ion-label>Objetivo</ion-label>
+              <ion-select placeholder="Objetivo" formControlName="goal" interface="popover">
+                <ion-select-option [value]="1">Emagrecer</ion-select-option>
+                <ion-select-option [value]="2">Emagrecer Agressivo</ion-select-option>
+                <ion-select-option [value]="3">Manter
+                </ion-select-option>
+                <ion-select-option [value]="4">Ganhos “Secos”
+                </ion-select-option>
+                <ion-select-option [value]="5">Ganhos agressivos
+                </ion-select-option>
+              </ion-select>
             </ion-item>
             <ion-item>
-              <ion-input formControlName="exercise_intensity" type="string" placeholder="Itensidade de exercício">
-              </ion-input>
+              <ion-label>Itensidade de exercício</ion-label>
+              <ion-select placeholder="Itensidade de exercício" formControlName="exercise_intensity"
+                interface="popover">
+                <ion-select-option [value]="1">Sedentário: praticamente não faz nada</ion-select-option>
+                <ion-select-option [value]="2">Levemente ativo: exercícios leves 1-3x por semana</ion-select-option>
+                <ion-select-option [value]="3">Moderadamente ativo: exercícios moderados de 3-5x por semana
+                </ion-select-option>
+                <ion-select-option [value]="4">Muito ativo: exercícios pesados/esportes 6-7x por semana
+                </ion-select-option>
+                <ion-select-option [value]="5">Extremamente ativo: exercícios muito pesados, treinando duas vezes ao dia
+                </ion-select-option>
+              </ion-select>
             </ion-item>
             <ion-item>
               <ion-input formControlName="work_intensity" type="string" placeholder="Itensidade de trabalho">
