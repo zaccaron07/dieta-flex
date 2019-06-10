@@ -28,6 +28,7 @@ import { TipsListComponent } from './tips/tips-list/tips-list.component';
 import { ContactService } from './contact/contact.service';
 import { MyContactsComponent } from './my-contacts/my-contacts.component';
 import { FoodListComponent } from './food/food-list/food-list.component';
+import { DietModalComponent } from './diet/diet-modal/diet-modal.component';
 
 @NgModule({
   declarations: [
@@ -41,9 +42,10 @@ import { FoodListComponent } from './food/food-list/food-list.component';
     TipsListComponent,
     FoodComponent,
     MyContactsComponent,
-    FoodListComponent
+    FoodListComponent,
+    DietModalComponent
   ],
-  entryComponents: [],
+  entryComponents: [DietModalComponent],
   imports: [
     ReactiveFormsModule,
     FormsModule,

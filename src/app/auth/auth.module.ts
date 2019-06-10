@@ -6,7 +6,6 @@ import { AuthRoutingModule } from "./auth-routing.module";
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { GooglePlus } from '@ionic-native/google-plus/ngx';
 
 @NgModule({
     declarations: [
@@ -21,9 +20,7 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx';
         AngularFireAuthModule,
         AuthRoutingModule
     ],
-    providers: [
-        GooglePlus
-    ]
+    providers: []
 })
 export class AuthModule {
 

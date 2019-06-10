@@ -1,6 +1,7 @@
 export interface FoodData {
+    id?: string;
     fat: number;
-    colorie: number;
+    calorie: number;
     protein: number;
     carbohydrate: number;
     name: string;

@@ -4,6 +4,7 @@ import { UserProfileData } from '../user-profile/user-profile.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { FoodData } from '../food/food-data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class NewDietService {
   public dietAmount = {} as DietAmount;
   public resultO = new Subject<DietResult[]>();
   public resultOO = new Subject<DietAmount>();
+  public foodData = new Subject<FoodData[]>();
 
   constructor(
     private authService: AuthService,
@@ -27,6 +29,19 @@ export class NewDietService {
 
   generateDiet() {
     this.calcMinCalories();
+  }
+
+  getFood() {
+    this.afFirestore.collection('food')
+      .snapshotChanges()
+      .pipe(
+        map(data => {
+          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
+        })
+      )
+      .subscribe((food) => {
+        this.foodData.next(food as FoodData[]);
+      });
   }
 
   private calcMinCalories() {
