@@ -12,6 +12,7 @@ export class ContactService {
 
   contactChanged = new Subject<any[]>();
   contactsChanged = new Subject<any[]>();
+  contacts = [];
 
   constructor(
     private afFirestore: AngularFirestore,
@@ -19,6 +20,8 @@ export class ContactService {
   ) { }
 
   retrieveContacts(userName: String) {
+    let email;
+    email = this.authService.getUser().email;
 
     return this.afFirestore.collection('user', ref => {
       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
@@ -36,6 +39,11 @@ export class ContactService {
         })
       )
       .subscribe((user) => {
+        console.log(user)
+
+        user = user.filter(user => user['email'] != email);
+
+        console.log(user)
         this.contactChanged.next(user);
       });
   }
@@ -64,6 +72,7 @@ export class ContactService {
       )
       .subscribe((user) => {
         this.contactsChanged.next(user);
+        this.contacts = user;
       });
   }
 }

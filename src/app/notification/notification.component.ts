@@ -24,7 +24,7 @@ export class NotificationComponent implements OnInit {
     switch (notificationId) {
       case 1:
         this.title = this.notification.notificationRequest.title;
-        this.message = "É sempre aconselhável que seja realizado qualquer tipo de atividade física juntamente com uma dieta, fora todos os benefícios que a realização de um exercício trás, a queima de calorias ajuda significantemente para a perda de peso de forma saudável.";
+        this.message = "";
     }
   }
 

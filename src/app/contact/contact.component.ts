@@ -11,7 +11,7 @@ import { ContactService } from './contact.service';
 export class ContactComponent implements OnInit {
 
   public searchControl: FormControl;
-  public contacts: any;
+  public contacts: any[];
 
   constructor(private contactService: ContactService) {
     this.searchControl = new FormControl();
@@ -36,6 +36,10 @@ export class ContactComponent implements OnInit {
 
     this.contactService.contactChanged.subscribe(users => {
       this.contacts = users;
+
+      this.contactService.contacts.forEach((savedContact) => {
+        this.contacts = this.contacts.filter(contact => contact.email != savedContact.email);
+      })
     })
   }
 }
