@@ -29,6 +29,7 @@ import { ContactService } from './contact/contact.service';
 import { MyContactsComponent } from './my-contacts/my-contacts.component';
 import { FoodListComponent } from './food/food-list/food-list.component';
 import { DietModalComponent } from './diet/diet-modal/diet-modal.component';
+import { HistoricListComponent } from './historic-list/historic-list.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { DietModalComponent } from './diet/diet-modal/diet-modal.component';
     FoodComponent,
     MyContactsComponent,
     FoodListComponent,
-    DietModalComponent
+    DietModalComponent,
+    HistoricListComponent
   ],
   entryComponents: [DietModalComponent],
   imports: [

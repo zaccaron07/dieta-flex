@@ -11,6 +11,7 @@ import { FoodComponent } from './food/food.component';
 import { TipsListComponent } from './tips/tips-list/tips-list.component';
 import { MyContactsComponent } from './my-contacts/my-contacts.component';
 import { FoodListComponent } from './food/food-list/food-list.component';
+import { HistoricListComponent } from './historic-list/historic-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -24,7 +25,8 @@ const routes: Routes = [
   { path: 'mycontacts/contact', component: ContactComponent, canActivate: [AuthGuard] },
   { path: 'food-list', component: FoodListComponent, canActivate: [AuthGuard] },
   { path: 'food-list/food-add', component: FoodComponent, canActivate: [AuthGuard] },
-  { path: 'mycontacts', component: MyContactsComponent, canActivate: [AuthGuard] }
+  { path: 'mycontacts', component: MyContactsComponent, canActivate: [AuthGuard] },
+  { path: 'historic-list', component: HistoricListComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
