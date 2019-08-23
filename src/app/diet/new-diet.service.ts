@@ -261,6 +261,25 @@ export class NewDietService {
         this.resultO.next(this.result)
       });
   }
+
+  createDiet(diet) {
+    console.log(diet)
+    if (diet["id"]) {
+      return this.afFirestore.collection('diet').doc(diet["id"]).update(diet)
+    } else {
+      return this.afFirestore.collection('diet').add(diet);
+    }
+  }
+
+  getDiet() {
+    return this.afFirestore.collection('diet')
+      .snapshotChanges()
+      .pipe(
+        map(data => {
+          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
+        })
+      )
+  }
 }
 
 export interface DietResult {

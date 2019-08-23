@@ -17,13 +17,22 @@ export class DietComponent implements OnInit {
   public food = [] as FoodData[];
   public foodOriginal = [] as FoodData[];
   public dietReady: boolean = true;
+  public dietId: String;
 
   constructor(
     private dietService: NewDietService,
     private modalController: ModalController
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.dietService.getDiet().subscribe(result => {
+      if (result[0]) {
+        this.dietResult = result[0]["alimentos"];
+        this.totalDietAmount = result[0]["detalhes"];
+        this.dietId = result[0]["id"];
+      }
+    })
+  }
 
   generateDiet() {
     this.dietReady = false;
@@ -50,6 +59,19 @@ export class DietComponent implements OnInit {
 
       this.dietReady = true;
     });
+  }
+
+  saveDiet() {
+    let lDadosSalvar = {
+      alimentos: this.dietResult,
+      detalhes: this.totalDietAmount
+    };
+
+    if (this.dietId) {
+      lDadosSalvar["id"] = this.dietId
+    }
+
+    this.dietService.createDiet(lDadosSalvar)
   }
 
   openModal() {
@@ -81,7 +103,6 @@ export class DietComponent implements OnInit {
   }
 
   changedAmount(event) {
-    console.log(event)
     let lFood: FoodData;
     let lNewFood = {} as FoodData;
     let lNewAmount: number;
@@ -90,7 +111,7 @@ export class DietComponent implements OnInit {
     lNewAmount = event.value;
 
     lFood = event.food;
-    console.log(this.dietAmount)
+
     this.dietAmount.calories -= lFood.calorie;
     this.dietAmount.fat -= lFood.fat;
     this.dietAmount.protein -= lFood.protein;
@@ -100,7 +121,6 @@ export class DietComponent implements OnInit {
     lNewFood.fat = 0;
     lNewFood.protein = 0;
     lNewFood.carbohydrate = 0;
-    console.log(this.foodOriginal[event.indice])
 
     if (lFood.portion) {
       lNewFood.calorie = lNewAmount * this.foodOriginal[event.indice].calorie;
@@ -114,7 +134,6 @@ export class DietComponent implements OnInit {
       lNewFood.carbohydrate = (lNewAmount * this.foodOriginal[event.indice].carbohydrate) / 100;
     }
 
-    console.log(lNewFood)
     this.dietAmount.calories += lNewFood.calorie;
     this.dietAmount.fat += lNewFood.fat;
     this.dietAmount.protein += lNewFood.protein;
@@ -124,6 +143,5 @@ export class DietComponent implements OnInit {
     this.food[event.indice].fat = lNewFood.fat;
     this.food[event.indice].protein = lNewFood.protein;
     this.food[event.indice].carbohydrate = lNewFood.carbohydrate;
-
   }
 }
