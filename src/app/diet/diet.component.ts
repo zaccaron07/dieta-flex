@@ -4,6 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { DietModalComponent } from './diet-modal/diet-modal.component';
 import { FoodData } from '../food/food-data.model';
 import { FoodService } from '../food/food.service';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-diet',
@@ -26,35 +27,30 @@ export class DietComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.dietService.getFood();
+    this.dietService.getDiet()
+      .pipe(
+        map(result => {
+          if (result[0]) {
+            this.dietResult = result[0]["alimentos"];
+            this.totalDietAmount = result[0]["detalhes"];
+            this.food = result[0]["food"];
+            this.dietId = result[0]["id"];
 
-    this.dietService.getDiet().subscribe(result => {
-      if (result[0]) {
-        this.dietResult = result[0]["alimentos"];
-        this.totalDietAmount = result[0]["detalhes"];
-        this.food = result[0]["food"];
-        this.dietId = result[0]["id"];
-
-        this.loadDietAmount();
-      }
-    })
-
-    this.dietService.foodData.subscribe((result) => {
-      console.log(result)
-      console.log(this.food)
-      result.forEach(result => {
-        this.food.forEach(food => {
-          if (result.id == food.id) {
-            this.foodOriginal.push(JSON.parse(JSON.stringify(result)));
+            this.loadDietAmount();
           }
+        }),
+        switchMap(() => {
+          return this.dietService.getFood()
+        })
+      ).subscribe((result) => {
+        result.forEach(result => {
+          this.food.forEach(food => {
+            if (result["id"] == food.id) {
+              this.foodOriginal.push(JSON.parse(JSON.stringify(result)));
+            }
+          })
         })
       })
-      console.log(this.foodOriginal)
-    })
-  }
-
-  teste(){
-    
   }
 
   generateDiet() {
@@ -149,8 +145,9 @@ export class DietComponent implements OnInit {
     lNewFood.fat = 0;
     lNewFood.protein = 0;
     lNewFood.carbohydrate = 0;
+    lNewFood.amount = lNewAmount;
 
-    if (lFood.portion) {
+    if (lFood.portion) {      
       lNewFood.calorie = lNewAmount * this.foodOriginal[event.indice].calorie;
       lNewFood.fat = lNewAmount * this.foodOriginal[event.indice].fat;
       lNewFood.protein = lNewAmount * this.foodOriginal[event.indice].protein;

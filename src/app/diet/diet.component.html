@@ -37,7 +37,7 @@
           <ion-card-header color="dark">{{ item.name }}</ion-card-header>
           <ion-card-content>
             <ion-grid>
-              <span *ngIf="!item.portion">Gramas: <ion-input type="number" placeholder="100"
+              <span *ngIf="!item.portion">Gramas: <ion-input type="number" placeholder="100" [(ngModel)]="item.amount"
                   (ionChange)="changedAmount({value: $event.detail.value, food: item, indice: i})"></ion-input>g </span>
               <span *ngIf="item.portion">Porção: <ion-input type="number" placeholder="1"
                   (ionChange)="changedAmount({value: $event.detail.value, food: item, indice: i})"></ion-input></span> -

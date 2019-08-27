@@ -14,17 +14,15 @@ export class DietModalComponent implements OnInit {
   public foodData: FoodData[];
 
   constructor(
-    navParams: NavParams,
     private foodService: NewDietService,
     private modalController: ModalController
   ) { }
 
   ngOnInit() {
-    this.foodService.getFood();
-
-    this.foodService.foodData.subscribe((result) => {
-      this.foodData = result;
-    });
+    this.foodService.getFood()
+      .subscribe((result: FoodData[]) => {
+        this.foodData = result;
+      });
   }
 
   selectFood(food: FoodData) {
