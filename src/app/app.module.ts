@@ -20,13 +20,10 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NotificationComponent } from './notification/notification.component';
 import { DietComponent } from './diet/diet.component';
-import { ContactComponent } from './contact/contact.component';
 import { DietDetailComponent } from './diet/diet-detail/diet-detail.component';
 import { TipsAddComponent } from './tips/tips-add/tips-add.component';
 import { FoodComponent } from './food/food.component';
 import { TipsListComponent } from './tips/tips-list/tips-list.component';
-import { ContactService } from './contact/contact.service';
-import { MyContactsComponent } from './my-contacts/my-contacts.component';
 import { FoodListComponent } from './food/food-list/food-list.component';
 import { DietModalComponent } from './diet/diet-modal/diet-modal.component';
 import { HistoricListComponent } from './historic-list/historic-list.component';
@@ -37,12 +34,10 @@ import { HistoricListComponent } from './historic-list/historic-list.component';
     UserProfileComponent,
     NotificationComponent,
     DietComponent,
-    ContactComponent,
     DietDetailComponent,
     TipsAddComponent,
     TipsListComponent,
     FoodComponent,
-    MyContactsComponent,
     FoodListComponent,
     DietModalComponent,
     HistoricListComponent
@@ -65,7 +60,6 @@ import { HistoricListComponent } from './historic-list/historic-list.component';
     StatusBar,
     SplashScreen,
     AuthService,
-    ContactService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

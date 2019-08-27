@@ -4,12 +4,10 @@ import { AuthGuard } from './auth/auth.guard';
 import { UserProfileComponent } from './user-profile/user-profile-add/user-profile.component';
 import { NotificationComponent } from './notification/notification.component';
 import { DietComponent } from './diet/diet.component';
-import { ContactComponent } from './contact/contact.component';
 import { DietDetailComponent } from './diet/diet-detail/diet-detail.component';
 import { TipsAddComponent } from './tips/tips-add/tips-add.component';
 import { FoodComponent } from './food/food.component';
 import { TipsListComponent } from './tips/tips-list/tips-list.component';
-import { MyContactsComponent } from './my-contacts/my-contacts.component';
 import { FoodListComponent } from './food/food-list/food-list.component';
 import { HistoricListComponent } from './historic-list/historic-list.component';
 
@@ -25,10 +23,7 @@ const routes: Routes = [
 
   { path: 'tips-list/tips-add', component: TipsAddComponent, canActivate: [AuthGuard] },
   { path: 'tips-list', component: TipsListComponent, canActivate: [AuthGuard] },
-  { path: 'notification', component: NotificationComponent, canActivate: [AuthGuard] },
-  { path: 'mycontacts', component: MyContactsComponent, canActivate: [AuthGuard] },
-  { path: 'mycontacts/contact', component: ContactComponent, canActivate: [AuthGuard] }
-
+  { path: 'notification', component: NotificationComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
