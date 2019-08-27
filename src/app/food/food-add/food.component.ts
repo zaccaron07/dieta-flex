@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FoodService } from './food.service';
+import { FoodService } from '../food.service';
 import { ToastController } from '@ionic/angular';
-import { FoodData } from './food-data.model';
+import { FoodData } from '../food-data.model';
 
 @Component({
   selector: 'app-food',
   templateUrl: './food.component.html',
-  styleUrls: ['./food.component.scss'],
 })
 export class FoodComponent implements OnInit {
 

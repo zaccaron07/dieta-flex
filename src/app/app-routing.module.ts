@@ -6,10 +6,10 @@ import { NotificationComponent } from './notification/notification.component';
 import { DietComponent } from './diet/diet.component';
 import { DietDetailComponent } from './diet/diet-detail/diet-detail.component';
 import { TipsAddComponent } from './tips/tips-add/tips-add.component';
-import { FoodComponent } from './food/food.component';
+import { FoodComponent } from './food/food-add/food.component';
 import { TipsListComponent } from './tips/tips-list/tips-list.component';
 import { FoodListComponent } from './food/food-list/food-list.component';
-import { HistoricListComponent } from './historic-list/historic-list.component';
+import { HistoricListComponent } from './historic/historic-list/historic-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },

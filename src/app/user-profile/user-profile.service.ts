@@ -20,7 +20,7 @@ export class UserProfileService {
     historic.height = userProfile.height;
     historic.weight = userProfile.weight;
     historic.time = new Date().toString();
-    console.log(historic);
+    
     this.afFirestore.collection('user/'+ lUserId +'/historic').add(historic);
     
     return this.afFirestore.collection('user').doc(lUserId).update(userProfile);

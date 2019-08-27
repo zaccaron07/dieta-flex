@@ -3,13 +3,11 @@ import { NewDietService, DietResult, DietAmount } from './new-diet.service';
 import { ModalController } from '@ionic/angular';
 import { DietModalComponent } from './diet-modal/diet-modal.component';
 import { FoodData } from '../food/food-data.model';
-import { FoodService } from '../food/food.service';
 import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-diet',
   templateUrl: './diet.component.html',
-  styleUrls: ['./diet.component.scss'],
 })
 export class DietComponent implements OnInit {
 

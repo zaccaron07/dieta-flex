@@ -6,7 +6,6 @@ import { FoodData } from 'src/app/food/food-data.model';
 @Component({
   selector: 'app-diet-modal',
   templateUrl: './diet-modal.component.html',
-  styleUrls: ['./diet-modal.component.scss'],
 })
 export class DietModalComponent implements OnInit {
   @Input() value: number;
