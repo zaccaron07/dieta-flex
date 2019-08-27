@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FoodService } from './food.service';
 import { ToastController } from '@ionic/angular';
 import { FoodData } from './food-data.model';
@@ -16,7 +16,8 @@ export class FoodComponent implements OnInit {
   food: FoodData;
 
   constructor(
-    private router: ActivatedRoute,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
     private foodService: FoodService,
     public toastController: ToastController
   ) { }
@@ -32,7 +33,7 @@ export class FoodComponent implements OnInit {
 
     let lbExisteParam: boolean;
 
-    this.router.params.subscribe(params => {
+    this.activatedRoute.params.subscribe(params => {
       console.log(JSON.stringify(params))
 
       lbExisteParam = (params.id != undefined)
@@ -51,8 +52,10 @@ export class FoodComponent implements OnInit {
 
   onSubmit() {
     this.presentToast();
-    this.foodService.createFood(this.foodForm.value);
-    this.initFoodForm();
+    this.foodService.createFood(this.foodForm.value)
+      .then(() => {
+        this.router.navigate(['food-list'])
+      })
   }
 
   async presentToast() {
