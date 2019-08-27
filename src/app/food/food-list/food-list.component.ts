@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { FoodService } from '../food.service';
 import { debounceTime, map } from 'rxjs/operators';
+import { FoodData } from '../food-data.model';
 
 @Component({
   selector: 'app-food-list',
@@ -15,7 +17,10 @@ export class FoodListComponent implements OnInit {
   listFood: Observable<any[]>
   listFoodBase: Observable<any[]>
 
-  constructor(private FoodService: FoodService) {
+  constructor(
+    private FoodService: FoodService,
+    private router: Router
+  ) {
     this.searchControl = new FormControl();
   }
 
@@ -27,6 +32,11 @@ export class FoodListComponent implements OnInit {
       .subscribe(search => {
         this.setFilteredItems(search);
       });
+  }
+
+  openEditFood(food: FoodData) {
+    console.log(JSON.stringify(food));
+    this.router.navigate(['food-list/food-add', food])
   }
 
   getListFood() {
