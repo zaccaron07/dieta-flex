@@ -6,7 +6,6 @@ import { ToastController } from '@ionic/angular';
 @Component({
   selector: 'app-tips-add',
   templateUrl: './tips-add.component.html',
-  styleUrls: ['./tips-add.component.scss'],
 })
 export class TipsAddComponent implements OnInit {
 
