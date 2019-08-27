@@ -3,6 +3,7 @@ import { NewDietService, DietResult, DietAmount } from './new-diet.service';
 import { ModalController } from '@ionic/angular';
 import { DietModalComponent } from './diet-modal/diet-modal.component';
 import { FoodData } from '../food/food-data.model';
+import { FoodService } from '../food/food.service';
 
 @Component({
   selector: 'app-diet',
@@ -25,13 +26,35 @@ export class DietComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.dietService.getFood();
+
     this.dietService.getDiet().subscribe(result => {
       if (result[0]) {
         this.dietResult = result[0]["alimentos"];
         this.totalDietAmount = result[0]["detalhes"];
+        this.food = result[0]["food"];
         this.dietId = result[0]["id"];
+
+        this.loadDietAmount();
       }
     })
+
+    this.dietService.foodData.subscribe((result) => {
+      console.log(result)
+      console.log(this.food)
+      result.forEach(result => {
+        this.food.forEach(food => {
+          if (result.id == food.id) {
+            this.foodOriginal.push(JSON.parse(JSON.stringify(result)));
+          }
+        })
+      })
+      console.log(this.foodOriginal)
+    })
+  }
+
+  teste(){
+    
   }
 
   generateDiet() {
@@ -43,17 +66,7 @@ export class DietComponent implements OnInit {
     this.dietService.resultO.subscribe((result) => {
       this.dietResult = result as DietResult[];
 
-      this.dietAmount.calories = 0;
-      this.dietAmount.fat = 0;
-      this.dietAmount.protein = 0;
-      this.dietAmount.carbohydrate = 0;
-
-      this.dietResult.forEach((food) => {
-        this.dietAmount.calories += (food.amount * food.calorie) / 100;
-        this.dietAmount.fat += food.fat;
-        this.dietAmount.protein += food.protein;
-        this.dietAmount.carbohydrate += food.carbohydrate;
-      });
+      this.loadDietAmount();
 
       this.totalDietAmount = this.dietService.dietAmount;
 
@@ -61,9 +74,24 @@ export class DietComponent implements OnInit {
     });
   }
 
+  loadDietAmount() {
+    this.dietAmount.calories = 0;
+    this.dietAmount.fat = 0;
+    this.dietAmount.protein = 0;
+    this.dietAmount.carbohydrate = 0;
+
+    this.dietResult.forEach((food) => {
+      this.dietAmount.calories += (food.amount * food.calorie) / 100;
+      this.dietAmount.fat += food.fat;
+      this.dietAmount.protein += food.protein;
+      this.dietAmount.carbohydrate += food.carbohydrate;
+    });
+  }
+
   saveDiet() {
     let lDadosSalvar = {
       alimentos: this.dietResult,
+      food: this.food,
       detalhes: this.totalDietAmount
     };
 
