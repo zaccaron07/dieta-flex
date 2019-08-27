@@ -4,6 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { DietModalComponent } from './diet-modal/diet-modal.component';
 import { FoodData } from '../food/food-data.model';
 import { map, switchMap } from 'rxjs/operators';
+import { FoodService } from '../food/food.service';
 
 @Component({
   selector: 'app-diet',
@@ -20,6 +21,7 @@ export class DietComponent implements OnInit {
   public dietId: String;
 
   constructor(
+    private foodService: FoodService,
     private dietService: NewDietService,
     private modalController: ModalController
   ) { }
@@ -38,7 +40,7 @@ export class DietComponent implements OnInit {
           }
         }),
         switchMap(() => {
-          return this.dietService.getFood()
+          return this.foodService.getFood()
         })
       ).subscribe((result) => {
         result.forEach(result => {
@@ -145,7 +147,7 @@ export class DietComponent implements OnInit {
     lNewFood.carbohydrate = 0;
     lNewFood.amount = lNewAmount;
 
-    if (lFood.portion) {      
+    if (lFood.portion) {
       lNewFood.calorie = lNewAmount * this.foodOriginal[event.indice].calorie;
       lNewFood.fat = lNewAmount * this.foodOriginal[event.indice].fat;
       lNewFood.protein = lNewAmount * this.foodOriginal[event.indice].protein;

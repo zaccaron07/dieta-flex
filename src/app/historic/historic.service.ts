@@ -2,31 +2,35 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { HistoricData } from '../user-profile/historic.model';
 import { map } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HistoricService {
 
+  constructor(private afFirestore: AngularFirestore, private authService: AuthService) { }
 
-  constructor(private afFirestore: AngularFirestore) { }
+  userId = this.authService.getUser().id;
 
-  createFood(foodData: HistoricData) {
-    var retorno;
-    if (foodData["id"]) {
-      retorno = this.afFirestore.collection('historic').doc(foodData["id"]).update(foodData)
+  createHistoric(historicData: HistoricData) {
+    let returnCreate;
+
+    if (historicData["id"]) {
+      returnCreate = this.afFirestore.collection(`user/${this.userId}/historic`).doc(historicData["id"]).update(historicData)
     } else {
-      retorno = this.afFirestore.collection('historic').add(foodData);
+      returnCreate = this.afFirestore.collection(`user/${this.userId}/historic`).add(historicData);
     }
-    return retorno;
+    return returnCreate;
   }
 
-  getFood() {
-    return this.afFirestore.collection('historic')
+  getHistoric() {
+    return this.afFirestore.collection(`user/${this.userId}/historic`)
       .snapshotChanges()
       .pipe(
         map(data => {
           return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
         })
       )
-  }}
+  }
+}

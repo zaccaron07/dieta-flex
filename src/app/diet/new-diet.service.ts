@@ -3,8 +3,8 @@ import { AuthService } from '../auth/auth.service';
 import { UserProfileData } from '../user-profile/user-profile.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
-import { Subject, Observable } from 'rxjs';
-import { FoodData } from '../food/food-data.model';
+import { Subject } from 'rxjs';
+import { FoodService } from '../food/food.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +16,9 @@ export class NewDietService {
   public dietAmount = {} as DietAmount;
   public resultO = new Subject<DietResult[]>();
   public resultOO = new Subject<DietAmount>();
-  
+
   constructor(
+    private foodService: FoodService,
     private authService: AuthService,
     private afFirestore: AngularFirestore
   ) {
@@ -28,18 +29,6 @@ export class NewDietService {
 
   generateDiet() {
     this.calcMinCalories();
-  }
-
-  getFood(): Observable<FoodData[]> {
-    return this.afFirestore.collection('food')
-      .snapshotChanges()
-      .pipe(
-        map(data => {
-          return data.map(action => (
-            { id: action.payload.doc.id, ...action.payload.doc.data() } as FoodData
-          ));
-        })
-      )
   }
 
   private calcMinCalories() {
@@ -115,12 +104,9 @@ export class NewDietService {
     this.dietAmount.totalCarbohydrate = lDayCarbohydrate;
 
     this.dietAmount.totalCalories = this.dietAmount.totalProtein * 4 + this.dietAmount.totalFat * 9 + this.dietAmount.totalCarbohydrate * 4;
-    console.log(this.dietAmount)
-    this.resultOO.next(this.dietAmount);
-    this.resultOO.next(this.dietAmount);
 
-    console.log("Protein" + lDayProtein)
-    console.log("Carbo" + lDayCarbohydrate)
+    this.resultOO.next(this.dietAmount);
+    this.resultOO.next(this.dietAmount);
 
     this.afFirestore.collection('food', ref => {
       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
@@ -261,16 +247,15 @@ export class NewDietService {
   }
 
   createDiet(diet) {
-    console.log(diet)
     if (diet["id"]) {
-      return this.afFirestore.collection('diet').doc(diet["id"]).update(diet)
+      return this.afFirestore.collection(`user/${this.authService.getUser().id}/diet`).doc(diet["id"]).update(diet)
     } else {
-      return this.afFirestore.collection('diet').add(diet);
+      return this.afFirestore.collection(`user/${this.authService.getUser().id}/diet`).add(diet);
     }
   }
 
   getDiet() {
-    return this.afFirestore.collection('diet')
+    return this.afFirestore.collection(`user/${this.authService.getUser().id}/diet`)
       .snapshotChanges()
       .pipe(
         map(data => {
