@@ -17,16 +17,18 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'home', loadChildren: './home/home.module#HomePageModule', canActivate: [AuthGuard] },
   { path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard] },
+  { path: 'diet', component: DietComponent, canActivate: [AuthGuard] },
+  { path: 'diet/dietDetail', component: DietDetailComponent, canActivate: [AuthGuard] },
+  { path: 'food-list', component: FoodListComponent, canActivate: [AuthGuard] },
+  { path: 'food-list/food-add', component: FoodComponent, canActivate: [AuthGuard] },
+  { path: 'historic-list', component: HistoricListComponent, canActivate: [AuthGuard] },
+
   { path: 'tips-list/tips-add', component: TipsAddComponent, canActivate: [AuthGuard] },
   { path: 'tips-list', component: TipsListComponent, canActivate: [AuthGuard] },
   { path: 'notification', component: NotificationComponent, canActivate: [AuthGuard] },
-  { path: 'diet', component: DietComponent, canActivate: [AuthGuard] },
-  { path: 'diet/dietDetail', component: DietDetailComponent, canActivate: [AuthGuard] },
-  { path: 'mycontacts/contact', component: ContactComponent, canActivate: [AuthGuard] },
-  { path: 'food-list', component: FoodListComponent, canActivate: [AuthGuard] },
-  { path: 'food-list/food-add', component: FoodComponent, canActivate: [AuthGuard] },
   { path: 'mycontacts', component: MyContactsComponent, canActivate: [AuthGuard] },
-  { path: 'historic-list', component: HistoricListComponent, canActivate: [AuthGuard] }
+  { path: 'mycontacts/contact', component: ContactComponent, canActivate: [AuthGuard] }
+
 ];
 
 @NgModule({
