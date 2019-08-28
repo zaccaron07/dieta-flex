@@ -21,6 +21,9 @@
       <div>Barriga: {{item.belly}}</div>
       <div>Peito: {{item.chest}}</div>
     </ion-card-header>
+    <ion-card-header color="white">
+      <ion-icon (click)="openRemoveHistoric(item)" name="trash"></ion-icon>
+    </ion-card-header>
   </ion-card>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button routerLink="historic-add">

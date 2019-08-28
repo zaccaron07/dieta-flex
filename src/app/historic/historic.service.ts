@@ -39,4 +39,8 @@ export class HistoricService {
         })
       )
   }
+
+  deleteHistoric(idHistoric: string) {
+    return this.afFirestore.collection(`user/${this.idUser}/historic`).doc(idHistoric).delete();
+  }
 }
