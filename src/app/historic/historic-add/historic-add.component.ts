@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { HistoricData } from '../historic.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HistoricService } from '../historic.service';
 import { ToastController } from '@ionic/angular';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-historic-add',
@@ -11,8 +11,7 @@ import { ToastController } from '@ionic/angular';
 })
 export class HistoricAddComponent implements OnInit {
 
-  HistoricForm: FormGroup;
-  Historic: HistoricData;
+  historicForm: FormGroup;
 
   constructor(
     private router: Router,
@@ -36,7 +35,7 @@ export class HistoricAddComponent implements OnInit {
 
       lbExisteParam = (params.id != undefined)
 
-      this.HistoricForm = new FormGroup({
+      this.historicForm = new FormGroup({
         'id': new FormControl(lbExisteParam ? params.id : null, Validators.required),
         'weight': new FormControl(lbExisteParam ? params.weight : '', Validators.required),
         'biceps': new FormControl(lbExisteParam ? params.biceps : '', Validators.required),
@@ -49,10 +48,21 @@ export class HistoricAddComponent implements OnInit {
   }
 
   onSubmit() {
+    let lDate;
+    let lNewDate;
     this.presentToast();
-    console.log(JSON.stringify(this.HistoricForm.value))
-    this.historicService.createHistoric(this.HistoricForm.value)
-      .then(() => {
+
+    lDate = new Date();
+
+    lNewDate = ('0' + lDate.getDate()).slice(-2) + '/' + ('0' + (lDate.getMonth() + 1)).slice(-2) + '/' + lDate.getFullYear();
+
+    this.historicForm.value.time = lNewDate;
+
+    this.historicService.documentExists(this.historicForm.value)
+      .pipe(
+        switchMap(result => this.historicService.createHistoric(this.historicForm.value, result))
+      )
+      .subscribe(() => {
         this.router.navigate(['historic-list'])
       })
   }

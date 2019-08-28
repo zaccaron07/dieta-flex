@@ -14,20 +14,37 @@ export class HistoricService {
 
   idUser = this.authService.getUser().id;
 
-  createHistoric(historicData: HistoricData) {
-    let lDate;
+  createHistoric(historicData: HistoricData, result) {
     let returnCreated;
 
-    lDate = new Date();
-    lDate = (lDate.getDay() > 9 ? lDate.getDay(): '0' + lDate.getDay()) + "/" + (lDate.getMonth() > 9 ? lDate.getMonth(): '0' + lDate.getMonth()) + "/" + lDate.getFullYear();
-    historicData.time = lDate;
+    if (result.length >= 0) {
+      historicData.id = result[0]["id"]
+    }
 
     if (historicData["id"]) {
       returnCreated = this.afFirestore.collection(`user/${this.authService.getUser().id}/historic`).doc(historicData["id"]).update(historicData)
     } else {
       returnCreated = this.afFirestore.collection(`user/${this.authService.getUser().id}/historic`).add(historicData);
     }
+
     return returnCreated;
+  }
+
+  documentExists(historicData): Observable<any> {
+    return this.afFirestore.collection(`user/${this.authService.getUser().id}/historic`, ref => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+
+      query = query.where("time", "==", historicData.time)
+
+      return query
+    })
+      .snapshotChanges()
+      .pipe(
+        map(data => {
+          return data.map(action => ({ ...action.payload.doc.data(), id: action.payload.doc.id }));
+        })
+      )
+
   }
 
   getHistoric(): Observable<HistoricData[]> {

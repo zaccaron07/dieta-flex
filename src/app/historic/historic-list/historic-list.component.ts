@@ -34,17 +34,14 @@ export class HistoricListComponent implements OnInit {
   }
 
   openEditHistoric(Historic: HistoricData) {
-    console.log(JSON.stringify(Historic));
     this.router.navigate(['historic-list/historic-add', Historic])
   }
 
   openRemoveHistoric(historic: HistoricData) {
-    console.log(JSON.stringify(historic))
     this.historicService.deleteHistoric(historic.id)
   }
   getListHistoric() {
     this.listHistoric = this.historicService.getHistoric();
-    console.log(this.listHistoric)
     this.listHistoricBase = this.listHistoric;
   }
 
