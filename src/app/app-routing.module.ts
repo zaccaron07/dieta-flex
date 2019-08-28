@@ -4,23 +4,22 @@ import { AuthGuard } from './auth/auth.guard';
 import { UserProfileComponent } from './user-profile/user-profile-add/user-profile.component';
 import { NotificationComponent } from './notification/notification.component';
 import { DietComponent } from './diet/diet.component';
-import { DietDetailComponent } from './diet/diet-detail/diet-detail.component';
 import { TipsAddComponent } from './tips/tips-add/tips-add.component';
 import { FoodComponent } from './food/food-add/food.component';
 import { TipsListComponent } from './tips/tips-list/tips-list.component';
 import { FoodListComponent } from './food/food-list/food-list.component';
 import { HistoricListComponent } from './historic/historic-list/historic-list.component';
+import { HistoricAddComponent } from './historic/historic-add/historic-add.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'home', loadChildren: './home/home.module#HomePageModule', canActivate: [AuthGuard] },
   { path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard] },
   { path: 'diet', component: DietComponent, canActivate: [AuthGuard] },
-  { path: 'diet/dietDetail', component: DietDetailComponent, canActivate: [AuthGuard] },
   { path: 'food-list', component: FoodListComponent, canActivate: [AuthGuard] },
   { path: 'food-list/food-add', component: FoodComponent, canActivate: [AuthGuard] },
   { path: 'historic-list', component: HistoricListComponent, canActivate: [AuthGuard] },
-
+  { path: 'historic-list/historic-add', component: HistoricAddComponent, canActivate: [AuthGuard] },
   { path: 'tips-list/tips-add', component: TipsAddComponent, canActivate: [AuthGuard] },
   { path: 'tips-list', component: TipsListComponent, canActivate: [AuthGuard] },
   { path: 'notification', component: NotificationComponent, canActivate: [AuthGuard] }

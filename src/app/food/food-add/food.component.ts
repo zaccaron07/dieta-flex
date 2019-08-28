@@ -38,7 +38,7 @@ export class FoodComponent implements OnInit {
       lbExisteParam = (params.id != undefined)
 
       this.foodForm = new FormGroup({
-        'id': new FormControl(lbExisteParam ? params.id : '', Validators.required),
+        'id': new FormControl(lbExisteParam ? params.id : null, Validators.required),
         'name': new FormControl(lbExisteParam ? params.name : '', Validators.required),
         'calorie': new FormControl(lbExisteParam ? params.calorie : '', Validators.required),
         'carbohydrate': new FormControl(lbExisteParam ? params.carbohydrate : '', Validators.required),

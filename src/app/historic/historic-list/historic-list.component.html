@@ -4,13 +4,28 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Historico
+      Histórico de medidas
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-card *ngFor="let item of listFood | async">
-    <ion-card-header color="dark">Altura: {{item.height}} - Peso: {{item.weight}} - Data de alteração: {{item.time}}</ion-card-header>
+  <ion-searchbar [formControl]="searchControl" showCancelButton></ion-searchbar>
+  <ion-card *ngFor="let item of listHistoric | async">
+    <ion-card-header (click)="openEditHistoric(item)" color="dark">
+      <div>{{item.time}}</div>
+      <div>Peso: {{item.weight}}</div>
+      <div>Bíceps: {{item.biceps}}</div>
+      <div>Coxa: {{item.thigh}}</div>
+      <div>Panturrilha: {{item.calf}}</div>
+      <div>Barriga: {{item.belly}}</div>
+      <div>Peito: {{item.chest}}</div>
+    </ion-card-header>
   </ion-card>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button routerLink="historic-add">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>

@@ -27,7 +27,7 @@ export class FoodService {
       .pipe(
         map(data => {
           return data.map(action => (
-            { id: action.payload.doc.id, ...action.payload.doc.data() } as FoodData
+            { ...action.payload.doc.data(), id: action.payload.doc.id } as FoodData
           ));
         })
       )

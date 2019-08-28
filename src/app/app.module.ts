@@ -20,13 +20,13 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NotificationComponent } from './notification/notification.component';
 import { DietComponent } from './diet/diet.component';
-import { DietDetailComponent } from './diet/diet-detail/diet-detail.component';
 import { TipsAddComponent } from './tips/tips-add/tips-add.component';
 import { FoodComponent } from './food/food-add/food.component';
 import { TipsListComponent } from './tips/tips-list/tips-list.component';
 import { FoodListComponent } from './food/food-list/food-list.component';
 import { DietModalComponent } from './diet/diet-modal/diet-modal.component';
 import { HistoricListComponent } from './historic/historic-list/historic-list.component';
+import { HistoricAddComponent } from './historic/historic-add/historic-add.component';
 
 @NgModule({
   declarations: [
@@ -34,13 +34,13 @@ import { HistoricListComponent } from './historic/historic-list/historic-list.co
     UserProfileComponent,
     NotificationComponent,
     DietComponent,
-    DietDetailComponent,
     TipsAddComponent,
     TipsListComponent,
     FoodComponent,
     FoodListComponent,
     DietModalComponent,
-    HistoricListComponent
+    HistoricListComponent,
+    HistoricAddComponent
   ],
   entryComponents: [DietModalComponent],
   imports: [

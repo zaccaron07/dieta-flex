@@ -6,4 +6,5 @@ export interface HistoricData {
     calf: number;
     belly: number;
     chest: number;
+    time: string;
 }
