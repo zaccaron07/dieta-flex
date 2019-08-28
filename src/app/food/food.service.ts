@@ -32,4 +32,8 @@ export class FoodService {
         })
       )
   }
+
+  deleteFood(idFood: string) {
+    return this.afFirestore.collection(`food`).doc(idFood).delete();
+  }
 }

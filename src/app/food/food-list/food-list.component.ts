@@ -43,6 +43,11 @@ export class FoodListComponent implements OnInit {
     this.listFoodBase = this.listFood;
   }
 
+  removeFood(food: FoodData) {
+    console.log(JSON.stringify(food))
+    this.FoodService.deleteFood(food.id)
+  }
+
   setFilteredItems(searchTerm) {
 
     if (!searchTerm) {
