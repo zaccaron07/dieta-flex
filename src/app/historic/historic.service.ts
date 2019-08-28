@@ -15,9 +15,12 @@ export class HistoricService {
   idUser = this.authService.getUser().id;
 
   createHistoric(historicData: HistoricData) {
+    let lDate;
     let returnCreate;
 
-    historicData.time = new Date().toString();
+    lDate = new Date();
+    lDate = lDate.getDay() + "/" + lDate.getMonth() + "/" + lDate.getFullYear();
+    historicData.time = lDate;
 
     if (historicData["id"]) {
       returnCreate = this.afFirestore.collection(`user/${this.authService.getUser().id}/historic`).doc(historicData["id"]).update(historicData)
