@@ -16,18 +16,18 @@ export class HistoricService {
 
   createHistoric(historicData: HistoricData) {
     let lDate;
-    let returnCreate;
+    let returnCreated;
 
     lDate = new Date();
-    lDate = lDate.getDay() + "/" + lDate.getMonth() + "/" + lDate.getFullYear();
+    lDate = (lDate.getDay() > 9 ? lDate.getDay(): '0' + lDate.getDay()) + "/" + (lDate.getMonth() > 9 ? lDate.getMonth(): '0' + lDate.getMonth()) + "/" + lDate.getFullYear();
     historicData.time = lDate;
 
     if (historicData["id"]) {
-      returnCreate = this.afFirestore.collection(`user/${this.authService.getUser().id}/historic`).doc(historicData["id"]).update(historicData)
+      returnCreated = this.afFirestore.collection(`user/${this.authService.getUser().id}/historic`).doc(historicData["id"]).update(historicData)
     } else {
-      returnCreate = this.afFirestore.collection(`user/${this.authService.getUser().id}/historic`).add(historicData);
+      returnCreated = this.afFirestore.collection(`user/${this.authService.getUser().id}/historic`).add(historicData);
     }
-    return returnCreate;
+    return returnCreated;
   }
 
   getHistoric(): Observable<HistoricData[]> {
