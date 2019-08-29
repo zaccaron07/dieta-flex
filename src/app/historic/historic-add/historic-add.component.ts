@@ -12,6 +12,7 @@ import { switchMap } from 'rxjs/operators';
 export class HistoricAddComponent implements OnInit {
 
   historicForm: FormGroup;
+  historicStatic;
 
   constructor(
     private router: Router,
@@ -42,7 +43,8 @@ export class HistoricAddComponent implements OnInit {
         'thigh': new FormControl(lbExisteParam ? params.thigh : '', Validators.required),
         'calf': new FormControl(lbExisteParam ? params.calf : '', Validators.required),
         'belly': new FormControl(lbExisteParam ? params.belly : '', Validators.required),
-        'chest': new FormControl(lbExisteParam ? params.chest : false, Validators.required)
+        'chest': new FormControl(lbExisteParam ? params.chest : false, Validators.required),
+        'time': new FormControl(lbExisteParam ? params.time : '', Validators.required)
       });
     });
   }
@@ -54,11 +56,12 @@ export class HistoricAddComponent implements OnInit {
 
     lDate = new Date();
 
-    lNewDate = ('0' + lDate.getDate()).slice(-2) + '/' + ('0' + (lDate.getMonth() + 1)).slice(-2) + '/' + lDate.getFullYear();
+    if (this.historicForm.value.time === '') {
+      lNewDate = ('0' + lDate.getDate()).slice(-2) + '/' + ('0' + (lDate.getMonth() + 1)).slice(-2) + '/' + lDate.getFullYear();
+      this.historicForm.value.time = lNewDate;
+    }
 
-    this.historicForm.value.time = lNewDate;
-
-    this.historicService.documentExists(this.historicForm.value)
+    this.historicStatic = this.historicService.documentExists(this.historicForm.value)
       .pipe(
         switchMap(result => this.historicService.createHistoric(this.historicForm.value, result))
       )
@@ -74,5 +77,10 @@ export class HistoricAddComponent implements OnInit {
     });
 
     toast.present();
+  }
+
+  ngOnDestroy(): void {
+    console.log("destruiu objeto")
+    this.historicStatic.unsubscribe();
   }
 }

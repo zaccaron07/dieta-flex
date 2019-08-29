@@ -20,3 +20,7 @@ ionic capacitor run android
 
 
 https://firebase.google.com Criar conta
+
+
+#Resolver problema de destruir paginas abertas anteriormente.
+https://github.com/ionic-team/ionic/issues/15935

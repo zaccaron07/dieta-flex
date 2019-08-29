@@ -17,7 +17,7 @@ export class HistoricService {
   createHistoric(historicData: HistoricData, result) {
     let returnCreated;
 
-    if (result.length >= 0) {
+    if (result.length > 0) {
       historicData.id = result[0]["id"]
     }
 
@@ -44,7 +44,6 @@ export class HistoricService {
           return data.map(action => ({ ...action.payload.doc.data(), id: action.payload.doc.id }));
         })
       )
-
   }
 
   getHistoric(): Observable<HistoricData[]> {
