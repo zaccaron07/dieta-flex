@@ -3,7 +3,7 @@ import { NewDietService, DietResult, DietAmount } from './new-diet.service';
 import { ModalController } from '@ionic/angular';
 import { DietModalComponent } from './diet-modal/diet-modal.component';
 import { FoodData } from '../food/food-data.model';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { FoodService } from '../food/food.service';
 
 @Component({
@@ -41,7 +41,9 @@ export class DietComponent implements OnInit {
         }),
         switchMap(() => {
           return this.foodService.getFood()
-        })
+        }),
+        take(1)
+        
       ).subscribe((result) => {
         result.forEach(result => {
           this.food.forEach(food => {

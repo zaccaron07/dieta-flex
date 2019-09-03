@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { UserProfileData } from '../user-profile/user-profile.model';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FoodService } from '../food/food.service';
 
@@ -119,7 +119,8 @@ export class NewDietService {
       .pipe(
         map(data => {
           return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
-        })
+        }),
+        take(1)
       )
       .subscribe((food) => {
         let lRandom;
@@ -161,7 +162,8 @@ export class NewDietService {
       .pipe(
         map(data => {
           return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
-        })
+        }),
+        take(1)
       )
       .subscribe((food) => {
         let lRandom;
@@ -203,7 +205,8 @@ export class NewDietService {
       .pipe(
         map(data => {
           return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
-        })
+        }),
+        take(1)
       )
       .subscribe((food) => {
         let lRandom;
@@ -260,7 +263,8 @@ export class NewDietService {
       .pipe(
         map(data => {
           return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
-        })
+        }),
+        take(1)
       )
   }
 }

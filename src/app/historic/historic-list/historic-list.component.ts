@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { HistoricData } from '../historic.model';
-import { debounceTime, map } from 'rxjs/operators';
+import { debounceTime, map, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { HistoricService } from '../historic.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-historic-list',
@@ -18,7 +19,7 @@ export class HistoricListComponent implements OnInit {
 
   constructor(
     private historicService: HistoricService,
-    private router: Router,
+    private router: Router
   ) {
     this.searchControl = new FormControl();
   }
@@ -59,5 +60,9 @@ export class HistoricListComponent implements OnInit {
           }
         }))
       );
+  }
+
+  ionViewWillEnter(){
+    this.getListHistoric();
   }
 }

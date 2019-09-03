@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FoodData } from './food-data.model';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -29,7 +29,8 @@ export class FoodService {
           return data.map(action => (
             { ...action.payload.doc.data(), id: action.payload.doc.id } as FoodData
           ));
-        })
+        }),
+        take(1)
       )
   }
 

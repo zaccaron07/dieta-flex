@@ -3,7 +3,7 @@ import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HistoricService } from '../historic.service';
 import { ToastController } from '@ionic/angular';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-historic-add',
@@ -63,7 +63,8 @@ export class HistoricAddComponent implements OnInit {
 
     this.historicStatic = this.historicService.documentExists(this.historicForm.value)
       .pipe(
-        switchMap(result => this.historicService.createHistoric(this.historicForm.value, result))
+        switchMap(result => this.historicService.createHistoric(this.historicForm.value, result)),
+        take(1)
       )
       .subscribe(() => {
         this.router.navigate(['historic-list'])
@@ -77,10 +78,5 @@ export class HistoricAddComponent implements OnInit {
     });
 
     toast.present();
-  }
-
-  ngOnDestroy(): void {
-    console.log("destruiu objeto")
-    this.historicStatic.unsubscribe();
   }
 }

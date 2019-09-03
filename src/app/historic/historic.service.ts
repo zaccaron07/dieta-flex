@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { HistoricData } from '../historic/historic.model';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { Observable } from 'rxjs';
 
@@ -42,7 +42,8 @@ export class HistoricService {
       .pipe(
         map(data => {
           return data.map(action => ({ ...action.payload.doc.data(), id: action.payload.doc.id }));
-        })
+        }),
+        take(1)
       )
   }
 
@@ -55,7 +56,8 @@ export class HistoricService {
           return data.map(action => (
             { ...action.payload.doc.data(), id: action.payload.doc.id } as HistoricData
           ));
-        })
+        }),
+        take(1)
       )
   }
 
