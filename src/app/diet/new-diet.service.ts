@@ -267,6 +267,25 @@ export class NewDietService {
         take(1)
       )
   }
+
+  getDietByDate() {
+    return this.afFirestore.collection(`user/${this.authService.getUser().id}/diet`, ref => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      let lDate = new Date()
+      let lFormattedDate = `${lDate.getFullYear()}-${('0' + (lDate.getMonth() + 1)).slice(-2)}-${('0' + lDate.getDate()).slice(-2)}`
+
+      query = query.where("date", "==", lFormattedDate)
+
+      return query
+    })
+      .snapshotChanges()
+      .pipe(
+        map(data => {
+          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
+        }),
+        take(1)
+      )
+  }
 }
 
 export interface DietResult {

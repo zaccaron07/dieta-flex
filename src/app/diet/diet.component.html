@@ -13,7 +13,6 @@
   <ion-card>
     <ion-card-content>
       <ion-button expand="full" [disabled]="!dietReady" (click)="generateDiet()">Gerar dieta</ion-button>
-      <ion-button expand="full" [disabled]="!dietResult" (click)="saveDiet()">Salvar dieta</ion-button>
     </ion-card-content>
   </ion-card>
   <ion-card>
@@ -48,14 +47,32 @@
           </ion-card-content>
         </ion-card>
       </ion-list>
-      <ion-button *ngIf="dietResult" (click)="openModal()">Adicionar alimento</ion-button>
-      <br>
-      Calorias: {{ dietAmount.calories | number: '1.2-2' }}KCal /
-      {{ totalDietAmount.totalCalories | number: '1.2-2' }}KCal<br>
-      Proteinas: {{ dietAmount.protein | number: '1.2-2' }}g / {{ totalDietAmount.totalProtein | number: '1.2-2' }}g<br>
-      Carboidratos: {{ dietAmount.carbohydrate | number: '1.2-2' }}g /
-      {{ totalDietAmount.totalCarbohydrate | number: '1.2-2' }}g<br>
-      Gordura: {{ dietAmount.fat | number: '1.2-2' }}g / {{ totalDietAmount.totalFat | number: '1.2-2' }}g<br>
+      <ion-button expand="full" *ngIf="dietResult" (click)="openModal()">Adicionar alimento</ion-button>
+      <ion-card-content>
+        <div>
+          Calorias: {{ dietAmount.calories | number: '1.2-2' }}KCal /
+          {{ totalDietAmount.totalCalories | number: '1.2-2' }}KCal
+        </div>
+        <div>
+          Proteinas: {{ dietAmount.protein | number: '1.2-2' }}g / {{ totalDietAmount.totalProtein | number: '1.2-2' }}g
+        </div>
+        <div>
+          Carboidratos: {{ dietAmount.carbohydrate | number: '1.2-2' }}g /
+          {{ totalDietAmount.totalCarbohydrate | number: '1.2-2' }}g
+        </div>
+        <div>
+          Gordura: {{ dietAmount.fat | number: '1.2-2' }}g / {{ totalDietAmount.totalFat | number: '1.2-2' }}g
+        </div>
+      </ion-card-content>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-content>
+      <ion-item>
+        <ion-label>Data: </ion-label>
+        <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD/MM/YYYY" placeholder="Selecione a data" [(ngModel)]="dietDate"></ion-datetime>
+      </ion-item>
+      <ion-button expand="full" [disabled]="!dietResult" (click)="saveDiet()">Salvar dieta</ion-button>
     </ion-card-content>
   </ion-card>
 </ion-content>

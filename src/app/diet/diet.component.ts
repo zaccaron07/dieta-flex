@@ -19,6 +19,7 @@ export class DietComponent implements OnInit {
   public foodOriginal = [] as FoodData[];
   public dietReady: boolean = true;
   public dietId: String;
+  public dietDate: string;
 
   constructor(
     private foodService: FoodService,
@@ -27,23 +28,29 @@ export class DietComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.dietService.getDiet()
+    this.dietService.getDietByDate()
       .pipe(
         map(result => {
+          console.log(result)
           if (result[0]) {
             this.dietResult = result[0]["alimentos"];
             this.totalDietAmount = result[0]["detalhes"];
             this.food = result[0]["food"];
             this.dietId = result[0]["id"];
+            this.dietDate = result[0]["date"];
 
             this.loadDietAmount();
+          } else {
+            let lDate = new Date()
+            let lFormattedDate = `${lDate.getFullYear()}-${('0' + (lDate.getMonth() + 1)).slice(-2)}-${('0' + lDate.getDate()).slice(-2)}`
+            this.dietDate = lFormattedDate
           }
         }),
         switchMap(() => {
           return this.foodService.getFood()
         }),
         take(1)
-        
+
       ).subscribe((result) => {
         result.forEach(result => {
           this.food.forEach(food => {
@@ -96,6 +103,8 @@ export class DietComponent implements OnInit {
     if (this.dietId) {
       lDadosSalvar["id"] = this.dietId
     }
+
+    lDadosSalvar["date"] = this.dietDate.substr(0, 10);
 
     this.dietService.createDiet(lDadosSalvar)
   }
