@@ -10,12 +10,14 @@ import { TipsListComponent } from './tips/tips-list/tips-list.component';
 import { FoodListComponent } from './food/food-list/food-list.component';
 import { HistoricListComponent } from './historic/historic-list/historic-list.component';
 import { HistoricAddComponent } from './historic/historic-add/historic-add.component';
+import { DietListComponent } from './diet/diet-list/diet-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'home', loadChildren: './home/home.module#HomePageModule', canActivate: [AuthGuard] },
   { path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard] },
-  { path: 'diet', component: DietComponent, canActivate: [AuthGuard] },
+  { path: 'diet-list/diet-add', component: DietComponent, canActivate: [AuthGuard] },
+  { path: 'diet-list', component: DietListComponent, canActivate: [AuthGuard] },
   { path: 'food-list', component: FoodListComponent, canActivate: [AuthGuard] },
   { path: 'food-list/food-add', component: FoodComponent, canActivate: [AuthGuard] },
   { path: 'historic-list', component: HistoricListComponent, canActivate: [AuthGuard] },

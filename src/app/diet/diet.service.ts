@@ -3,13 +3,14 @@ import { AuthService } from '../auth/auth.service';
 import { UserProfileData } from '../user-profile/user-profile.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map, take } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { FoodService } from '../food/food.service';
+import { DietResult, DietAmount, DietData } from './diet-data.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NewDietService {
+export class DietService {
 
   private userProfile: UserProfileData;
   private result = [] as DietResult[];
@@ -258,7 +259,7 @@ export class NewDietService {
   }
 
   getDiet() {
-    return this.afFirestore.collection(`user/${this.authService.getUser().id}/diet`)
+    return this.afFirestore.collection<DietData>(`user/${this.authService.getUser().id}/diet`)
       .snapshotChanges()
       .pipe(
         map(data => {
@@ -268,43 +269,24 @@ export class NewDietService {
       )
   }
 
-  getDietByDate() {
-    return this.afFirestore.collection(`user/${this.authService.getUser().id}/diet`, ref => {
+  getDietByDate(dietDate) {
+    return this.afFirestore.collection<DietData>(`user/${this.authService.getUser().id}/diet`, ref => {
       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
-      let lDate = new Date()
-      let lFormattedDate = `${lDate.getFullYear()}-${('0' + (lDate.getMonth() + 1)).slice(-2)}-${('0' + lDate.getDate()).slice(-2)}`
+      let lDate = dietDate
+      //let lFormattedDate = `${lDate.getFullYear()}-${('0' + (lDate.getMonth() + 1)).slice(-2)}-${('0' + lDate.getDate()).slice(-2)}`
 
-      query = query.where("date", "==", lFormattedDate)
+      query = query.where("date", "==", lDate)
 
       return query
     })
       .snapshotChanges()
       .pipe(
-        map(data => {
-          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
-        }),
+
         take(1)
       )
   }
-}
 
-export interface DietResult {
-  name: string;
-  portion: boolean;
-  fat: number;
-  amount: number;
-  calorie: number;
-  protein: number;
-  carbohydrate: number;
-}
-
-export interface DietAmount {
-  fat: number;
-  protein: number;
-  calories: number;
-  carbohydrate: number;
-  totalFat: number;
-  totalProtein: number;
-  totalCalories: number;
-  totalCarbohydrate: number;
+  deleteDiet(dietId) {
+    return this.afFirestore.collection(`user/${this.authService.getUser().id}/diet`).doc(dietId).delete();
+  }
 }

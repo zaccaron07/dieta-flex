@@ -27,6 +27,7 @@ import { FoodListComponent } from './food/food-list/food-list.component';
 import { DietModalComponent } from './diet/diet-modal/diet-modal.component';
 import { HistoricListComponent } from './historic/historic-list/historic-list.component';
 import { HistoricAddComponent } from './historic/historic-add/historic-add.component';
+import { DietListComponent } from './diet/diet-list/diet-list.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { HistoricAddComponent } from './historic/historic-add/historic-add.compo
     UserProfileComponent,
     NotificationComponent,
     DietComponent,
+    DietListComponent,
     TipsAddComponent,
     TipsListComponent,
     FoodComponent,
