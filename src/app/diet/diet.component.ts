@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { NewDietService, DietResult, DietAmount } from './new-diet.service';
+import { DietResult, DietAmount } from './diet-data.model';
 import { ModalController } from '@ionic/angular';
 import { DietModalComponent } from './diet-modal/diet-modal.component';
 import { FoodData } from '../food/food-data.model';
 import { map, switchMap, take } from 'rxjs/operators';
 import { FoodService } from '../food/food.service';
+import { DietService } from './diet.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-diet',
@@ -23,12 +25,25 @@ export class DietComponent implements OnInit {
 
   constructor(
     private foodService: FoodService,
-    private dietService: NewDietService,
+    private dietService: DietService,
+    private activatedRoute: ActivatedRoute,
     private modalController: ModalController
   ) { }
 
   ngOnInit() {
-    this.dietService.getDietByDate()
+
+    this.activatedRoute.params.subscribe(params => {
+      let date = params.date
+
+      if (date) {
+        this.getDietByDate(date)
+      }
+    });
+
+  }
+
+  getDietByDate(date) {
+    this.dietService.getDietByDate(date)
       .pipe(
         map(result => {
           console.log(result)

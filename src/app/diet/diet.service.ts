@@ -269,19 +269,19 @@ export class DietService {
       )
   }
 
-  getDietByDate(dietDate) {
-    return this.afFirestore.collection<DietData>(`user/${this.authService.getUser().id}/diet`, ref => {
+  getDietByDate(date) {
+    return this.afFirestore.collection(`user/${this.authService.getUser().id}/diet`, ref => {
       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
-      let lDate = dietDate
-      //let lFormattedDate = `${lDate.getFullYear()}-${('0' + (lDate.getMonth() + 1)).slice(-2)}-${('0' + lDate.getDate()).slice(-2)}`
 
-      query = query.where("date", "==", lDate)
+      query = query.where("date", "==", date)
 
       return query
     })
       .snapshotChanges()
       .pipe(
-
+        map(data => {
+          return data.map(action => ({ ...action.payload.doc.data(), id: action.payload.doc.id }));
+        }),
         take(1)
       )
   }

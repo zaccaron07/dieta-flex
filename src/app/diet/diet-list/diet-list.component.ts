@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -34,7 +34,6 @@ export class DietListComponent implements OnInit {
   }
 
   openEditDiet(diet: DietData) {
-    console.log((diet));
     this.router.navigate(['diet-list/diet-add', diet])
   }
 
@@ -44,7 +43,6 @@ export class DietListComponent implements OnInit {
   }
 
   removeDiet(Diet: DietData) {
-    console.log(JSON.stringify(Diet))
     this.dietService.deleteDiet(Diet.id)
   }
 
@@ -52,7 +50,7 @@ export class DietListComponent implements OnInit {
     if (!searchTerm) {
       return this.listDiet = this.listDietBase;
     }
-    
+
     this.listDiet = this.listDietBase
       .pipe(
         map(listDiet => listDiet.filter((filtering) => {
