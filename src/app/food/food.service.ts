@@ -34,6 +34,23 @@ export class FoodService {
       )
   }
 
+  getFoodByType(type) {
+    return this.afFirestore.collection('food', ref => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+
+      query = query.where('food_type', '==', type);
+
+      return query;
+    })
+      .snapshotChanges()
+      .pipe(
+        map(data => {
+          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
+        }),
+        take(1)
+      )
+  }
+
   deleteFood(idFood: string) {
     return this.afFirestore.collection(`food`).doc(idFood).delete();
   }

@@ -70,7 +70,7 @@
     <ion-card-content>
       <ion-item>
         <ion-label>Data: </ion-label>
-        <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD/MM/YYYY" placeholder="Selecione a data" [(ngModel)]="dietDate"></ion-datetime>
+        <ion-datetime [disabled]="isEditing" displayFormat="DD/MM/YYYY" pickerFormat="DD/MM/YYYY" placeholder="Selecione a data" [(ngModel)]="dietDate"></ion-datetime>
       </ion-item>
       <ion-button expand="full" [disabled]="!dietResult" (click)="saveDiet()">Salvar dieta</ion-button>
     </ion-card-content>

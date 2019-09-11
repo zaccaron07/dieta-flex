@@ -3,7 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
 import { UserProfileComponent } from './user-profile/user-profile-add/user-profile.component';
 import { NotificationComponent } from './notification/notification.component';
-import { DietComponent } from './diet/diet.component';
+import { DietComponent } from './diet/diet-add/diet-add.component';
 import { TipsAddComponent } from './tips/tips-add/tips-add.component';
 import { FoodComponent } from './food/food-add/food.component';
 import { TipsListComponent } from './tips/tips-list/tips-list.component';

@@ -34,7 +34,6 @@ export class FoodListComponent implements OnInit {
   }
 
   openEditFood(food: FoodData) {
-    console.log(JSON.stringify(food));
     this.router.navigate(['food-list/food-add', food])
   }
 
@@ -44,7 +43,6 @@ export class FoodListComponent implements OnInit {
   }
 
   removeFood(food: FoodData) {
-    console.log(JSON.stringify(food))
     this.FoodService.deleteFood(food.id)
   }
 

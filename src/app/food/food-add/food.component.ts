@@ -33,8 +33,6 @@ export class FoodComponent implements OnInit {
     let lbExisteParam: boolean;
 
     this.activatedRoute.params.subscribe(params => {
-      console.log(JSON.stringify(params))
-
       lbExisteParam = (params.id != undefined)
 
       this.foodForm = new FormGroup({

@@ -27,7 +27,6 @@ export class LoginComponent implements OnInit {
   login(authData: AuthData) {
     this.authService.login(authData)
       .then(res => {
-        console.log('Login com sucesso')
         this.router.navigate(['/home']);
       })
       .catch(err => {

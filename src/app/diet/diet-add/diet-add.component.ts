@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { DietResult, DietAmount } from './diet-data.model';
+import { DietResult, DietAmount } from '../diet-data.model';
 import { ModalController } from '@ionic/angular';
-import { DietModalComponent } from './diet-modal/diet-modal.component';
-import { FoodData } from '../food/food-data.model';
+import { DietModalComponent } from '../diet-modal/diet-modal.component';
+import { FoodData } from '../../food/food-data.model';
 import { map, switchMap, take } from 'rxjs/operators';
-import { FoodService } from '../food/food.service';
-import { DietService } from './diet.service';
+import { FoodService } from '../../food/food.service';
+import { DietService } from '../diet.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-diet',
-  templateUrl: './diet.component.html',
+  templateUrl: './diet-add.component.html',
 })
 export class DietComponent implements OnInit {
 
@@ -22,6 +22,7 @@ export class DietComponent implements OnInit {
   public dietReady: boolean = true;
   public dietId: String;
   public dietDate: string;
+  public isEditing: boolean = false;
 
   constructor(
     private foodService: FoodService,
@@ -34,19 +35,19 @@ export class DietComponent implements OnInit {
 
     this.activatedRoute.params.subscribe(params => {
       let date = params.date
-
       if (date) {
         this.getDietByDate(date)
+        this.isEditing = true
+      } else {
+        this.isEditing = false
       }
     });
-
   }
 
   getDietByDate(date) {
     this.dietService.getDietByDate(date)
       .pipe(
         map(result => {
-          console.log(result)
           if (result[0]) {
             this.dietResult = result[0]["alimentos"];
             this.totalDietAmount = result[0]["detalhes"];

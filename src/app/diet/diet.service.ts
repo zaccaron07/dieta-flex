@@ -83,7 +83,6 @@ export class DietService {
         lMinCalories += 348;
         break;
     }
-    console.log(lMinCalories)
 
     let lDayProtein;
     let lDayCarbohydrate;
