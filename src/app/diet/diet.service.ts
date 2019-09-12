@@ -3,7 +3,7 @@ import { AuthService } from '../auth/auth.service';
 import { UserProfileData } from '../user-profile/user-profile.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map, take } from 'rxjs/operators';
-import { Subject, Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { FoodService } from '../food/food.service';
 import { DietResult, DietAmount, DietData } from './diet-data.model';
 
@@ -108,20 +108,7 @@ export class DietService {
     this.resultOO.next(this.dietAmount);
     this.resultOO.next(this.dietAmount);
 
-    this.afFirestore.collection('food', ref => {
-      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
-
-      query = query.where('food_type', '==', 2);
-
-      return query;
-    })
-      .snapshotChanges()
-      .pipe(
-        map(data => {
-          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
-        }),
-        take(1)
-      )
+    this.foodService.getFoodByType(2)
       .subscribe((food) => {
         let lRandom;
         let lFat;
@@ -151,20 +138,7 @@ export class DietService {
         this.resultO.next(this.result);
       });
 
-    this.afFirestore.collection('food', ref => {
-      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
-
-      query = query.where('food_type', '==', 1);
-
-      return query;
-    })
-      .snapshotChanges()
-      .pipe(
-        map(data => {
-          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
-        }),
-        take(1)
-      )
+    this.foodService.getFoodByType(1)
       .subscribe((food) => {
         let lRandom;
         let lFat;
@@ -194,20 +168,7 @@ export class DietService {
         this.resultO.next(this.result);
       });
 
-    this.afFirestore.collection('food', ref => {
-      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
-
-      query = query.where('food_type', '==', 0);
-
-      return query;
-    })
-      .snapshotChanges()
-      .pipe(
-        map(data => {
-          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
-        }),
-        take(1)
-      )
+    this.foodService.getFoodByType(0)
       .subscribe((food) => {
         let lRandom;
         let lFood;
