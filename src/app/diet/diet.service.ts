@@ -129,10 +129,10 @@ export class DietService {
 
         lResultMeal.name = lFood.name;
         lResultMeal.amount = lAmountFood;
-        lResultMeal.calorie = lFood.calorie;
-        lResultMeal.fat = lFat;
-        lResultMeal.protein = lProtein;
-        lResultMeal.carbohydrate = lCarbohydrates;
+        lResultMeal.calorie = Math.round(lFood.calorie);
+        lResultMeal.fat = Math.round(lFat);
+        lResultMeal.protein = Math.round(lProtein);
+        lResultMeal.carbohydrate = Math.round(lCarbohydrates);
 
         this.result.push(lResultMeal);
         this.resultO.next(this.result);
@@ -159,10 +159,10 @@ export class DietService {
 
         lResultMeal.name = lFood.name;
         lResultMeal.amount = lAmountFood;
-        lResultMeal.calorie = lFood.calorie;
-        lResultMeal.fat = lFat;
-        lResultMeal.protein = lProtein;
-        lResultMeal.carbohydrate = lCarbohydrates;
+        lResultMeal.calorie = Math.round(lFood.calorie);
+        lResultMeal.fat = Math.round(lFat);
+        lResultMeal.protein = Math.round(lProtein);
+        lResultMeal.carbohydrate = Math.round(lCarbohydrates);
 
         this.result.push(lResultMeal);
         this.resultO.next(this.result);
@@ -196,10 +196,10 @@ export class DietService {
 
           lResultMeal.name = lFood.name;
           lResultMeal.amount = 1;
-          lResultMeal.fat = lFood.fat;
-          lResultMeal.calorie = lFood.calorie;
-          lResultMeal.protein = lFood.protein;
-          lResultMeal.carbohydrate = lFood.carbohydrate;
+          lResultMeal.fat = Math.round(lFood.fat);
+          lResultMeal.calorie = Math.round(lFood.calorie);
+          lResultMeal.protein = Math.round(lFood.protein);
+          lResultMeal.carbohydrate = Math.round(lFood.carbohydrate);
           lResultMeal.portion = true;
 
           this.result.push(JSON.parse(JSON.stringify(lResultMeal)));

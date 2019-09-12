@@ -118,23 +118,30 @@ export class DietComponent implements OnInit {
       detalhes: this.totalDietAmount
     };
 
-    if (this.dietId) {
-      lDadosSalvar["id"] = this.dietId
-    }
-
     lDadosSalvar["date"] = this.dietDate.substr(0, 10);
+
+    if (this.dietId) {
+      lDadosSalvar["id"] = this.dietId;
+      await this.dietService.createDiet(lDadosSalvar);
+    } else {
+      this.dietService.getDietByDate(lDadosSalvar["date"])
+        .subscribe((result) => {
+          if (result[0]) {
+            lDadosSalvar["id"] = result[0]["id"];
+          }
+          this.dietService.createDiet(lDadosSalvar);
+        });
+    };
 
     await this.presentToast();
 
-    await this.dietService.createDiet(lDadosSalvar);
-
-    this.router.navigate(['diet-list'])
+    this.router.navigate(['diet-list']);
   }
 
   async presentToast() {
     const toast = await this.toastController.create({
       message: 'Dados cadastrados com sucesso!',
-      duration: 2000
+      duration: 4000
     });
     toast.present();
   }
@@ -157,10 +164,10 @@ export class DietComponent implements OnInit {
         this.food.push(lFood);
         this.foodOriginal.push(JSON.parse(JSON.stringify(lFood)));
 
-        this.dietAmount.calories += lFood.calorie;
-        this.dietAmount.fat += lFood.fat;
-        this.dietAmount.protein += lFood.protein;
-        this.dietAmount.carbohydrate += lFood.carbohydrate;
+        this.dietAmount.calories += Math.round(lFood.calorie);
+        this.dietAmount.fat += Math.round(lFood.fat);
+        this.dietAmount.protein += Math.round(lFood.protein);
+        this.dietAmount.carbohydrate += Math.round(lFood.carbohydrate);
       }
     });
 
