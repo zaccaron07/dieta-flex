@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { DietResult, DietAmount } from '../diet-data.model';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { DietModalComponent } from '../diet-modal/diet-modal.component';
 import { FoodData } from '../../food/food-data.model';
 import { map, switchMap, take } from 'rxjs/operators';
 import { FoodService } from '../../food/food.service';
 import { DietService } from '../diet.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-diet',
@@ -28,7 +28,9 @@ export class DietComponent implements OnInit {
     private foodService: FoodService,
     private dietService: DietService,
     private activatedRoute: ActivatedRoute,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private toastController: ToastController,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -109,7 +111,7 @@ export class DietComponent implements OnInit {
     });
   }
 
-  saveDiet() {
+  async saveDiet() {
     let lDadosSalvar = {
       alimentos: this.dietResult,
       food: this.food,
@@ -122,7 +124,19 @@ export class DietComponent implements OnInit {
 
     lDadosSalvar["date"] = this.dietDate.substr(0, 10);
 
-    this.dietService.createDiet(lDadosSalvar)
+    await this.presentToast();
+
+    await this.dietService.createDiet(lDadosSalvar);
+
+    this.router.navigate(['diet-list'])
+  }
+
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: 'Dados cadastrados com sucesso!',
+      duration: 2000
+    });
+    toast.present();
   }
 
   openModal() {

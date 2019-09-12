@@ -45,8 +45,8 @@
               <ion-input formControlName="height" type="number"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Objetivo</ion-label>
-              <ion-select placeholder="Objetivo" formControlName="goal" interface="popover">
+              <ion-label position="floating">Objetivo</ion-label>
+              <ion-select formControlName="goal" interface="action-sheet">
                 <ion-select-option [value]="1">Emagrecer</ion-select-option>
                 <ion-select-option [value]="2">Emagrecer Agressivo</ion-select-option>
                 <ion-select-option [value]="3">Manter
@@ -58,9 +58,8 @@
               </ion-select>
             </ion-item>
             <ion-item>
-              <ion-label>Itensidade de exercício</ion-label>
-              <ion-select placeholder="Itensidade de exercício" formControlName="exercise_intensity"
-                interface="popover">
+              <ion-label position="floating">Itensidade de exercício</ion-label>
+              <ion-select formControlName="exercise_intensity" interface="action-sheet">
                 <ion-select-option [value]="1">Sedentário: praticamente não faz nada</ion-select-option>
                 <ion-select-option [value]="2">Levemente ativo: exercícios leves 1-3x por semana</ion-select-option>
                 <ion-select-option [value]="3">Moderadamente ativo: exercícios moderados de 3-5x por semana
@@ -72,8 +71,14 @@
               </ion-select>
             </ion-item>
             <ion-item>
-              <ion-input formControlName="work_intensity" type="string" placeholder="Itensidade de trabalho">
-              </ion-input>
+              <ion-label position="floating">Itensidade de trabalho</ion-label>
+              <ion-select formControlName="work_intensity" interface="action-sheet">
+                <ion-select-option [value]="1">Intesidade do trabalho 1</ion-select-option>
+                <ion-select-option [value]="2">Intesidade do trabalho 2</ion-select-option>
+                <ion-select-option [value]="3">Intesidade do trabalho 3</ion-select-option>
+                <ion-select-option [value]="4">Intesidade do trabalho 4</ion-select-option>
+                <ion-select-option [value]="5">Intesidade do trabalho 5</ion-select-option>
+              </ion-select>
             </ion-item>
           </div>
           <div padding>
