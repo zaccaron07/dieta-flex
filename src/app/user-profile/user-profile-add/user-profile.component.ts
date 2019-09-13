@@ -37,8 +37,7 @@ export class UserProfileComponent implements OnInit {
       'goal': new FormControl(0, Validators.required),
       'weight': new FormControl("", Validators.required),
       'height': new FormControl("", Validators.required),
-      'exercise_intensity': new FormControl("", Validators.required),
-      'work_intensity': new FormControl("", Validators.required)
+      'exercise_intensity': new FormControl("", Validators.required)
     });
 
     this.authService.userChanged.subscribe(user => {
