@@ -40,11 +40,9 @@ export class UserProfileComponent implements OnInit {
       'exercise_intensity': new FormControl("", Validators.required)
     });
 
-    this.authService.userChanged.subscribe(user => {
-      lUser = user;
+    lUser = this.authService.getUser()
 
-      this.userProfileForm.patchValue(lUser);
-    });
+    this.userProfileForm.patchValue(lUser)
   }
 
   onSubmit() {

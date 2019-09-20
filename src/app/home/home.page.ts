@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 import { Router } from '@angular/router';
 import { NotificationService } from '../notification/notification.service';
-import { Platform } from '@ionic/angular';
+import { Platform, AlertController } from '@ionic/angular';
+import { HistoricService } from '../historic/historic.service';
+import { HistoricData } from '../historic/historic.model';
 
 const { LocalNotifications } = Plugins;
 
@@ -15,7 +17,9 @@ export class HomePage {
   constructor(
     private router: Router,
     private notificationService: NotificationService,
-    private platform: Platform
+    private platform: Platform,
+    private historicService: HistoricService,
+    public alertController: AlertController
   ) { }
 
   ngOnInit() {
@@ -30,6 +34,9 @@ export class HomePage {
   }
 
   scheduleNotification() {
+
+    this.getLastHistoric()
+
     if (this.platform.is('cordova')) {
       LocalNotifications.schedule({
         notifications: [
@@ -50,6 +57,34 @@ export class HomePage {
         ]
       })
     }
+  }
+
+  private getLastHistoric() {
+    this.historicService.getLastHistoric()
+      .subscribe((historicList) => {
+        historicList = historicList.sort((a, b) => b.timeOrderBy.getTime() - a.timeOrderBy.getTime())
+        this.showNotification(historicList[0])
+      })
+  }
+
+  private showNotification(historic: HistoricData) {
+    let lDate = new Date()
+    let lOneWeekAgoDate = lDate.getDate() - 7
+    lDate.setDate(lOneWeekAgoDate)
+
+    if (historic.timeOrderBy.getTime() <= lDate.getTime()) {
+      this.presentAlert()
+    }
+  }
+
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Atenção',
+      message: 'Atualize seu histórico de medidas!',
+      buttons: ['OK']
+    })
+
+    await alert.present()
   }
 
 }

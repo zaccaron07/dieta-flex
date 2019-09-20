@@ -22,10 +22,7 @@ export class HistoricAddComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.initHistoricForm();
-  }
-  ngOpen() {
-    this.initHistoricForm();
+    this.initHistoricForm()
   }
 
   private initHistoricForm() {

@@ -7,4 +7,5 @@ export interface HistoricData {
     belly: number;
     chest: number;
     time: string;
+    timeOrderBy?: Date;
 }

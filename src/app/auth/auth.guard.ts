@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
@@ -10,23 +8,27 @@ export class AuthGuard implements CanActivate {
 
     constructor(
         private router: Router,
-        private afAuth: AngularFireAuth,
         private afAuthService: AuthService
     ) { }
 
     canActivate(): Observable<boolean> {
-        return this.afAuth.authState.pipe(
-            map(auth => {
+        return new Observable<boolean>((observer) => {
+            this.afAuthService.getAuth().subscribe(auth => {
                 if (!auth) {
                     this.router.navigate(['/login'])
-
-                    return false;
+                    observer.next(true)
+                    observer.complete()
+                    return false
                 } else {
-                    this.afAuthService.retrieveUser(auth.email);
-
-                    return true;
+                    this.afAuthService.retrieveUser(auth.email)
+                        .subscribe((user) => {
+                            this.afAuthService.setUser(user[0])
+                            observer.next(true)
+                            observer.complete()
+                            return true;
+                        })
                 }
             })
-        )
+        })
     }
 }

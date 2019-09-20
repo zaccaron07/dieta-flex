@@ -11,7 +11,7 @@
 
 <ion-content>
   <ion-searchbar [formControl]="searchControl" showCancelButton></ion-searchbar>
-  <ion-card *ngFor="let item of listHistoric | async">
+  <ion-card *ngFor="let item of listHistoric">
     <ion-card-header (click)="openEditHistoric(item)" color="dark">
       <div>{{item.time}}</div>
       <div>Peso: {{item.weight}}</div>

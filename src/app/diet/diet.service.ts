@@ -23,13 +23,11 @@ export class DietService {
     private authService: AuthService,
     private afFirestore: AngularFirestore
   ) {
-    this.authService.userChanged.subscribe(user => {
-      this.userProfile = user;
-    });
+    this.userProfile = this.authService.getUser()
   }
 
   generateDiet() {
-    this.calcMinCalories();
+    this.calcMinCalories();    
   }
 
   private calcMinCalories() {

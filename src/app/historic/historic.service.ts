@@ -12,7 +12,7 @@ export class HistoricService {
 
   constructor(private afFirestore: AngularFirestore, private authService: AuthService) { }
 
-  idUser = this.authService.getUser().id;
+  userId = this.authService.getUser().id
 
   createHistoric(historicData: HistoricData, result) {
     let returnCreated;
@@ -22,16 +22,16 @@ export class HistoricService {
     }
 
     if (historicData["id"]) {
-      returnCreated = this.afFirestore.collection(`user/${this.authService.getUser().id}/historic`).doc(historicData["id"]).update(historicData)
+      returnCreated = this.afFirestore.collection(`user/${this.userId}/historic`).doc(historicData["id"]).update(historicData)
     } else {
-      returnCreated = this.afFirestore.collection(`user/${this.authService.getUser().id}/historic`).add(historicData);
+      returnCreated = this.afFirestore.collection(`user/${this.userId}/historic`).add(historicData);
     }
 
     return returnCreated;
   }
 
   documentExists(historicData): Observable<any> {
-    return this.afFirestore.collection(`user/${this.authService.getUser().id}/historic`, ref => {
+    return this.afFirestore.collection(`user/${this.userId}/historic`, ref => {
       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
 
       query = query.where("time", "==", historicData.time)
@@ -48,13 +48,24 @@ export class HistoricService {
   }
 
   getHistoric(): Observable<HistoricData[]> {
-
-    return this.afFirestore.collection(`user/${this.idUser}/historic`)
+    return this.afFirestore.collection(`user/${this.userId}/historic`)
       .snapshotChanges()
       .pipe(
         map(data => {
           return data.map(action => (
             { ...action.payload.doc.data(), id: action.payload.doc.id } as HistoricData
+          ));
+        })
+      )
+  }
+
+  getLastHistoric(): Observable<HistoricData[]> {
+    return this.afFirestore.collection(`user/${this.userId}/historic`)
+      .snapshotChanges()
+      .pipe(
+        map(data => {
+          return data.map(action => (
+            { ...action.payload.doc.data(), id: action.payload.doc.id, timeOrderBy: this.formatDate(action.payload.doc.data()["time"]) } as HistoricData
           ));
         }),
         take(1)
@@ -62,6 +73,12 @@ export class HistoricService {
   }
 
   deleteHistoric(idHistoric: string) {
-    return this.afFirestore.collection(`user/${this.idUser}/historic`).doc(idHistoric).delete();
+    return this.afFirestore.collection(`user/${this.userId}/historic`).doc(idHistoric).delete();
+  }
+
+  formatDate(date: string) {
+    let lDateFormatted = new Date(`${date.substr(6, 4)}-${date.substr(3, 2)}-${date.substr(0, 2)} GMT-0300`)
+
+    return lDateFormatted
   }
 }

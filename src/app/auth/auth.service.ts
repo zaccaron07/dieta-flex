@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AuthData } from './auth-data.model';
 import { map } from "rxjs/operators";
 import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore'
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { UserProfileData } from '../user-profile/user-profile.model';
 
 @Injectable({
@@ -54,7 +54,7 @@ export class AuthService {
     )
   }
 
-  private setUser(user: UserProfileData) {
+  setUser(user: UserProfileData) {
     this.user = user;
 
     this.userChanged.next(this.user);
@@ -64,8 +64,8 @@ export class AuthService {
     return this.user;
   }
 
-  retrieveUser(userEmail: string) {
-    this.afFirestore.collection('user', ref => {
+  retrieveUser(userEmail: string): Observable<UserProfileData[]> {
+    return this.afFirestore.collection('user', ref => {
       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
 
       if (userEmail) {
@@ -77,16 +77,9 @@ export class AuthService {
       .snapshotChanges()
       .pipe(
         map(data => {
-          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
+          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() } as UserProfileData));
         })
       )
-      .subscribe((user) => {
-        let lUser = {} as UserProfileData;
-
-        lUser = user[0] as UserProfileData;
-
-        this.setUser(lUser);
-      });
   }
 
   logout() {
