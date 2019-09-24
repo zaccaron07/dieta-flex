@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { Router } from '@angular/router';
 import { AuthData } from '../auth-data.model';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Subscription } from 'rxjs';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -11,31 +12,33 @@ import { AngularFireAuth } from '@angular/fire/auth';
 })
 export class LoginComponent implements OnInit {
 
+  private subscription: Subscription
+
   constructor(
     private authService: AuthService,
-    private router: Router,
-    public afAuth: AngularFireAuth) { }
+    private navController: NavController,
+    public afAuth: AngularFireAuth) {
+  }
 
   ngOnInit() {
-    this.authService.getAuth().subscribe(auth => {
+    this.subscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
-        this.router.navigate(['/home']);
+        this.navController.navigateRoot('/home')
       }
     })
   }
 
   login(authData: AuthData) {
     this.authService.login(authData)
-      .then(res => {
-        this.router.navigate(['/home']);
+      .then(() => {
+        this.navController.navigateRoot('/home')
       })
       .catch(err => {
         console.log(err)
       })
   }
 
-  signOut() {
-    this.afAuth.auth.signOut();
+  ionViewWillLeave() {
+    this.subscription.unsubscribe()
   }
-
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { AuthData } from '../auth-data.model';
-import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-signup',
@@ -12,14 +12,14 @@ export class SignupComponent implements OnInit {
 
   constructor(
     private afAuth: AuthService,
-    private router: Router
+    private navController: NavController   
   ) { }
 
   ngOnInit() { }
 
   registerUser(authData: AuthData) {
-    this.afAuth.registerUser(authData).then((success) => {
-      this.router.navigate(['/home']);
+    this.afAuth.registerUser(authData).then(() => {
+      this.navController.navigateRoot('/home')
     });
   }
 

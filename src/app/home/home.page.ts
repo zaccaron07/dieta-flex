@@ -62,8 +62,10 @@ export class HomePage {
   private getLastHistoric() {
     this.historicService.getLastHistoric()
       .subscribe((historicList) => {
-        historicList = historicList.sort((a, b) => b.timeOrderBy.getTime() - a.timeOrderBy.getTime())
-        this.showNotification(historicList[0])
+        if (historicList && historicList.length > 0) {
+          historicList = historicList.sort((a, b) => b.timeOrderBy.getTime() - a.timeOrderBy.getTime())
+          this.showNotification(historicList[0])
+        }
       })
   }
 

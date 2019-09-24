@@ -22,12 +22,10 @@ export class DietService {
     private foodService: FoodService,
     private authService: AuthService,
     private afFirestore: AngularFirestore
-  ) {
-    this.userProfile = this.authService.getUser()
-  }
+  ) { }
 
   generateDiet() {
-    this.calcMinCalories();    
+    this.calcMinCalories();
   }
 
   private calcMinCalories() {
@@ -35,6 +33,8 @@ export class DietService {
     this.dietAmount = {} as DietAmount;
     this.resultO = new Subject<DietResult[]>();
     this.resultOO = new Subject<DietAmount>();
+
+    this.userProfile = this.authService.getUser()
 
     let lMinCalories: number = 0;
 
