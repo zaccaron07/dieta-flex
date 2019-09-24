@@ -19,26 +19,55 @@
               <ion-label position="floating">Peso(cm)</ion-label>
               <ion-input formControlName="weight" type="number"></ion-input>
             </ion-item>
+            <ion-item
+              *ngIf="!historicForm.controls.weight.valid && (historicForm.controls.weight.dirty || submitAttempt)">
+              <p>Peso inválido.</p>
+            </ion-item>
+
             <ion-item>
               <ion-label position="floating">Bíceps(cm)</ion-label>
               <ion-input formControlName="biceps" type="number"></ion-input>
             </ion-item>
+            <ion-item
+              *ngIf="!historicForm.controls.biceps.valid && (historicForm.controls.biceps.dirty || submitAttempt)">
+              <p>Biceps inválido.</p>
+            </ion-item>
+
             <ion-item>
               <ion-label position="floating">Coxa(cm)</ion-label>
               <ion-input formControlName="thigh" type="number"></ion-input>
             </ion-item>
+            <ion-item
+              *ngIf="!historicForm.controls.thigh.valid && (historicForm.controls.thigh.dirty || submitAttempt)">
+              <p>Coxa inválida.</p>
+            </ion-item>
+
             <ion-item>
               <ion-label position="floating">Panturrilha(cm)</ion-label>
               <ion-input formControlName="calf" type="number"></ion-input>
             </ion-item>
+            <ion-item *ngIf="!historicForm.controls.calf.valid && (historicForm.controls.calf.dirty || submitAttempt)">
+              <p>Panturrilha inválida.</p>
+            </ion-item>
+
             <ion-item>
               <ion-label position="floating">Barriga(cm)</ion-label>
               <ion-input formControlName="belly" type="number"></ion-input>
             </ion-item>
+            <ion-item
+              *ngIf="!historicForm.controls.belly.valid && (historicForm.controls.belly.dirty || submitAttempt)">
+              <p>Barriga inválida.</p>
+            </ion-item>
+
             <ion-item>
               <ion-label position="floating">Peito(cm)</ion-label>
               <ion-input formControlName="chest" type="number"></ion-input>
             </ion-item>
+            <ion-item
+              *ngIf="!historicForm.controls.chest.valid && (historicForm.controls.chest.dirty || submitAttempt)">
+              <p>Peito inválido.</p>
+            </ion-item>
+
           </div>
           <div padding>
             <ion-button type="submit" expand="block">Gravar</ion-button>

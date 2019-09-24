@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 })
 export class UserProfileComponent implements OnInit {
 
+  submitAttempt: boolean;
+
   constructor(
     private userProfileService: UserProfileService,
     private toastController: ToastController,
@@ -46,12 +48,16 @@ export class UserProfileComponent implements OnInit {
   }
 
   onSubmit() {
-    this.userProfileService.createUserProfile(this.userProfileForm.value)
+    this.submitAttempt = true;
+
+    if(this.userProfileForm.valid){
+      this.userProfileService.createUserProfile(this.userProfileForm.value)
       .then(() => {
         this.presentToast().then(() => {
           this.router.navigate(['home']);
         });
       });
+    }
   }
 
   async presentToast() {

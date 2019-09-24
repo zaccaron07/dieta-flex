@@ -13,6 +13,7 @@ export class FoodComponent implements OnInit {
 
   foodForm: FormGroup;
   food: FoodData;
+  submitAttempt: boolean;
 
   constructor(
     private router: Router,
@@ -36,7 +37,7 @@ export class FoodComponent implements OnInit {
       lbExisteParam = (params.id != undefined)
 
       this.foodForm = new FormGroup({
-        'id': new FormControl(lbExisteParam ? params.id : null, Validators.required),
+        'id': new FormControl(lbExisteParam ? params.id : null),
         'name': new FormControl(lbExisteParam ? params.name : '', Validators.required),
         'calorie': new FormControl(lbExisteParam ? params.calorie : '', Validators.required),
         'carbohydrate': new FormControl(lbExisteParam ? params.carbohydrate : '', Validators.required),
@@ -48,16 +49,19 @@ export class FoodComponent implements OnInit {
   }
 
   onSubmit() {
-    this.presentToast();
-    this.foodService.createFood(this.foodForm.value)
-      .then(() => {
-        this.router.navigate(['food-list'])
-      })
+
+    this.submitAttempt = true;
+    if (this.foodForm.valid) {
+      this.foodService.createFood(this.foodForm.value)
+        .then(() => {
+          this.router.navigate(['food-list'])
+        })
+    }
   }
 
-  async presentToast() {
+  async presentToast(messageTitle: string) {
     const toast = await this.toastController.create({
-      message: 'Dados cadastrados com sucesso!',
+      message: messageTitle,
       duration: 2000
     });
 

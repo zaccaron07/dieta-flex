@@ -11,6 +11,7 @@ import { switchMap, take } from 'rxjs/operators';
 })
 export class HistoricAddComponent implements OnInit {
 
+  submitAttempt: boolean;
   historicForm: FormGroup;
   historicStatic;
 
@@ -34,38 +35,43 @@ export class HistoricAddComponent implements OnInit {
       lbExisteParam = (params.id != undefined)
 
       this.historicForm = new FormGroup({
-        'id': new FormControl(lbExisteParam ? params.id : null, Validators.required),
+        'id': new FormControl(lbExisteParam ? params.id : null),
         'weight': new FormControl(lbExisteParam ? params.weight : '', Validators.required),
         'biceps': new FormControl(lbExisteParam ? params.biceps : '', Validators.required),
         'thigh': new FormControl(lbExisteParam ? params.thigh : '', Validators.required),
         'calf': new FormControl(lbExisteParam ? params.calf : '', Validators.required),
         'belly': new FormControl(lbExisteParam ? params.belly : '', Validators.required),
-        'chest': new FormControl(lbExisteParam ? params.chest : false, Validators.required),
-        'time': new FormControl(lbExisteParam ? params.time : '', Validators.required)
+        'chest': new FormControl(lbExisteParam ? params.chest : '', Validators.required),
+        'time': new FormControl(lbExisteParam ? params.time : '')
       });
     });
   }
 
   onSubmit() {
-    let lDate;
-    let lNewDate;
-    this.presentToast();
 
-    lDate = new Date();
+    this.submitAttempt = true
 
-    if (this.historicForm.value.time === '') {
-      lNewDate = ('0' + lDate.getDate()).slice(-2) + '/' + ('0' + (lDate.getMonth() + 1)).slice(-2) + '/' + lDate.getFullYear();
-      this.historicForm.value.time = lNewDate;
+    if (this.historicForm.valid) {
+      let lDate;
+      let lNewDate;
+      this.presentToast();
+
+      lDate = new Date();
+
+      if (this.historicForm.value.time === '') {
+        lNewDate = ('0' + lDate.getDate()).slice(-2) + '/' + ('0' + (lDate.getMonth() + 1)).slice(-2) + '/' + lDate.getFullYear();
+        this.historicForm.value.time = lNewDate;
+      }
+
+      this.historicStatic = this.historicService.documentExists(this.historicForm.value)
+        .pipe(
+          switchMap(result => this.historicService.createHistoric(this.historicForm.value, result)),
+          take(1)
+        )
+        .subscribe(() => {
+          this.router.navigate(['historic-list'])
+        })
     }
-
-    this.historicStatic = this.historicService.documentExists(this.historicForm.value)
-      .pipe(
-        switchMap(result => this.historicService.createHistoric(this.historicForm.value, result)),
-        take(1)
-      )
-      .subscribe(() => {
-        this.router.navigate(['historic-list'])
-      })
   }
 
   async presentToast() {
@@ -73,7 +79,6 @@ export class HistoricAddComponent implements OnInit {
       message: 'Dados cadastrados com sucesso!',
       duration: 2000
     });
-
     toast.present();
   }
 }

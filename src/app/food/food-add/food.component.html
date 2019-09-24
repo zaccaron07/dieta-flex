@@ -15,26 +15,48 @@
       <ion-row color="primary" justify-content-center>
         <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
           <div padding>
+
             <ion-item>
               <ion-label position="floating">Alimento</ion-label>
               <ion-input formControlName="name" type="text"></ion-input>
             </ion-item>
+            <ion-item *ngIf="!foodForm.controls.name.valid && (foodForm.controls.name.dirty || submitAttempt)">
+              <p>Nome inválido.</p>
+            </ion-item>
+
             <ion-item>
               <ion-label position="floating">Calorias</ion-label>
               <ion-input formControlName="calorie" type="number"></ion-input>
             </ion-item>
+            <ion-item *ngIf="!foodForm.controls.calorie.valid && (foodForm.controls.calorie.dirty || submitAttempt)">
+              <p>Caloria inválida.</p>
+            </ion-item>
+
             <ion-item>
               <ion-label position="floating">Carboitrados</ion-label>
               <ion-input formControlName="carbohydrate" type="number"></ion-input>
             </ion-item>
+            <ion-item
+              *ngIf="!foodForm.controls.carbohydrate.valid && (foodForm.controls.carbohydrate.dirty || submitAttempt)">
+              <p>Carboidrato inválido.</p>
+            </ion-item>
+
             <ion-item>
               <ion-label position="floating">Proteinas</ion-label>
               <ion-input formControlName="protein" type="number"></ion-input>
             </ion-item>
+            <ion-item *ngIf="!foodForm.controls.protein.valid && (foodForm.controls.protein.dirty || submitAttempt)">
+              <p>Proteina inválida.</p>
+            </ion-item>
+
             <ion-item>
               <ion-label position="floating">Gordura</ion-label>
               <ion-input formControlName="fat" type="number"></ion-input>
             </ion-item>
+            <ion-item *ngIf="!foodForm.controls.fat.valid && (foodForm.controls.fat.dirty || submitAttempt)">
+              <p>Gordura inválida.</p>
+            </ion-item>
+
             <ion-item>
               <ion-label>Porção</ion-label>
               <ion-checkbox formControlName="portion"></ion-checkbox>
