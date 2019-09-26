@@ -1,6 +1,7 @@
 export interface DietData {
   id?: string;
   date: string;
+  dateFormatted: Date
   alimentos: DietResult[];
   detalhes: DietAmount[];
 }

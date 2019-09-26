@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationExtras } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { DietService } from '../diet.service';
 import { DietData } from '../diet-data.model';
@@ -13,8 +13,9 @@ import { DietData } from '../diet-data.model';
 export class DietListComponent implements OnInit {
 
   public searchControl: FormControl;
-  listDiet: Observable<DietData[]>
-  listDietBase: Observable<DietData[]>
+  public listDiet: DietData[]
+  public listDietBase: DietData[]
+  private subscription: Subscription
 
   constructor(
     private dietService: DietService,
@@ -24,8 +25,6 @@ export class DietListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getListDiet();
-
     this.searchControl.valueChanges
       .pipe(debounceTime(700))
       .subscribe(search => {
@@ -38,8 +37,10 @@ export class DietListComponent implements OnInit {
   }
 
   getListDiet() {
-    this.listDiet = this.dietService.getDiet();
-    this.listDietBase = this.listDiet;
+    this.subscription = this.dietService.getDiet().subscribe((listDiet) => {
+      this.listDiet = listDiet
+      this.listDietBase = this.listDiet
+    })
   }
 
   removeDiet(Diet: DietData) {
@@ -51,18 +52,18 @@ export class DietListComponent implements OnInit {
       return this.listDiet = this.listDietBase;
     }
 
-    this.listDiet = this.listDietBase
-      .pipe(
-        map(listDiet => listDiet.filter((filtering) => {
-          if (filtering.date && searchTerm) {
-            return filtering.date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1;
-          }
-        }))
-      );
+    this.listDiet = this.listDietBase.filter((filtering) => {
+      if (filtering.date && searchTerm) {
+        return filtering.date.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+      }
+    })
   }
 
   ionViewWillEnter() {
-    this.getListDiet();
+    this.getListDiet()
   }
 
+  ionViewWillLeave() {
+    this.subscription.unsubscribe()
+  }
 }
