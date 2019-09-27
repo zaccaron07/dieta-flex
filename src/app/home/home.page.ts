@@ -5,25 +5,36 @@ import { NotificationService } from '../notification/notification.service';
 import { Platform, AlertController } from '@ionic/angular';
 import { HistoricService } from '../historic/historic.service';
 import { HistoricData } from '../historic/historic.model';
+import { DietService } from '../diet/diet.service';
+import { Observable } from 'rxjs';
+import { DietData } from '../diet/diet-data.model';
 
 const { LocalNotifications } = Plugins;
 
 @Component({
   selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  templateUrl: 'home.page.html'
 })
 export class HomePage {
+
+  dietToday: Observable<DietData>
+
   constructor(
     private router: Router,
     private notificationService: NotificationService,
     private platform: Platform,
     private historicService: HistoricService,
-    public alertController: AlertController
+    public alertController: AlertController,
+    public dietService: DietService
   ) { }
 
   ngOnInit() {
+
+    this.dietToday = null
+
     this.scheduleNotification();
+
+    this.showDietToday();
 
     if (this.platform.is('cordova')) {
       Plugins.LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
@@ -31,6 +42,27 @@ export class HomePage {
         this.router.navigate(["/notification"]);
       });
     }
+  }
+
+  openEditDiet(diet: DietData) {
+
+    if (diet) {
+      this.router.navigate(['diet-list/diet-add', diet])
+    } else {
+      this.router.navigate(['diet-list/diet-add'])
+    }
+  }
+
+  showDietToday() {
+    let dateNow = new Date();
+    let lNewDate = dateNow.getFullYear() + '-' + ('0' + (dateNow.getMonth() + 1)).slice(-2) + '-' + ('0' + dateNow.getDate()).slice(-2);
+
+    this.dietService.getDietByDate(lNewDate)
+      .subscribe((diet) => {
+        if (diet && diet.length > 0) {
+          this.dietToday = diet['0'];
+        }
+      });
   }
 
   scheduleNotification() {
