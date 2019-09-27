@@ -22,18 +22,18 @@ export class DietComponent implements OnInit {
   public dietReady: boolean = true;
   public dietId: String;
   public dietDate: string;
-  public dietDateFormatted
+  public dietDateFormatted: Date
   public isEditing: boolean = false;
   public dateInvalid = false
   public minSelectableDate
 
   constructor(
+    private router: Router,
     private foodService: FoodService,
     private dietService: DietService,
     private activatedRoute: ActivatedRoute,
     private modalController: ModalController,
-    private toastController: ToastController,
-    private router: Router
+    private toastController: ToastController    
   ) { }
 
   ngOnInit() {
@@ -89,17 +89,23 @@ export class DietComponent implements OnInit {
     this.dietReady = false;
     this.food = [];
     this.foodOriginal = [];
-    this.dietService.generateDiet();
+    let generateDiet: boolean
 
-    this.dietService.resultO.subscribe((result) => {
-      this.dietResult = result as DietResult[];
+    generateDiet = this.dietService.generateDiet()
 
-      this.loadDietAmount();
+    if (generateDiet) {
+      this.dietService.resultO.subscribe((result) => {
+        this.dietResult = result as DietResult[]
 
-      this.totalDietAmount = this.dietService.dietAmount;
+        this.loadDietAmount()
 
-      this.dietReady = true;
-    });
+        this.totalDietAmount = this.dietService.dietAmount
+
+        this.dietReady = true
+      })
+    } else {
+      this.presentToastInvalidProfile()
+    }
   }
 
   loadDietAmount() {
@@ -117,35 +123,63 @@ export class DietComponent implements OnInit {
   }
 
   async saveDiet() {
+    let isDataValid: boolean = true
+
     let lDadosSalvar = {
       alimentos: this.dietResult,
       food: this.food,
       detalhes: this.totalDietAmount
     };
 
-    lDadosSalvar["date"] = this.dietDate.substr(0, 10);
+    lDadosSalvar.food.forEach((food) => {
+      if (!food.amount) {
+        isDataValid = false
+      }
+    })
 
-    if (this.dietId) {
-      lDadosSalvar["id"] = this.dietId;
-      await this.dietService.createDiet(lDadosSalvar);
+    if (isDataValid) {
+      lDadosSalvar["date"] = this.dietDate.substr(0, 10);
+
+      if (this.dietId) {
+        lDadosSalvar["id"] = this.dietId;
+        await this.dietService.createDiet(lDadosSalvar);
+      } else {
+        this.dietService.getDietByDate(lDadosSalvar["date"])
+          .subscribe((result) => {
+            if (result[0]) {
+              lDadosSalvar["id"] = result[0]["id"];
+            }
+            this.dietService.createDiet(lDadosSalvar);
+          });
+      };
+
+      await this.presentToast();
+
+      this.router.navigate(['diet-list']);
     } else {
-      this.dietService.getDietByDate(lDadosSalvar["date"])
-        .subscribe((result) => {
-          if (result[0]) {
-            lDadosSalvar["id"] = result[0]["id"];
-          }
-          this.dietService.createDiet(lDadosSalvar);
-        });
-    };
-
-    await this.presentToast();
-
-    this.router.navigate(['diet-list']);
+      await this.presentToastFormInvalid()
+    }
   }
 
   async presentToast() {
     const toast = await this.toastController.create({
       message: 'Dados cadastrados com sucesso!',
+      duration: 4000
+    });
+    toast.present();
+  }
+
+  async presentToastFormInvalid() {
+    const toast = await this.toastController.create({
+      message: 'Existem alimentos sem quantidade de gramas/porção informado!',
+      duration: 4000
+    });
+    toast.present();
+  }
+
+  async presentToastInvalidProfile() {
+    const toast = await this.toastController.create({
+      message: 'Não é possível gerar a dieta pois a quantidade calórica diária é menor do que a quantidade de calorias geradas pela quantidade de proteína e gordura diária. Para ser possível gerar a dieta é necessário alterar o objetivo em "Perfil usuário".',
       duration: 4000
     });
     toast.present();
@@ -179,15 +213,14 @@ export class DietComponent implements OnInit {
     return await modal.present();
   }
 
-  changedAmount(event) {
+  changedAmount(foodChange) {
     let lFood: FoodData;
     let lNewFood = {} as FoodData;
     let lNewAmount: number;
 
-    lNewAmount = 0;
-    lNewAmount = event.value;
+    lNewAmount = foodChange.food.amount;
 
-    lFood = event.food;
+    lFood = foodChange.food;
 
     this.dietAmount.calories -= lFood.calorie;
     this.dietAmount.fat -= lFood.fat;
@@ -201,15 +234,15 @@ export class DietComponent implements OnInit {
     lNewFood.amount = lNewAmount;
 
     if (lFood.portion) {
-      lNewFood.calorie = lNewAmount * this.foodOriginal[event.indice].calorie;
-      lNewFood.fat = lNewAmount * this.foodOriginal[event.indice].fat;
-      lNewFood.protein = lNewAmount * this.foodOriginal[event.indice].protein;
-      lNewFood.carbohydrate = lNewAmount * this.foodOriginal[event.indice].carbohydrate;
+      lNewFood.calorie = lNewAmount * this.foodOriginal[foodChange.indice].calorie;
+      lNewFood.fat = lNewAmount * this.foodOriginal[foodChange.indice].fat;
+      lNewFood.protein = lNewAmount * this.foodOriginal[foodChange.indice].protein;
+      lNewFood.carbohydrate = lNewAmount * this.foodOriginal[foodChange.indice].carbohydrate;
     } else {
-      lNewFood.calorie = (lNewAmount * this.foodOriginal[event.indice].calorie) / 100;
-      lNewFood.fat = (lNewAmount * this.foodOriginal[event.indice].fat) / 100;
-      lNewFood.protein = (lNewAmount * this.foodOriginal[event.indice].protein) / 100;
-      lNewFood.carbohydrate = (lNewAmount * this.foodOriginal[event.indice].carbohydrate) / 100;
+      lNewFood.calorie = (lNewAmount * this.foodOriginal[foodChange.indice].calorie) / 100;
+      lNewFood.fat = (lNewAmount * this.foodOriginal[foodChange.indice].fat) / 100;
+      lNewFood.protein = (lNewAmount * this.foodOriginal[foodChange.indice].protein) / 100;
+      lNewFood.carbohydrate = (lNewAmount * this.foodOriginal[foodChange.indice].carbohydrate) / 100;
     }
 
     this.dietAmount.calories += lNewFood.calorie;
@@ -217,10 +250,11 @@ export class DietComponent implements OnInit {
     this.dietAmount.protein += lNewFood.protein;
     this.dietAmount.carbohydrate += lNewFood.carbohydrate;
 
-    this.food[event.indice].calorie = lNewFood.calorie;
-    this.food[event.indice].fat = lNewFood.fat;
-    this.food[event.indice].protein = lNewFood.protein;
-    this.food[event.indice].carbohydrate = lNewFood.carbohydrate;
+    this.food[foodChange.indice].amount = lNewFood.amount
+    this.food[foodChange.indice].calorie = lNewFood.calorie
+    this.food[foodChange.indice].fat = lNewFood.fat
+    this.food[foodChange.indice].protein = lNewFood.protein
+    this.food[foodChange.indice].carbohydrate = lNewFood.carbohydrate
   }
 
   initializeDate() {
@@ -234,8 +268,12 @@ export class DietComponent implements OnInit {
     this.minSelectableDate = new Date(dateNow + " GMT-0000").toISOString()
   }
 
-  verifyDateValid(teste?) {
+  verifyDateValid() {
     let dateNow = new Date()
+    dateNow.setHours(0)
+    dateNow.setMinutes(0)
+    dateNow.setSeconds(0)
+    dateNow.setMilliseconds(0)
 
     if (this.dietDateFormatted < dateNow) {
       this.dateInvalid = true

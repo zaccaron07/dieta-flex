@@ -9,7 +9,7 @@ import { HistoricService } from '../historic/historic.service';
 })
 export class DashboardComponent implements OnInit {
 
-  @ViewChild('barChart') barChart;
+  @ViewChild('barChart', { static: true }) barChart;
 
   bars: any;
   colorArray: any;

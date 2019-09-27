@@ -23,11 +23,12 @@ export class DietService {
     private afFirestore: AngularFirestore
   ) { }
 
-  generateDiet() {
-    this.calcMinCalories();
+  generateDiet(): boolean {
+    return this.calcMinCalories();
   }
 
-  private calcMinCalories() {
+  private calcMinCalories(): boolean {
+    let generatedDiet: boolean = true
     this.result = [] as DietResult[];
     this.dietAmount = {} as DietAmount;
     this.resultO = new Subject<DietResult[]>();
@@ -90,113 +91,121 @@ export class DietService {
     lCaloricDayBalance = lBasalMetabolicRate + lIntensityExercise + lGoal;
     lDayProtein = this.userProfile.weight * 1.5
     lDayFat = this.userProfile.weight
-    lDayCarbohydrate = (lCaloricDayBalance - ((lDayProtein * 4) + (lDayFat * 9)))  / 4
+    lDayCarbohydrate = (lCaloricDayBalance - ((lDayProtein * 4) + (lDayFat * 9))) / 4
 
-    this.dietAmount.totalProtein = lDayProtein;
-    this.dietAmount.totalFat = this.userProfile.weight;
-    this.dietAmount.totalCarbohydrate = lDayCarbohydrate;
-    this.dietAmount.totalCalories = lCaloricDayBalance;
+    if (lDayCarbohydrate < 0) {
+      generatedDiet = false
+    }
 
-    this.foodService.getFoodByType(2)
-      .subscribe((food) => {
-        let lRandom;
-        let lFat;
-        let lFood;
-        let lProtein;
-        let lAmountFood;
-        let lCarbohydrates;
-        let lResultMeal = {} as DietResult;
+    if (generatedDiet) {
+      this.dietAmount.totalProtein = lDayProtein;
+      this.dietAmount.totalFat = this.userProfile.weight;
+      this.dietAmount.totalCarbohydrate = lDayCarbohydrate;
+      this.dietAmount.totalCalories = lCaloricDayBalance;
 
-        lRandom = Math.floor(Math.random() * food.length);
+      this.foodService.getFoodByType(2)
+        .subscribe((food) => {
+          let lRandom;
+          let lFat;
+          let lFood;
+          let lProtein;
+          let lAmountFood;
+          let lCarbohydrates;
+          let lResultMeal = {} as DietResult;
 
-        lFood = food[lRandom];
-
-        lAmountFood = (100 * (0.2 * lDayProtein)) / lFood.protein;
-        lProtein = (lAmountFood * lFood.protein) / 100;
-        lCarbohydrates = (lAmountFood * lFood.carbohydrate) / 100;
-        lFat = (lAmountFood * lFood.fat) / 100;
-
-        lResultMeal.name = lFood.name;
-        lResultMeal.amount = lAmountFood;
-        lResultMeal.calorie = Math.round(lFood.calorie);
-        lResultMeal.fat = Math.round(lFat);
-        lResultMeal.protein = Math.round(lProtein);
-        lResultMeal.carbohydrate = Math.round(lCarbohydrates);
-
-        this.result.push(lResultMeal);
-        this.resultO.next(this.result);
-      });
-
-    this.foodService.getFoodByType(1)
-      .subscribe((food) => {
-        let lRandom;
-        let lFat;
-        let lFood;
-        let lProtein;
-        let lCarbohydrates;
-        let lAmountFood;
-        let lResultMeal = {} as DietResult;
-
-        lRandom = Math.floor(Math.random() * food.length);
-
-        lFood = food[lRandom];
-
-        lAmountFood = (100 * (0.15 * lDayCarbohydrate)) / lFood.carbohydrate;
-        lProtein = (lAmountFood * lFood.protein) / 100;
-        lCarbohydrates = (lAmountFood * lFood.carbohydrate) / 100;
-        lFat = (lAmountFood * lFood.fat) / 100;
-
-        lResultMeal.name = lFood.name;
-        lResultMeal.amount = lAmountFood;
-        lResultMeal.calorie = Math.round(lFood.calorie);
-        lResultMeal.fat = Math.round(lFat);
-        lResultMeal.protein = Math.round(lProtein);
-        lResultMeal.carbohydrate = Math.round(lCarbohydrates);
-
-        this.result.push(lResultMeal);
-        this.resultO.next(this.result);
-      });
-
-    this.foodService.getFoodByType(0)
-      .subscribe((food) => {
-        let lRandom;
-        let lFood;
-        let lResultMeal = {} as DietResult;
-        let lPrevious: number;
-
-        lPrevious = 0;
-
-        for (let index = 0; index < 2; index++) {
           lRandom = Math.floor(Math.random() * food.length);
-
-          while (true) {
-            let lR;
-
-            lR = Math.floor(Math.random() * food.length);
-
-            if (lR != lPrevious) {
-              lRandom = lR;
-
-              break;
-            }
-          }
 
           lFood = food[lRandom];
 
+          lAmountFood = (100 * (0.2 * lDayProtein)) / lFood.protein;
+          lProtein = (lAmountFood * lFood.protein) / 100;
+          lCarbohydrates = (lAmountFood * lFood.carbohydrate) / 100;
+          lFat = (lAmountFood * lFood.fat) / 100;
+
           lResultMeal.name = lFood.name;
-          lResultMeal.amount = 1;
-          lResultMeal.fat = Math.round(lFood.fat);
+          lResultMeal.amount = lAmountFood;
           lResultMeal.calorie = Math.round(lFood.calorie);
-          lResultMeal.protein = Math.round(lFood.protein);
-          lResultMeal.carbohydrate = Math.round(lFood.carbohydrate);
-          lResultMeal.portion = true;
+          lResultMeal.fat = Math.round(lFat);
+          lResultMeal.protein = Math.round(lProtein);
+          lResultMeal.carbohydrate = Math.round(lCarbohydrates);
 
-          this.result.push(JSON.parse(JSON.stringify(lResultMeal)));
+          this.result.push(lResultMeal);
+          this.resultO.next(this.result);
+        });
 
-          lPrevious = lRandom;
-        }
-        this.resultO.next(this.result)
-      });
+      this.foodService.getFoodByType(1)
+        .subscribe((food) => {
+          let lRandom;
+          let lFat;
+          let lFood;
+          let lProtein;
+          let lCarbohydrates;
+          let lAmountFood;
+          let lResultMeal = {} as DietResult;
+
+          lRandom = Math.floor(Math.random() * food.length);
+
+          lFood = food[lRandom];
+
+          lAmountFood = (100 * (0.15 * lDayCarbohydrate)) / lFood.carbohydrate;
+          lProtein = (lAmountFood * lFood.protein) / 100;
+          lCarbohydrates = (lAmountFood * lFood.carbohydrate) / 100;
+          lFat = (lAmountFood * lFood.fat) / 100;
+
+          lResultMeal.name = lFood.name;
+          lResultMeal.amount = lAmountFood;
+          lResultMeal.calorie = Math.round(lFood.calorie);
+          lResultMeal.fat = Math.round(lFat);
+          lResultMeal.protein = Math.round(lProtein);
+          lResultMeal.carbohydrate = Math.round(lCarbohydrates);
+
+          this.result.push(lResultMeal);
+          this.resultO.next(this.result);
+        });
+
+      this.foodService.getFoodByType(0)
+        .subscribe((food) => {
+          let lRandom;
+          let lFood;
+          let lResultMeal = {} as DietResult;
+          let lPrevious: number;
+
+          lPrevious = 0;
+
+          for (let index = 0; index < 2; index++) {
+            lRandom = Math.floor(Math.random() * food.length);
+
+            while (true) {
+              let lR;
+
+              lR = Math.floor(Math.random() * food.length);
+
+              if (lR != lPrevious) {
+                lRandom = lR;
+
+                break;
+              }
+            }
+
+            lFood = food[lRandom];
+
+            lResultMeal.name = lFood.name;
+            lResultMeal.amount = 1;
+            lResultMeal.fat = Math.round(lFood.fat);
+            lResultMeal.calorie = Math.round(lFood.calorie);
+            lResultMeal.protein = Math.round(lFood.protein);
+            lResultMeal.carbohydrate = Math.round(lFood.carbohydrate);
+            lResultMeal.portion = true;
+
+            this.result.push(JSON.parse(JSON.stringify(lResultMeal)));
+
+            lPrevious = lRandom;
+          }
+          this.resultO.next(this.result)
+        });
+    }
+
+    return generatedDiet
   }
 
   createDiet(diet) {

@@ -6,5 +6,5 @@ export interface FoodData {
     carbohydrate: number;
     name: string;
     portion: boolean;
-    amount?: number;
+    amount: number;
 }

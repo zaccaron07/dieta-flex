@@ -37,9 +37,9 @@
           <ion-card-content>
             <ion-grid>
               <span *ngIf="!item.portion">Gramas: <ion-input type="number" placeholder="100" [(ngModel)]="item.amount"
-                  (ionChange)="changedAmount({value: $event.detail.value, food: item, indice: i})"></ion-input>g </span>
-              <span *ngIf="item.portion">Porção: <ion-input type="number" placeholder="1"
-                  (ionChange)="changedAmount({value: $event.detail.value, food: item, indice: i})"></ion-input></span> -
+                  (ionChange)="changedAmount({food: item, indice: i})"></ion-input>g </span>
+              <span *ngIf="item.portion">Porção: <ion-input type="number" placeholder="1" [(ngModel)]="item.amount"
+                  (ionChange)="changedAmount({food: item, indice: i})"></ion-input></span> -
               Proteina:
               {{ item.protein | number: '1.2-2' }}g -
               Carboidrato: {{ item.carbohydrate | number: '1.2-2' }}g - Gordura: {{ item.fat | number: '1.2-2'}}g
@@ -47,7 +47,7 @@
           </ion-card-content>
         </ion-card>
       </ion-list>
-      <ion-button expand="full" *ngIf="dietResult" (click)="openModal()">Adicionar alimento</ion-button>
+      <ion-button expand="full" (click)="openModal()">Adicionar alimento</ion-button>
       <ion-card-content>
         <div>
           Calorias: {{ dietAmount.calories | number: '1.2-2' }}KCal /
@@ -70,8 +70,8 @@
     <ion-card-content>
       <ion-item>
         <ion-label>Data: </ion-label>
-        <ion-datetime [disabled]="isEditing" displayFormat="DD/MM/YYYY"
-          placeholder="Selecione a data" [(ngModel)]="dietDate" [min]="minSelectableDate"></ion-datetime>
+        <ion-datetime [disabled]="isEditing" displayFormat="DD/MM/YYYY" placeholder="Selecione a data"
+          [(ngModel)]="dietDate" [min]="minSelectableDate"></ion-datetime>
       </ion-item>
       <ion-button expand="full" [disabled]="!dietResult || dateInvalid" (click)="saveDiet()">Salvar dieta</ion-button>
     </ion-card-content>
