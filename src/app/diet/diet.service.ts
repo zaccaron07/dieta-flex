@@ -221,9 +221,9 @@ export class DietService {
       .snapshotChanges()
       .pipe(
         map(data => {
-          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
-        }),
-        take(1)
+          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data(), dateFormatted: new Date(`${action.payload.doc.data()["date"]} GMT-0300`) }))
+            .sort((a, b) => b.dateFormatted.getTime() - a.dateFormatted.getTime());
+        })
       )
   }
 
@@ -238,7 +238,7 @@ export class DietService {
       .snapshotChanges()
       .pipe(
         map(data => {
-          return data.map(action => ({ ...action.payload.doc.data(), id: action.payload.doc.id }));
+          return data.map(action => ({ ...action.payload.doc.data(), id: action.payload.doc.id, dateFormatted: new Date(`${action.payload.doc.data()["date"]} GMT-0300`) }));
         }),
         take(1)
       )

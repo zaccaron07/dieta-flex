@@ -22,7 +22,10 @@ export class DietComponent implements OnInit {
   public dietReady: boolean = true;
   public dietId: String;
   public dietDate: string;
+  public dietDateFormatted
   public isEditing: boolean = false;
+  public dateInvalid = false
+  public minSelectableDate
 
   constructor(
     private foodService: FoodService,
@@ -34,6 +37,7 @@ export class DietComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.initializeMimDate()
 
     this.activatedRoute.params.subscribe(params => {
       let date = params.date
@@ -42,6 +46,7 @@ export class DietComponent implements OnInit {
         this.isEditing = true
       } else {
         this.isEditing = false
+        this.initializeDate()
       }
     });
   }
@@ -56,12 +61,12 @@ export class DietComponent implements OnInit {
             this.food = result[0]["food"];
             this.dietId = result[0]["id"];
             this.dietDate = result[0]["date"];
+            this.dietDateFormatted = result[0]["dateFormatted"]
+            this.verifyDateValid()
 
             this.loadDietAmount();
           } else {
-            let lDate = new Date()
-            let lFormattedDate = `${lDate.getFullYear()}-${('0' + (lDate.getMonth() + 1)).slice(-2)}-${('0' + lDate.getDate()).slice(-2)}`
-            this.dietDate = lFormattedDate
+            this.initializeDate()
           }
         }),
         switchMap(() => {
@@ -216,5 +221,24 @@ export class DietComponent implements OnInit {
     this.food[event.indice].fat = lNewFood.fat;
     this.food[event.indice].protein = lNewFood.protein;
     this.food[event.indice].carbohydrate = lNewFood.carbohydrate;
+  }
+
+  initializeDate() {
+    let dateNow = new Date()
+    let lFormattedDate = `${dateNow.getFullYear()}-${('0' + (dateNow.getMonth() + 1)).slice(-2)}-${('0' + dateNow.getDate()).slice(-2)}`
+    this.dietDate = lFormattedDate
+  }
+
+  initializeMimDate() {
+    let dateNow = new Date()
+    this.minSelectableDate = new Date(dateNow + " GMT-0000").toISOString()
+  }
+
+  verifyDateValid(teste?) {
+    let dateNow = new Date()
+
+    if (this.dietDateFormatted < dateNow) {
+      this.dateInvalid = true
+    }
   }
 }
