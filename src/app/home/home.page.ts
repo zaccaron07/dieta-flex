@@ -30,11 +30,7 @@ export class HomePage {
 
   ngOnInit() {
 
-    this.dietToday = null
-
-    this.scheduleNotification();
-
-    this.showDietToday();
+    this.startHome();
 
     if (this.platform.is('cordova')) {
       Plugins.LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
@@ -44,13 +40,26 @@ export class HomePage {
     }
   }
 
-  openEditDiet(diet: DietData) {
+  startHome() {
+    this.dietToday = null;
+    this.scheduleNotification();
+    this.showDietToday();
+  }
 
+  openEditDiet(diet: DietData) {
     if (diet) {
       this.router.navigate(['diet-list/diet-add', diet])
     } else {
       this.router.navigate(['diet-list/diet-add'])
     }
+  }
+
+  ionViewWillEnter() {
+    this.startHome();
+  }
+
+  openDashboard() {
+    this.router.navigate(['dashboard'])
   }
 
   showDietToday() {

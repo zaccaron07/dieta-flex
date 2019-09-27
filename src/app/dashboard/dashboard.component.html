@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Dashboard
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!--<ion-list-header color="light">Historico de dieta</ion-list-header>-->
+  <ion-card class="welcome-card">
+    <ion-card-header>
+      <ion-card-title>Histórico de medidas</ion-card-title>
+      <ion-card-subtitle>Evolução das medidas lançadas:</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <canvas #barChart></canvas>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

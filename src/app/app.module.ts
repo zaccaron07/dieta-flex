@@ -28,6 +28,7 @@ import { DietModalComponent } from './diet/diet-modal/diet-modal.component';
 import { HistoricListComponent } from './historic/historic-list/historic-list.component';
 import { HistoricAddComponent } from './historic/historic-add/historic-add.component';
 import { DietListComponent } from './diet/diet-list/diet-list.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { DietListComponent } from './diet/diet-list/diet-list.component';
     FoodListComponent,
     DietModalComponent,
     HistoricListComponent,
-    HistoricAddComponent
+    HistoricAddComponent,
+    DashboardComponent
   ],
   entryComponents: [DietModalComponent],
   imports: [
