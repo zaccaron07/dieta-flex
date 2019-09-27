@@ -10,4 +10,25 @@
 </ion-header>
 
 <ion-content>
+  <ion-card>
+    <ion-card-header *ngIf="dietToday" (click)="openEditDiet(dietToday)">
+      <ion-card-title>Dieta Atual</ion-card-title>
+      <ion-card-subtitle>Visualize a sua dia atual: {{dietToday?.date}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-header *ngIf="!dietToday" (click)="openEditDiet(dietToday)">
+      <ion-card-title>Gere sua dieta de hoje!</ion-card-title>
+      <ion-card-subtitle>Ao gerar sua dieta, ajuste para que a mesma possa atingir o seu objetivo.</ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Gráfico de medidas</ion-card-title>
+      <ion-card-subtitle>Verifique sua evolução</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      Gráfico de medidas proporciona uma acompanhamento da sua evolução, demonstrando com transparencias os resultados
+      obtidos.
+    </ion-card-content>
+  </ion-card>
 </ion-content>
