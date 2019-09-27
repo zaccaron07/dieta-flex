@@ -16,7 +16,6 @@ export class DietService {
   private result = [] as DietResult[];
   public dietAmount = {} as DietAmount;
   public resultO = new Subject<DietResult[]>();
-  public resultOO = new Subject<DietAmount>();
 
   constructor(
     private foodService: FoodService,
@@ -32,79 +31,71 @@ export class DietService {
     this.result = [] as DietResult[];
     this.dietAmount = {} as DietAmount;
     this.resultO = new Subject<DietResult[]>();
-    this.resultOO = new Subject<DietAmount>();
 
     this.userProfile = this.authService.getUser()
 
-    let lMinCalories: number = 0;
+    let lBasalMetabolicRate: number = 0;
+    let lCaloricDayBalance: number = 0;
+    let lIntensityExercise: number = 0;
+    let lGoal: number = 0;
 
     const MALE = 1;
 
     if (this.userProfile.gender == MALE) {
-      lMinCalories = 66 + (13.7 * this.userProfile.weight) + (5 * this.userProfile.height) - (6.5 * this.userProfile.age);
+      lBasalMetabolicRate = (10 * this.userProfile.weight) + (6.25 * this.userProfile.height) - (5 * this.userProfile.age) + 5;
     } else {
-      lMinCalories = 655 + (9.6 * this.userProfile.weight) + (1.8 * this.userProfile.height) - (4.7 * this.userProfile.age);
+      lBasalMetabolicRate = (10 * this.userProfile.weight) + (6.25 * this.userProfile.height) - (5 * this.userProfile.age) - 161;
     }
 
     switch (this.userProfile.exercise_intensity) {
       case 2:
-        lMinCalories += 193;
+        lIntensityExercise += 193;
         break;
 
       case 3:
-        lMinCalories += 425;
+        lIntensityExercise += 425;
         break;
 
       case 4:
-        lMinCalories += 676;
+        lIntensityExercise += 676;
         break;
 
       case 5:
-        lMinCalories += 1159;
+        lIntensityExercise += 1159;
         break;
     }
 
     switch (this.userProfile.goal) {
       case 1:
-        lMinCalories -= 348;
+        lGoal -= 348;
         break;
 
       case 2:
-        lMinCalories -= 695;
+        lGoal -= 695;
         break;
 
       case 4:
-        lMinCalories += 162;
+        lGoal += 162;
         break;
 
       case 5:
-        lMinCalories += 348;
+        lGoal += 348;
         break;
     }
 
     let lDayProtein;
     let lDayCarbohydrate;
-    let lTotalCalorires;
+    let lDayFat;
 
-    lDayProtein = this.userProfile.weight * 2;
+    lCaloricDayBalance = lBasalMetabolicRate + lIntensityExercise + lGoal;
+    lDayProtein = this.userProfile.weight * 1.5
+    lDayFat = this.userProfile.weight
+    lDayCarbohydrate = (lCaloricDayBalance - ((lDayProtein * 4) + (lDayFat * 9)))  / 4
 
     this.dietAmount.totalProtein = lDayProtein;
-
-    lTotalCalorires = lDayProtein * 4;
-
-    lTotalCalorires += this.userProfile.weight * 9;
-
     this.dietAmount.totalFat = this.userProfile.weight;
-
-    lMinCalories = lMinCalories - lTotalCalorires;
-
-    lDayCarbohydrate = lMinCalories / 4;
     this.dietAmount.totalCarbohydrate = lDayCarbohydrate;
-
-    this.dietAmount.totalCalories = this.dietAmount.totalProtein * 4 + this.dietAmount.totalFat * 9 + this.dietAmount.totalCarbohydrate * 4;
-
-    this.resultOO.next(this.dietAmount);
-    this.resultOO.next(this.dietAmount);
+    this.dietAmount.totalCalories = lCaloricDayBalance;
 
     this.foodService.getFoodByType(2)
       .subscribe((food) => {
