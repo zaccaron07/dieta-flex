@@ -36,12 +36,12 @@ export class HistoricAddComponent implements OnInit {
 
       this.historicForm = new FormGroup({
         'id': new FormControl(lbExisteParam ? params.id : null),
-        'weight': new FormControl(lbExisteParam ? params.weight : '', Validators.required),
-        'biceps': new FormControl(lbExisteParam ? params.biceps : '', Validators.required),
-        'thigh': new FormControl(lbExisteParam ? params.thigh : '', Validators.required),
-        'calf': new FormControl(lbExisteParam ? params.calf : '', Validators.required),
-        'belly': new FormControl(lbExisteParam ? params.belly : '', Validators.required),
-        'chest': new FormControl(lbExisteParam ? params.chest : '', Validators.required),
+        'weight': new FormControl(lbExisteParam ? Number.parseInt(params.weight) : '', Validators.required),
+        'biceps': new FormControl(lbExisteParam ? Number.parseInt(params.biceps) : '', Validators.required),
+        'thigh': new FormControl(lbExisteParam ? Number.parseInt(params.thigh) : '', Validators.required),
+        'calf': new FormControl(lbExisteParam ? Number.parseInt(params.calf) : '', Validators.required),
+        'belly': new FormControl(lbExisteParam ? Number.parseInt(params.belly) : '', Validators.required),
+        'chest': new FormControl(lbExisteParam ? Number.parseInt(params.chest) : '', Validators.required),
         'time': new FormControl(lbExisteParam ? params.time : '')
       });
     });

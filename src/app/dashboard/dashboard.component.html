@@ -10,14 +10,23 @@
 </ion-header>
 
 <ion-content>
-  <!--<ion-list-header color="light">Historico de dieta</ion-list-header>-->
   <ion-card class="welcome-card">
     <ion-card-header>
       <ion-card-title>Histórico de medidas</ion-card-title>
       <ion-card-subtitle>Evolução das medidas lançadas:</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
-      <canvas #barChart></canvas>
+      <canvas #historicDashboard></canvas>
+    </ion-card-content>
+  </ion-card>
+  
+  <ion-card class="welcome-card">
+    <ion-card-header>
+      <ion-card-title>Ultimas dietas</ion-card-title>
+      <ion-card-subtitle>Demonstração do deficit e superávit calórico:</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <canvas #dietDashboard></canvas>
     </ion-card-content>
   </ion-card>
 </ion-content>

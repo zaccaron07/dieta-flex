@@ -39,10 +39,10 @@ export class FoodComponent implements OnInit {
       this.foodForm = new FormGroup({
         'id': new FormControl(lbExisteParam ? params.id : null),
         'name': new FormControl(lbExisteParam ? params.name : '', Validators.required),
-        'calorie': new FormControl(lbExisteParam ? params.calorie : '', Validators.required),
-        'carbohydrate': new FormControl(lbExisteParam ? params.carbohydrate : '', Validators.required),
-        'protein': new FormControl(lbExisteParam ? params.protein : '', Validators.required),
-        'fat': new FormControl(lbExisteParam ? params.fat : '', Validators.required),
+        'calorie': new FormControl(lbExisteParam ? Number.parseInt(params.calorie) : '', Validators.required),
+        'carbohydrate': new FormControl(lbExisteParam ? Number.parseInt(params.carbohydrate) : '', Validators.required),
+        'protein': new FormControl(lbExisteParam ? Number.parseInt(params.protein) : '', Validators.required),
+        'fat': new FormControl(lbExisteParam ? Number.parseInt(params.fat) : '', Validators.required),
         'portion': new FormControl(lbExisteParam ? params.portion : false, Validators.required)
       });
     });

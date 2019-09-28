@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Chart } from 'chart.js';
 import { HistoricData } from '../historic/historic.model';
 import { HistoricService } from '../historic/historic.service';
+import { DashboardGenerate } from './graphic-generate';
+import { Subscription } from 'rxjs';
+import { TypeGraphic } from './graphic-constants';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,87 +12,99 @@ import { HistoricService } from '../historic/historic.service';
 })
 export class DashboardComponent implements OnInit {
 
-  @ViewChild('barChart', { static: true }) barChart;
+  @ViewChild('historicDashboard', { static: true }) historicDashboard;
+  @ViewChild('dietDashboard', { static: true }) dietDashboard;
 
-  bars: any;
-  colorArray: any;
+  historicGraphic: any;
+  dietGraphic: any;
 
-  public historicList: HistoricData[];
+  private historicList: HistoricData[];
+  private subscription: Subscription;
 
   constructor(
     private historicService: HistoricService
   ) { }
 
   ngOnInit() {
-    this.createBarChart()
+    this.createHistoricDashboard();
+    this.createDietDashboard();
   }
 
-  createBarChart() {
-    this.bars = new Chart(this.barChart.nativeElement, {
-      type: 'line',
-      data: {
-        labels: ['01-05-2019', '01-06-2019', '01-07-2019', '01-08-2019', '01-09-2019'],
-        datasets: [
-          {
-            label: 'Bíceps(cm)',
-            data: [15, 16, 16.4, 16.5, 16.7, 17],
-            //backgroundColor: '#008080',
-            backgroundColor: 'transparent',
-            borderColor: '#008080',
-            borderWidth: 1
-          },
-          {
-            label: 'Panturrilha(cm)',
-            data: [27, 27.5, 27.9, 28.3, 28.9, 29.8],
-            //backgroundColor: '#009933',
-            backgroundColor: 'transparent',
-            borderColor: '#009933',
-            borderWidth: 1
-          },
-          {
-            label: 'Coxa(cm)',
-            data: [35, 36, 38, 38.5, 39, 40],
-            //backgroundColor: '#dd1334',
-            backgroundColor: 'transparent',
-            borderColor: '#dd1144',
-            borderWidth: 1
-          },
-          {
-            label: 'Barriga(cm)',
-            data: [59, 60, 61, 63, 62, 61],
-            //backgroundColor: '#0000ff',
-            backgroundColor: 'transparent',
-            borderColor: '#0000ff',
-            borderWidth: 1
-          },
-          {
-            label: 'Peito(cm)',
-            data: [65, 67, 70, 72, 70, 71],
-            //backgroundColor: '#660066',
-            backgroundColor: 'transparent',
-            borderColor: '#660066',
-            borderWidth: 1
-          },
-          {
-            label: 'Peso(kg)',
-            data: [70, 72, 74, 76, 77, 80],
-            //backgroundColor: '#ddee44',
-            backgroundColor: 'transparent',
-            borderColor: '#ddee44',
-            borderWidth: 1
-          },
+  ionViewWillLeave() {
+    this.subscription.unsubscribe()
+  }
 
-        ]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: false
-            }
-          }]
-        }
-      }
+  ionViewWillEnter() {
+    this.createHistoricDashboard();
+    this.createDietDashboard();
+  }
+
+  private createHistoricDashboard() {
+
+    let generateGraphic: DashboardGenerate;
+
+    let weightList: number[];
+    let bicepsList: number[];
+    let thighList: number[];
+    let calfList: number[];
+    let bellyList: number[];
+    let chestList: number[];
+    let timeList: string[];
+
+    this.subscription = this.historicService.getHistoric().subscribe((historicListReturned) => {
+
+      weightList = []
+      bicepsList = []
+      thighList = []
+      calfList = []
+      bellyList = []
+      chestList = []
+      timeList = []
+
+      this.historicList = historicListReturned
+
+      this.historicList.forEach((historic) => {
+        timeList.push(historic.time)
+        weightList.push(historic.weight)
+        bicepsList.push(historic.biceps)
+        thighList.push(historic.thigh)
+        calfList.push(historic.calf)
+        bellyList.push(historic.belly)
+        chestList.push(historic.chest)
+      })
+
+      generateGraphic = new DashboardGenerate();
+
+      generateGraphic.addLabels(timeList);
+      generateGraphic.addDataSet('Bíceps(cm)', bicepsList);
+      generateGraphic.addDataSet('Panturrilha(cm)', calfList);
+      generateGraphic.addDataSet('Coxa(cm)', thighList);
+      generateGraphic.addDataSet('Barriga(cm)', bellyList);
+      generateGraphic.addDataSet('Peito(cm)', chestList);
+      generateGraphic.addDataSet('Peso(kg)', weightList);
+
+      this.historicGraphic = new Chart(this.historicDashboard.nativeElement, {
+        type: TypeGraphic.LINE,
+        data: generateGraphic.getGraphicData(),
+      });
+    });
+  }
+
+  private createDietDashboard() {
+    let generateGraphic: DashboardGenerate;
+
+    generateGraphic = new DashboardGenerate();
+
+    generateGraphic.setBackgroundTransparent(true);
+
+    generateGraphic.addLabels(['01-05-2019', '01-06-2019', '01-07-2019', '01-08-2019', '01-09-2019']);
+
+    generateGraphic.addDataSet('Esperado', [2700, 2700, 2700, 2700, 2700, 2700]);
+    generateGraphic.addDataSet('Consumido', [2500, 2900, 2780, 2450, 2400, 3200]);
+
+    this.dietGraphic = new Chart(this.dietDashboard.nativeElement, {
+      type: TypeGraphic.LINE,
+      data: generateGraphic.getGraphicData(),
     });
   }
 }
