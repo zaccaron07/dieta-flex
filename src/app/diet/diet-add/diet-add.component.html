@@ -23,7 +23,7 @@
       <ion-list>
         <ion-card *ngFor="let item of diet.foods; let i = index">
           <ion-card-header color="dark">{{ item.name }}
-            <ion-icon (click)="removeDiet({food: item, indice: i})" name="trash"></ion-icon>
+            <ion-icon style="float: right" (click)="removeDiet({food: item, indice: i})" name="trash"></ion-icon>
           </ion-card-header>
           <ion-card-content>
             <ion-grid>

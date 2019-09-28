@@ -179,6 +179,11 @@ export class DietService {
   }
 
   loadCurrentBalance() {
+    this.diet.dietBalance.currentCalories = 0
+    this.diet.dietBalance.currentFat = 0
+    this.diet.dietBalance.currentProtein = 0
+    this.diet.dietBalance.currentCarbohydrate = 0
+
     this.diet.foods.forEach((food) => {
       this.diet.dietBalance.currentCalories = +this.diet.dietBalance.currentCalories ? this.diet.dietBalance.currentCalories + food.calorie : food.calorie
       this.diet.dietBalance.currentFat = +this.diet.dietBalance.currentFat ? this.diet.dietBalance.currentFat + food.fat : food.fat
