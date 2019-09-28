@@ -2,8 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Chart } from 'chart.js';
 import { HistoricData } from '../historic/historic.model';
 import { HistoricService } from '../historic/historic.service';
-import { DashboardGenerate } from './dashboard-generate';
+import { DashboardGenerate } from './graphic-generate';
 import { Subscription } from 'rxjs';
+import { TypeGraphic } from './graphic-constants';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,7 +38,7 @@ export class DashboardComponent implements OnInit {
     this.createHistoricDashboard();
     this.createDietDashboard();
   }
-  
+
   private createHistoricDashboard() {
 
     let generateGraphic: DashboardGenerate;
@@ -82,10 +83,8 @@ export class DashboardComponent implements OnInit {
       generateGraphic.addDataSet('Peito(cm)', chestList);
       generateGraphic.addDataSet('Peso(kg)', weightList);
 
-      console.log(generateGraphic.getGraphicData())
-
       this.historicGraphic = new Chart(this.historicDashboard.nativeElement, {
-        type: 'line',
+        type: TypeGraphic.LINE,
         data: generateGraphic.getGraphicData(),
       });
     });
@@ -104,7 +103,7 @@ export class DashboardComponent implements OnInit {
     generateGraphic.addDataSet('Consumido', [2500, 2900, 2780, 2450, 2400, 3200]);
 
     this.dietGraphic = new Chart(this.dietDashboard.nativeElement, {
-      type: 'line',
+      type: TypeGraphic.LINE,
       data: generateGraphic.getGraphicData(),
     });
   }
