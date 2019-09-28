@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Chart } from 'chart.js';
 import { HistoricData } from '../historic/historic.model';
 import { HistoricService } from '../historic/historic.service';
+import { DashboardGenerate } from './dashboard-generate';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,87 +10,58 @@ import { HistoricService } from '../historic/historic.service';
 })
 export class DashboardComponent implements OnInit {
 
-  @ViewChild('barChart', { static: true }) barChart;
+  @ViewChild('historicDashboard', { static: true }) historicDashboard;
+  @ViewChild('dietDashboard', { static: true }) dietDashboard;
 
-  bars: any;
-  colorArray: any;
-
-  public historicList: HistoricData[];
+  historicGraphic: any;
+  dietGraphic: any;
 
   constructor(
     private historicService: HistoricService
   ) { }
 
   ngOnInit() {
-    this.createBarChart()
+    this.createHistoricDashboard();
+    this.createDietDashboard();
   }
 
-  createBarChart() {
-    this.bars = new Chart(this.barChart.nativeElement, {
-      type: 'line',
-      data: {
-        labels: ['01-05-2019', '01-06-2019', '01-07-2019', '01-08-2019', '01-09-2019'],
-        datasets: [
-          {
-            label: 'Bíceps(cm)',
-            data: [15, 16, 16.4, 16.5, 16.7, 17],
-            //backgroundColor: '#008080',
-            backgroundColor: 'transparent',
-            borderColor: '#008080',
-            borderWidth: 1
-          },
-          {
-            label: 'Panturrilha(cm)',
-            data: [27, 27.5, 27.9, 28.3, 28.9, 29.8],
-            //backgroundColor: '#009933',
-            backgroundColor: 'transparent',
-            borderColor: '#009933',
-            borderWidth: 1
-          },
-          {
-            label: 'Coxa(cm)',
-            data: [35, 36, 38, 38.5, 39, 40],
-            //backgroundColor: '#dd1334',
-            backgroundColor: 'transparent',
-            borderColor: '#dd1144',
-            borderWidth: 1
-          },
-          {
-            label: 'Barriga(cm)',
-            data: [59, 60, 61, 63, 62, 61],
-            //backgroundColor: '#0000ff',
-            backgroundColor: 'transparent',
-            borderColor: '#0000ff',
-            borderWidth: 1
-          },
-          {
-            label: 'Peito(cm)',
-            data: [65, 67, 70, 72, 70, 71],
-            //backgroundColor: '#660066',
-            backgroundColor: 'transparent',
-            borderColor: '#660066',
-            borderWidth: 1
-          },
-          {
-            label: 'Peso(kg)',
-            data: [70, 72, 74, 76, 77, 80],
-            //backgroundColor: '#ddee44',
-            backgroundColor: 'transparent',
-            borderColor: '#ddee44',
-            borderWidth: 1
-          },
+  private createHistoricDashboard() {
 
-        ]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: false
-            }
-          }]
-        }
-      }
+    let generateGraphic: DashboardGenerate;
+
+    generateGraphic = new DashboardGenerate();
+
+    generateGraphic.addLabels(['01-05-2019', '01-06-2019', '01-07-2019', '01-08-2019', '01-09-2019']);
+    generateGraphic.addDataSet('Bíceps(cm)', [15, 16, 16.4, 16.5, 16.7, 17]);
+    generateGraphic.addDataSet('Panturrilha(cm)', [27, 27.5, 27.9, 28.3, 28.9, 29.8]);
+    generateGraphic.addDataSet('Coxa(cm)', [35, 36, 38, 38.5, 39, 40]);
+    generateGraphic.addDataSet('Barriga(cm)', [59, 60, 61, 63, 62, 61]);
+    generateGraphic.addDataSet('Peito(cm)', [65, 67, 70, 72, 70, 71]);
+    generateGraphic.addDataSet('Peso(kg)', [70, 72, 74, 76, 77, 80]);
+
+    console.log(generateGraphic.getGraphicData())
+
+    this.historicGraphic = new Chart(this.historicDashboard.nativeElement, {
+      type: 'line',
+      data: generateGraphic.getGraphicData(),
+    });
+  }
+
+  private createDietDashboard(){
+    let generateGraphic: DashboardGenerate;
+
+    generateGraphic = new DashboardGenerate();
+
+    generateGraphic.setBackgroundTransparent(true);
+    
+    generateGraphic.addLabels(['01-05-2019', '01-06-2019', '01-07-2019', '01-08-2019', '01-09-2019']);
+
+    generateGraphic.addDataSet('Esperado', [2700, 2700, 2700, 2700, 2700, 2700]);
+    generateGraphic.addDataSet('Consumido', [2500, 2900, 2780, 2450, 2400, 3200]);
+    
+    this.dietGraphic = new Chart(this.dietDashboard.nativeElement, {
+      type: 'line',
+      data: generateGraphic.getGraphicData(),
     });
   }
 }
