@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { DietResult, DietAmount } from '../diet-data.model';
+import { Diet } from '../diet-data.model';
 import { ModalController, ToastController } from '@ionic/angular';
 import { DietModalComponent } from '../diet-modal/diet-modal.component';
 import { FoodData } from '../../food/food-data.model';
-import { map, switchMap, take } from 'rxjs/operators';
 import { FoodService } from '../../food/food.service';
 import { DietService } from '../diet.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,15 +13,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class DietComponent implements OnInit {
 
-  public dietResult: DietResult[];
-  public dietAmount = {} as DietAmount;
-  public totalDietAmount = {} as DietAmount;
-  public food = [] as FoodData[];
-  public foodOriginal = [] as FoodData[];
-  public dietReady: boolean = true;
-  public dietId: String;
-  public dietDate: string;
-  public dietDateFormatted: Date
+  public diet = {} as Diet
+  public generatedDiet: boolean = true;
   public isEditing: boolean = false;
   public dateInvalid = false
   public minSelectableDate
@@ -33,125 +25,89 @@ export class DietComponent implements OnInit {
     private dietService: DietService,
     private activatedRoute: ActivatedRoute,
     private modalController: ModalController,
-    private toastController: ToastController    
+    private toastController: ToastController
   ) { }
 
   ngOnInit() {
-    this.initializeMimDate()
-
     this.activatedRoute.params.subscribe(params => {
       let date = params.date
       if (date) {
         this.getDietByDate(date)
         this.isEditing = true
       } else {
+
         this.isEditing = false
         this.initializeDate()
+        this.generateDietBalance()
       }
     });
   }
 
-  getDietByDate(date) {
-    this.dietService.getDietByDate(date)
-      .pipe(
-        map(result => {
-          if (result[0]) {
-            this.dietResult = result[0]["alimentos"];
-            this.totalDietAmount = result[0]["detalhes"];
-            this.food = result[0]["food"];
-            this.dietId = result[0]["id"];
-            this.dietDate = result[0]["date"];
-            this.dietDateFormatted = result[0]["dateFormatted"]
-            this.verifyDateValid()
+  async generateDietBalance() {
+    this.dietService.diet.id = this.diet.id
+    this.dietService.diet.date = this.diet.date
+    this.dietService.diet.dateFormatted = this.diet.dateFormatted
+    this.diet.dietBalance = await this.dietService.generateDietBalance()
 
-            this.loadDietAmount();
-          } else {
-            this.initializeDate()
-          }
-        }),
-        switchMap(() => {
-          return this.foodService.getFood()
-        }),
-        take(1)
-
-      ).subscribe((result) => {
-        result.forEach(result => {
-          this.food.forEach(food => {
-            if (result["id"] == food.id) {
-              this.foodOriginal.push(JSON.parse(JSON.stringify(result)));
-            }
-          })
-        })
-      })
+    if (!this.diet.foods) {
+      this.diet.foods = []
+      this.dietService.diet.foods = []
+    }
   }
 
-  generateDiet() {
-    this.dietReady = false;
-    this.food = [];
-    this.foodOriginal = [];
-    let generateDiet: boolean
+  async generateDietFoods() {
+    this.generatedDiet = false;
 
-    generateDiet = this.dietService.generateDiet()
+    this.generatedDiet = await this.dietService.generateDietFoods()
 
-    if (generateDiet) {
-      this.dietService.resultO.subscribe((result) => {
-        this.dietResult = result as DietResult[]
-
-        this.loadDietAmount()
-
-        this.totalDietAmount = this.dietService.dietAmount
-
-        this.dietReady = true
-      })
+    if (this.generatedDiet) {
+      this.diet = this.dietService.diet
     } else {
       this.presentToastInvalidProfile()
     }
   }
 
-  loadDietAmount() {
-    this.dietAmount.calories = 0;
-    this.dietAmount.fat = 0;
-    this.dietAmount.protein = 0;
-    this.dietAmount.carbohydrate = 0;
-
-    this.dietResult.forEach((food) => {
-      this.dietAmount.calories += (food.amount * food.calorie) / 100;
-      this.dietAmount.fat += food.fat;
-      this.dietAmount.protein += food.protein;
-      this.dietAmount.carbohydrate += food.carbohydrate;
-    });
+  getDietByDate(date) {
+    this.dietService.getDietByDate(date).subscribe((result) => {
+      if (result[0]) {
+        this.diet = result[0]
+        this.dietService.diet = result[0]
+        this.verifyDateValid()
+      } else {
+        this.initializeDate()
+      }
+    })
   }
 
   async saveDiet() {
     let isDataValid: boolean = true
 
-    let lDadosSalvar = {
-      alimentos: this.dietResult,
-      food: this.food,
-      detalhes: this.totalDietAmount
-    };
+    const invalidFoods = this.diet.foods.find(({ amount }) => amount == undefined || amount < 0)
 
-    lDadosSalvar.food.forEach((food) => {
-      if (!food.amount) {
-        isDataValid = false
-      }
-    })
+    if (invalidFoods) {
+      isDataValid = false
+    }
 
     if (isDataValid) {
-      lDadosSalvar["date"] = this.dietDate.substr(0, 10);
+      this.diet.date = this.diet.date.substr(0, 10)
 
-      if (this.dietId) {
-        lDadosSalvar["id"] = this.dietId;
-        await this.dietService.createDiet(lDadosSalvar);
+      if (this.diet.id) {
+        await this.dietService.createDiet(this.diet)
       } else {
-        this.dietService.getDietByDate(lDadosSalvar["date"])
-          .subscribe((result) => {
-            if (result[0]) {
-              lDadosSalvar["id"] = result[0]["id"];
-            }
-            this.dietService.createDiet(lDadosSalvar);
-          });
-      };
+        const diet = await this.dietService.getDietByDate(this.diet.date).toPromise()
+
+        if (diet && diet.length == 1) {
+          this.diet.id = diet[0].id
+        } else {
+          this.diet.id = ""
+        }
+
+        if (!this.diet.dateFormatted) {
+          this.diet.dateFormatted = new Date()
+        }
+
+        this.dietService.createDiet(this.diet)
+      }
 
       await this.presentToast();
 
@@ -191,22 +147,28 @@ export class DietComponent implements OnInit {
 
   async presentModal() {
     const modal = await this.modalController.create({
-      component: DietModalComponent,
-      componentProps: { value: 123 }
+      component: DietModalComponent
     });
 
     modal.onDidDismiss().then((detail) => {
       if (detail !== null) {
-        let lFood: FoodData;
+        let foodSelected: FoodData;
 
-        lFood = detail.data;
-        this.food.push(lFood);
-        this.foodOriginal.push(JSON.parse(JSON.stringify(lFood)));
+        foodSelected = detail.data;
 
-        this.dietAmount.calories += Math.round(lFood.calorie);
-        this.dietAmount.fat += Math.round(lFood.fat);
-        this.dietAmount.protein += Math.round(lFood.protein);
-        this.dietAmount.carbohydrate += Math.round(lFood.carbohydrate);
+        if (foodSelected.portion) {
+          foodSelected.amount = 1
+        }
+        else {
+          foodSelected.amount = 100
+        }
+
+        this.diet.foods.push(foodSelected)
+
+        this.diet.dietBalance.currentCalories = +this.diet.dietBalance.currentCalories ? this.diet.dietBalance.currentCalories + foodSelected.calorie : foodSelected.calorie
+        this.diet.dietBalance.currentFat = +this.diet.dietBalance.currentFat ? this.diet.dietBalance.currentFat + foodSelected.fat : foodSelected.fat
+        this.diet.dietBalance.currentProtein = +this.diet.dietBalance.currentProtein ? this.diet.dietBalance.currentProtein + foodSelected.protein : foodSelected.protein
+        this.diet.dietBalance.currentCarbohydrate = +this.diet.dietBalance.currentCarbohydrate ? this.diet.dietBalance.currentCarbohydrate + foodSelected.carbohydrate : foodSelected.carbohydrate
       }
     });
 
@@ -214,53 +176,54 @@ export class DietComponent implements OnInit {
   }
 
   changedAmount(foodChange) {
-    let lFood: FoodData;
-    let lNewFood = {} as FoodData;
-    let lNewAmount: number;
+    let newAmount: number
+    let food: FoodData
+    let newFood = {} as FoodData
+    let baseFood: FoodData
 
-    lNewAmount = foodChange.food.amount;
+    baseFood = this.foodService.getBaseFood(foodChange.food.id)
 
-    lFood = foodChange.food;
+    newAmount = foodChange.food.amount
 
-    this.dietAmount.calories -= lFood.calorie;
-    this.dietAmount.fat -= lFood.fat;
-    this.dietAmount.protein -= lFood.protein;
-    this.dietAmount.carbohydrate -= lFood.carbohydrate;
+    food = foodChange.food
 
-    lNewFood.calorie = 0;
-    lNewFood.fat = 0;
-    lNewFood.protein = 0;
-    lNewFood.carbohydrate = 0;
-    lNewFood.amount = lNewAmount;
+    this.diet.dietBalance.currentCalories -= food.calorie
+    this.diet.dietBalance.currentFat -= food.fat
+    this.diet.dietBalance.currentProtein -= food.protein
+    this.diet.dietBalance.currentCarbohydrate -= food.carbohydrate
 
-    if (lFood.portion) {
-      lNewFood.calorie = lNewAmount * this.foodOriginal[foodChange.indice].calorie;
-      lNewFood.fat = lNewAmount * this.foodOriginal[foodChange.indice].fat;
-      lNewFood.protein = lNewAmount * this.foodOriginal[foodChange.indice].protein;
-      lNewFood.carbohydrate = lNewAmount * this.foodOriginal[foodChange.indice].carbohydrate;
+    newFood.amount = newAmount
+
+    if (food.portion) {
+      newFood.calorie = newAmount * baseFood.calorie
+      newFood.fat = newAmount * baseFood.fat
+      newFood.protein = newAmount * baseFood.protein
+      newFood.carbohydrate = newAmount * baseFood.carbohydrate
     } else {
-      lNewFood.calorie = (lNewAmount * this.foodOriginal[foodChange.indice].calorie) / 100;
-      lNewFood.fat = (lNewAmount * this.foodOriginal[foodChange.indice].fat) / 100;
-      lNewFood.protein = (lNewAmount * this.foodOriginal[foodChange.indice].protein) / 100;
-      lNewFood.carbohydrate = (lNewAmount * this.foodOriginal[foodChange.indice].carbohydrate) / 100;
+      newFood.calorie = (newAmount * baseFood.calorie) / 100
+      newFood.fat = (newAmount * baseFood.fat) / 100
+      newFood.protein = (newAmount * baseFood.protein) / 100
+      newFood.carbohydrate = (newAmount * baseFood.carbohydrate) / 100
     }
 
-    this.dietAmount.calories += lNewFood.calorie;
-    this.dietAmount.fat += lNewFood.fat;
-    this.dietAmount.protein += lNewFood.protein;
-    this.dietAmount.carbohydrate += lNewFood.carbohydrate;
+    this.diet.dietBalance.currentCalories += newFood.calorie
+    this.diet.dietBalance.currentFat += newFood.fat
+    this.diet.dietBalance.currentProtein += newFood.protein
+    this.diet.dietBalance.currentCarbohydrate += newFood.carbohydrate
 
-    this.food[foodChange.indice].amount = lNewFood.amount
-    this.food[foodChange.indice].calorie = lNewFood.calorie
-    this.food[foodChange.indice].fat = lNewFood.fat
-    this.food[foodChange.indice].protein = lNewFood.protein
-    this.food[foodChange.indice].carbohydrate = lNewFood.carbohydrate
+    this.diet.foods[foodChange.indice].amount = newFood.amount
+    this.diet.foods[foodChange.indice].calorie = newFood.calorie
+    this.diet.foods[foodChange.indice].fat = newFood.fat
+    this.diet.foods[foodChange.indice].protein = newFood.protein
+    this.diet.foods[foodChange.indice].carbohydrate = newFood.carbohydrate
   }
 
   initializeDate() {
     let dateNow = new Date()
     let lFormattedDate = `${dateNow.getFullYear()}-${('0' + (dateNow.getMonth() + 1)).slice(-2)}-${('0' + dateNow.getDate()).slice(-2)}`
-    this.dietDate = lFormattedDate
+
+    this.diet.date = lFormattedDate
+    this.dietService.diet.date = lFormattedDate
   }
 
   initializeMimDate() {
@@ -275,8 +238,19 @@ export class DietComponent implements OnInit {
     dateNow.setSeconds(0)
     dateNow.setMilliseconds(0)
 
-    if (this.dietDateFormatted < dateNow) {
+    if (this.diet.dateFormatted < dateNow) {
       this.dateInvalid = true
     }
+  }
+
+  removeDiet(foodChange) {
+    foodChange.food.amount = 0
+
+    this.changedAmount(foodChange)
+    this.diet.foods.splice(foodChange.indice, 1)
+  }
+
+  ionViewWillLeave() {
+    this.diet = {} as Diet;
   }
 }

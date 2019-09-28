@@ -3,19 +3,15 @@ import { AuthService } from '../auth/auth.service';
 import { UserProfileData } from '../user-profile/user-profile.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map, take } from 'rxjs/operators';
-import { Subject } from 'rxjs';
 import { FoodService } from '../food/food.service';
-import { DietResult, DietAmount, DietData } from './diet-data.model';
+import { DietFood, Diet, DietBalance } from './diet-data.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DietService {
-
+  public diet = {} as Diet
   private userProfile: UserProfileData;
-  private result = [] as DietResult[];
-  public dietAmount = {} as DietAmount;
-  public resultO = new Subject<DietResult[]>();
 
   constructor(
     private foodService: FoodService,
@@ -23,24 +19,16 @@ export class DietService {
     private afFirestore: AngularFirestore
   ) { }
 
-  generateDiet(): boolean {
-    return this.calcMinCalories();
-  }
-
-  private calcMinCalories(): boolean {
-    let generatedDiet: boolean = true
-    this.result = [] as DietResult[];
-    this.dietAmount = {} as DietAmount;
-    this.resultO = new Subject<DietResult[]>();
-
-    this.userProfile = this.authService.getUser()
-
-    let lBasalMetabolicRate: number = 0;
-    let lCaloricDayBalance: number = 0;
-    let lIntensityExercise: number = 0;
+  async generateDietBalance(): Promise<DietBalance> {
     let lGoal: number = 0;
+    let lBasalMetabolicRate: number = 0;
+    let lIntensityExercise: number = 0;
+
+    let dietBalance = {} as DietBalance
 
     const MALE = 1;
+
+    this.userProfile = this.authService.getUser()
 
     if (this.userProfile.gender == MALE) {
       lBasalMetabolicRate = (10 * this.userProfile.weight) + (6.25 * this.userProfile.height) - (5 * this.userProfile.age) + 5;
@@ -83,133 +71,124 @@ export class DietService {
         lGoal += 348;
         break;
     }
+    dietBalance.totalDayCalories = lBasalMetabolicRate + lIntensityExercise + lGoal
+    dietBalance.totalDayProtein = this.userProfile.weight * 1.5
+    dietBalance.totalDayFat = this.userProfile.weight
+    dietBalance.totalDayCarbohydrate = (dietBalance.totalDayCalories - ((dietBalance.totalDayProtein * 4) + (dietBalance.totalDayFat * 9))) / 4
 
-    let lDayProtein;
-    let lDayCarbohydrate;
-    let lDayFat;
+    this.diet.dietBalance = dietBalance
 
-    lCaloricDayBalance = lBasalMetabolicRate + lIntensityExercise + lGoal;
-    lDayProtein = this.userProfile.weight * 1.5
-    lDayFat = this.userProfile.weight
-    lDayCarbohydrate = (lCaloricDayBalance - ((lDayProtein * 4) + (lDayFat * 9))) / 4
+    return dietBalance
+  }
 
-    if (lDayCarbohydrate < 0) {
+  async generateDietFoods(): Promise<boolean> {
+    let generatedDiet: boolean = true
+
+    if (this.diet.dietBalance.totalDayCarbohydrate < 0) {
       generatedDiet = false
     }
 
     if (generatedDiet) {
-      this.dietAmount.totalProtein = lDayProtein;
-      this.dietAmount.totalFat = this.userProfile.weight;
-      this.dietAmount.totalCarbohydrate = lDayCarbohydrate;
-      this.dietAmount.totalCalories = lCaloricDayBalance;
+      await this.getFoodByType1()
+      await this.getFoodByType2()
+      await this.getFoodByType0()
 
-      this.foodService.getFoodByType(2)
-        .subscribe((food) => {
-          let lRandom;
-          let lFat;
-          let lFood;
-          let lProtein;
-          let lAmountFood;
-          let lCarbohydrates;
-          let lResultMeal = {} as DietResult;
-
-          lRandom = Math.floor(Math.random() * food.length);
-
-          lFood = food[lRandom];
-
-          lAmountFood = (100 * (0.2 * lDayProtein)) / lFood.protein;
-          lProtein = (lAmountFood * lFood.protein) / 100;
-          lCarbohydrates = (lAmountFood * lFood.carbohydrate) / 100;
-          lFat = (lAmountFood * lFood.fat) / 100;
-
-          lResultMeal.name = lFood.name;
-          lResultMeal.amount = lAmountFood;
-          lResultMeal.calorie = Math.round(lFood.calorie);
-          lResultMeal.fat = Math.round(lFat);
-          lResultMeal.protein = Math.round(lProtein);
-          lResultMeal.carbohydrate = Math.round(lCarbohydrates);
-
-          this.result.push(lResultMeal);
-          this.resultO.next(this.result);
-        });
-
-      this.foodService.getFoodByType(1)
-        .subscribe((food) => {
-          let lRandom;
-          let lFat;
-          let lFood;
-          let lProtein;
-          let lCarbohydrates;
-          let lAmountFood;
-          let lResultMeal = {} as DietResult;
-
-          lRandom = Math.floor(Math.random() * food.length);
-
-          lFood = food[lRandom];
-
-          lAmountFood = (100 * (0.15 * lDayCarbohydrate)) / lFood.carbohydrate;
-          lProtein = (lAmountFood * lFood.protein) / 100;
-          lCarbohydrates = (lAmountFood * lFood.carbohydrate) / 100;
-          lFat = (lAmountFood * lFood.fat) / 100;
-
-          lResultMeal.name = lFood.name;
-          lResultMeal.amount = lAmountFood;
-          lResultMeal.calorie = Math.round(lFood.calorie);
-          lResultMeal.fat = Math.round(lFat);
-          lResultMeal.protein = Math.round(lProtein);
-          lResultMeal.carbohydrate = Math.round(lCarbohydrates);
-
-          this.result.push(lResultMeal);
-          this.resultO.next(this.result);
-        });
-
-      this.foodService.getFoodByType(0)
-        .subscribe((food) => {
-          let lRandom;
-          let lFood;
-          let lResultMeal = {} as DietResult;
-          let lPrevious: number;
-
-          lPrevious = 0;
-
-          for (let index = 0; index < 2; index++) {
-            lRandom = Math.floor(Math.random() * food.length);
-
-            while (true) {
-              let lR;
-
-              lR = Math.floor(Math.random() * food.length);
-
-              if (lR != lPrevious) {
-                lRandom = lR;
-
-                break;
-              }
-            }
-
-            lFood = food[lRandom];
-
-            lResultMeal.name = lFood.name;
-            lResultMeal.amount = 1;
-            lResultMeal.fat = Math.round(lFood.fat);
-            lResultMeal.calorie = Math.round(lFood.calorie);
-            lResultMeal.protein = Math.round(lFood.protein);
-            lResultMeal.carbohydrate = Math.round(lFood.carbohydrate);
-            lResultMeal.portion = true;
-
-            this.result.push(JSON.parse(JSON.stringify(lResultMeal)));
-
-            lPrevious = lRandom;
-          }
-          this.resultO.next(this.result)
-        });
+      this.loadCurrentBalance()
     }
 
     return generatedDiet
   }
 
-  createDiet(diet) {
-    if (diet["id"]) {
+  async getFoodByType0() {
+    const food = await this.foodService.getFoodByType(0).toPromise()
+
+    let lRandom: number
+    let lPrevious: number
+    let foodResult = {} as DietFood
+
+    for (let index = 0; index < 2; index++) {
+      lRandom = Math.floor(Math.random() * food.length);
+
+      while (true) {
+        let lR;
+
+        lR = Math.floor(Math.random() * food.length);
+
+        if (lR != lPrevious) {
+          lRandom = lR;
+
+          break;
+        }
+      }
+
+      foodResult = food[lRandom];
+      foodResult.amount = 1
+
+      foodResult.calorie = Math.round((foodResult.amount * foodResult.calorie) / 100)
+      this.diet.foods.push(JSON.parse(JSON.stringify(foodResult)))
+
+      lPrevious = lRandom;
+    }
+  }
+
+  async getFoodByType1() {
+    const food = await this.foodService.getFoodByType(1).toPromise()
+
+    let lRandom;
+    let foodAmount: number
+    let foodResult = {} as DietFood;
+
+    lRandom = Math.floor(Math.random() * food.length)
+
+    foodResult = food[lRandom]
+
+    foodAmount = Math.round((100 * (0.15 * this.diet.dietBalance.totalDayCarbohydrate)) / foodResult.carbohydrate)
+
+    foodResult.name = foodResult.name
+    foodResult.amount = foodAmount
+    foodResult.calorie = Math.round((foodAmount * foodResult.calorie) / 100)
+    foodResult.fat = Math.round((foodAmount * foodResult.fat) / 100)
+    foodResult.protein = Math.round((foodAmount * foodResult.protein) / 100)
+    foodResult.carbohydrate = Math.round((foodAmount * foodResult.carbohydrate) / 100)
+
+    this.diet.foods.push(JSON.parse(JSON.stringify(foodResult)))
+  }
+
+  async getFoodByType2() {
+
+    const food = await this.foodService.getFoodByType(2).toPromise()
+
+    let lRandom
+    let foodAmount: number
+    let foodResult = {} as DietFood
+
+    lRandom = Math.floor(Math.random() * food.length)
+
+    foodResult = food[lRandom]
+
+    foodAmount = Math.round((100 * (0.2 * this.diet.dietBalance.totalDayProtein)) / foodResult.protein)
+
+    foodResult.name = foodResult.name
+    foodResult.amount = foodAmount
+    foodResult.calorie = Math.round((foodAmount * foodResult.calorie) / 100)
+    foodResult.fat = Math.round((foodAmount * foodResult.fat) / 100)
+    foodResult.protein = Math.round((foodAmount * foodResult.protein) / 100)
+    foodResult.carbohydrate = Math.round((foodAmount * foodResult.carbohydrate) / 100)
+
+    this.diet.foods.push(JSON.parse(JSON.stringify(foodResult)))
+  }
+
+  loadCurrentBalance() {
+    this.diet.foods.forEach((food) => {
+      this.diet.dietBalance.currentCalories = +this.diet.dietBalance.currentCalories ? this.diet.dietBalance.currentCalories + food.calorie : food.calorie
+      this.diet.dietBalance.currentFat = +this.diet.dietBalance.currentFat ? this.diet.dietBalance.currentFat + food.fat : food.fat
+      this.diet.dietBalance.currentProtein = this.diet.dietBalance.currentProtein = +this.diet.dietBalance.currentProtein ? this.diet.dietBalance.currentProtein + food.protein : food.protein
+      this.diet.dietBalance.currentCarbohydrate = this.diet.dietBalance.currentCarbohydrate = +this.diet.dietBalance.currentCarbohydrate ? this.diet.dietBalance.currentCarbohydrate + food.carbohydrate : food.carbohydrate
+    });
+  }
+
+  createDiet(diet: Diet) {
+    if (diet.id && diet.id != "") {
       return this.afFirestore.collection(`user/${this.authService.getUser().id}/diet`).doc(diet["id"]).update(diet)
     } else {
       return this.afFirestore.collection(`user/${this.authService.getUser().id}/diet`).add(diet);
@@ -217,7 +196,7 @@ export class DietService {
   }
 
   getDiet() {
-    return this.afFirestore.collection<DietData>(`user/${this.authService.getUser().id}/diet`)
+    return this.afFirestore.collection<Diet>(`user/${this.authService.getUser().id}/diet`)
       .snapshotChanges()
       .pipe(
         map(data => {
@@ -238,7 +217,9 @@ export class DietService {
       .snapshotChanges()
       .pipe(
         map(data => {
-          return data.map(action => ({ ...action.payload.doc.data(), id: action.payload.doc.id, dateFormatted: new Date(`${action.payload.doc.data()["date"]} GMT-0300`) }));
+          return data.map(action => (
+            { ...action.payload.doc.data(), id: action.payload.doc.id, dateFormatted: new Date(`${action.payload.doc.data()["date"]} GMT-0300`) } as Diet
+          ))
         }),
         take(1)
       )

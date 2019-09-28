@@ -12,7 +12,7 @@
 <ion-content>
   <ion-card>
     <ion-card-content>
-      <ion-button expand="full" [disabled]="!dietReady" (click)="generateDiet()">Gerar dieta</ion-button>
+      <ion-button expand="full" [disabled]="!generatedDiet" (click)="generateDietFoods()">Gerar dieta</ion-button>
     </ion-card-content>
   </ion-card>
   <ion-card>
@@ -21,26 +21,16 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-card *ngFor="let item of dietResult">
-          <ion-card-header color="dark">{{ item.name }}</ion-card-header>
-          <ion-card-content>
-            <ion-grid>
-              <span *ngIf="!item.portion">Gramas: {{ item.amount | number: '1.2-2' }}g</span>
-              <span *ngIf="item.portion">Porção: {{ item.amount }}</span> - Proteina:
-              {{ item.protein | number: '1.2-2' }}g -
-              Carboidrato: {{ item.carbohydrate | number: '1.2-2' }}g - Gordura: {{ item.fat | number: '1.2-2'}}g
-            </ion-grid>
-          </ion-card-content>
-        </ion-card>
-        <ion-card *ngFor="let item of food; let i = index">
-          <ion-card-header color="dark">{{ item.name }}</ion-card-header>
+        <ion-card *ngFor="let item of diet.foods; let i = index">
+          <ion-card-header color="dark">{{ item.name }}
+            <ion-icon (click)="removeDiet({food: item, indice: i})" name="trash"></ion-icon>
+          </ion-card-header>
           <ion-card-content>
             <ion-grid>
               <span *ngIf="!item.portion">Gramas: <ion-input type="number" placeholder="100" [(ngModel)]="item.amount"
                   (ionChange)="changedAmount({food: item, indice: i})"></ion-input>g </span>
               <span *ngIf="item.portion">Porção: <ion-input type="number" placeholder="1" [(ngModel)]="item.amount"
-                  (ionChange)="changedAmount({food: item, indice: i})"></ion-input></span> -
-              Proteina:
+                  (ionChange)="changedAmount({food: item, indice: i})"></ion-input></span> - Proteina:
               {{ item.protein | number: '1.2-2' }}g -
               Carboidrato: {{ item.carbohydrate | number: '1.2-2' }}g - Gordura: {{ item.fat | number: '1.2-2'}}g
             </ion-grid>
@@ -50,18 +40,20 @@
       <ion-button expand="full" (click)="openModal()">Adicionar alimento</ion-button>
       <ion-card-content>
         <div>
-          Calorias: {{ dietAmount.calories | number: '1.2-2' }}KCal /
-          {{ totalDietAmount.totalCalories | number: '1.2-2' }}KCal
+          Calorias: {{ diet.dietBalance?.currentCalories | number: '1.2-2' }}KCal /
+          {{ diet.dietBalance?.totalDayCalories | number: '1.2-2' }}KCal
         </div>
         <div>
-          Proteinas: {{ dietAmount.protein | number: '1.2-2' }}g / {{ totalDietAmount.totalProtein | number: '1.2-2' }}g
+          Proteinas: {{ diet.dietBalance?.currentProtein | number: '1.2-2' }}g /
+          {{ diet.dietBalance?.totalDayProtein | number: '1.2-2' }}g
         </div>
         <div>
-          Carboidratos: {{ dietAmount.carbohydrate | number: '1.2-2' }}g /
-          {{ totalDietAmount.totalCarbohydrate | number: '1.2-2' }}g
+          Carboidratos: {{ diet.dietBalance?.currentCarbohydrate | number: '1.2-2' }}g /
+          {{ diet.dietBalance?.totalDayCarbohydrate | number: '1.2-2' }}g
         </div>
         <div>
-          Gordura: {{ dietAmount.fat | number: '1.2-2' }}g / {{ totalDietAmount.totalFat | number: '1.2-2' }}g
+          Gordura: {{ diet.dietBalance?.currentFat | number: '1.2-2' }}g /
+          {{ diet.dietBalance?.totalDayFat | number: '1.2-2' }}g
         </div>
       </ion-card-content>
     </ion-card-content>
@@ -71,9 +63,9 @@
       <ion-item>
         <ion-label>Data: </ion-label>
         <ion-datetime [disabled]="isEditing" displayFormat="DD/MM/YYYY" placeholder="Selecione a data"
-          [(ngModel)]="dietDate" [min]="minSelectableDate"></ion-datetime>
+          [(ngModel)]="diet.date" [min]="minSelectableDate"></ion-datetime>
       </ion-item>
-      <ion-button expand="full" [disabled]="!dietResult || dateInvalid" (click)="saveDiet()">Salvar dieta</ion-button>
+      <ion-button expand="full" [disabled]="!diet.foods || dateInvalid" (click)="saveDiet()">Salvar dieta</ion-button>
     </ion-card-content>
   </ion-card>
 </ion-content>

@@ -7,7 +7,7 @@ import { HistoricService } from '../historic/historic.service';
 import { HistoricData } from '../historic/historic.model';
 import { DietService } from '../diet/diet.service';
 import { Observable } from 'rxjs';
-import { DietData } from '../diet/diet-data.model';
+import { Diet } from '../diet/diet-data.model';
 
 const { LocalNotifications } = Plugins;
 
@@ -17,7 +17,7 @@ const { LocalNotifications } = Plugins;
 })
 export class HomePage {
 
-  dietToday: Observable<DietData>
+  dietToday: Observable<Diet>
 
   constructor(
     private router: Router,
@@ -46,7 +46,7 @@ export class HomePage {
     this.showDietToday();
   }
 
-  openEditDiet(diet: DietData) {
+  openEditDiet(diet: Diet) {
     if (diet) {
       this.router.navigate(['diet-list/diet-add', diet])
     } else {

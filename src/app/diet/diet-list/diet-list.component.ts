@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { DietService } from '../diet.service';
-import { DietData } from '../diet-data.model';
+import { Diet } from '../diet-data.model';
 
 @Component({
   selector: 'app-diet-list',
@@ -13,8 +13,8 @@ import { DietData } from '../diet-data.model';
 export class DietListComponent implements OnInit {
 
   public searchControl: FormControl;
-  public listDiet: DietData[]
-  public listDietBase: DietData[]
+  public listDiet: Diet[]
+  public listDietBase: Diet[]
   private subscription: Subscription
 
   constructor(
@@ -32,7 +32,7 @@ export class DietListComponent implements OnInit {
       });
   }
 
-  openEditDiet(diet: DietData) {
+  openEditDiet(diet: Diet) {
     this.router.navigate(['diet-list/diet-add', diet])
   }
 
@@ -43,7 +43,7 @@ export class DietListComponent implements OnInit {
     })
   }
 
-  removeDiet(Diet: DietData) {
+  removeDiet(Diet: Diet) {
     this.dietService.deleteDiet(Diet.id)
   }
 

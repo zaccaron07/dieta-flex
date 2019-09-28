@@ -3,13 +3,18 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { FoodData } from './food-data.model';
 import { map, take } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { DietFood } from '../diet/diet-data.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FoodService {
 
-  constructor(private afFirestore: AngularFirestore) { }
+  private baseFood: FoodData[]
+
+  constructor(private afFirestore: AngularFirestore) {
+    this.initializeBaseFood()
+  }
 
   createFood(foodData: FoodData) {
     let retorno;
@@ -19,6 +24,14 @@ export class FoodService {
       retorno = this.afFirestore.collection('food').add(foodData);
     }
     return retorno;
+  }
+
+  async initializeBaseFood() {
+    this.baseFood = await this.getFood().toPromise()
+  }
+
+  getBaseFood(foodId: string) {
+    return this.baseFood.find(({ id }) => id == foodId)
   }
 
   getFood(): Observable<FoodData[]> {
@@ -45,7 +58,9 @@ export class FoodService {
       .snapshotChanges()
       .pipe(
         map(data => {
-          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() }));
+          return data.map(action => (
+            { id: action.payload.doc.id, ...action.payload.doc.data() } as DietFood
+          ));
         }),
         take(1)
       )

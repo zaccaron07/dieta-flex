@@ -1,12 +1,13 @@
-export interface DietData {
+export interface Diet {
   id?: string;
   date: string;
-  dateFormatted: Date
-  alimentos: DietResult[];
-  detalhes: DietAmount[];
+  dateFormatted?: Date
+  foods: DietFood[];
+  dietBalance: DietBalance;
 }
 
-export interface DietResult {
+export interface DietFood {
+  id?: string
   name: string;
   portion: boolean;
   fat: number;
@@ -16,13 +17,13 @@ export interface DietResult {
   carbohydrate: number;
 }
 
-export interface DietAmount {
-  fat: number;
-  protein: number;
-  calories: number;
-  carbohydrate: number;
-  totalFat: number;
-  totalProtein: number;
-  totalCalories: number;
-  totalCarbohydrate: number;
+export interface DietBalance {
+  currentFat: number
+  currentProtein: number
+  currentCalories: number
+  currentCarbohydrate: number
+  totalDayFat: number
+  totalDayProtein: number
+  totalDayCalories: number
+  totalDayCarbohydrate: number
 }
