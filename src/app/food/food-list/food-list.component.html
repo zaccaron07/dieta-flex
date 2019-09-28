@@ -13,10 +13,14 @@
   <ion-searchbar [formControl]="searchControl" showCancelButton></ion-searchbar>
   <ion-card *ngFor="let item of listFood | async">
     <ion-card-header (click)="openEditFood(item)" color="dark">
-      {{item.name}}
-    </ion-card-header>
-    <ion-card-header color="white">
-      <ion-icon (click)="removeFood(item)" name="trash"></ion-icon>
+      <ion-row>
+        <ion-col>
+          {{item.name}}
+        </ion-col>
+        <ion-col>
+          <ion-icon style="float: right;" (click)="removeFood(item)" name="trash"></ion-icon>
+        </ion-col>
+      </ion-row>
     </ion-card-header>
   </ion-card>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">

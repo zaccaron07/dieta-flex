@@ -13,16 +13,20 @@
   <ion-searchbar [formControl]="searchControl" showCancelButton></ion-searchbar>
   <ion-card *ngFor="let item of listHistoric">
     <ion-card-header (click)="openEditHistoric(item)" color="dark">
-      <div>{{item.time}}</div>
-      <div>Peso: {{item.weight}}</div>
-      <div>Bíceps: {{item.biceps}}</div>
-      <div>Coxa: {{item.thigh}}</div>
-      <div>Panturrilha: {{item.calf}}</div>
-      <div>Barriga: {{item.belly}}</div>
-      <div>Peito: {{item.chest}}</div>
-    </ion-card-header>
-    <ion-card-header color="white">
-      <ion-icon (click)="openRemoveHistoric(item)" name="trash"></ion-icon>
+      <ion-row>
+        <ion-col>
+          <div>{{item.time}}</div>
+          <div>Peso: {{item.weight}}</div>
+          <div>Bíceps: {{item.biceps}}</div>
+          <div>Coxa: {{item.thigh}}</div>
+          <div>Panturrilha: {{item.calf}}</div>
+          <div>Barriga: {{item.belly}}</div>
+          <div>Peito: {{item.chest}}</div>
+        </ion-col>
+        <ion-col>
+          <ion-icon style="float: right;" (click)="openRemoveHistoric(item)" name="trash"></ion-icon>
+        </ion-col>
+      </ion-row>
     </ion-card-header>
   </ion-card>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">

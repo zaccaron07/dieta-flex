@@ -5,6 +5,8 @@ import { HistoricService } from '../historic/historic.service';
 import { DashboardGenerate } from './graphic-generate';
 import { Subscription } from 'rxjs';
 import { TypeGraphic } from './graphic-constants';
+import { DietService } from '../diet/diet.service';
+import { Diet } from '../diet/diet-data.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,10 +21,14 @@ export class DashboardComponent implements OnInit {
   dietGraphic: any;
 
   private historicList: HistoricData[];
-  private subscription: Subscription;
+  private dietList: Diet[];
+
+  private subscriptionHistoric: Subscription;
+  private subscriptionDiet: Subscription;
 
   constructor(
-    private historicService: HistoricService
+    private historicService: HistoricService,
+    private dietService: DietService
   ) { }
 
   ngOnInit() {
@@ -31,7 +37,8 @@ export class DashboardComponent implements OnInit {
   }
 
   ionViewWillLeave() {
-    this.subscription.unsubscribe()
+    this.subscriptionHistoric.unsubscribe()
+    this.subscriptionDiet.unsubscribe()
   }
 
   ionViewWillEnter() {
@@ -41,7 +48,7 @@ export class DashboardComponent implements OnInit {
 
   private createHistoricDashboard() {
 
-    let generateGraphic: DashboardGenerate;
+    let generateGraphic: DashboardGenerate = new DashboardGenerate();
 
     let weightList: number[];
     let bicepsList: number[];
@@ -51,7 +58,7 @@ export class DashboardComponent implements OnInit {
     let chestList: number[];
     let timeList: string[];
 
-    this.subscription = this.historicService.getHistoric().subscribe((historicListReturned) => {
+    this.subscriptionHistoric = this.historicService.getHistoric().subscribe((historicListReturned) => {
 
       weightList = []
       bicepsList = []
@@ -73,8 +80,6 @@ export class DashboardComponent implements OnInit {
         chestList.push(historic.chest)
       })
 
-      generateGraphic = new DashboardGenerate();
-
       generateGraphic.addLabels(timeList);
       generateGraphic.addDataSet('Bíceps(cm)', bicepsList);
       generateGraphic.addDataSet('Panturrilha(cm)', calfList);
@@ -91,20 +96,49 @@ export class DashboardComponent implements OnInit {
   }
 
   private createDietDashboard() {
-    let generateGraphic: DashboardGenerate;
 
-    generateGraphic = new DashboardGenerate();
+    let generateGraphic: DashboardGenerate = new DashboardGenerate();
 
-    generateGraphic.setBackgroundTransparent(true);
+    this.subscriptionDiet = this.dietService.getDiet().subscribe((dietListReturned) => {
 
-    generateGraphic.addLabels(['01-05-2019', '01-06-2019', '01-07-2019', '01-08-2019', '01-09-2019']);
+      this.dietList = dietListReturned;
 
-    generateGraphic.addDataSet('Esperado', [2700, 2700, 2700, 2700, 2700, 2700]);
-    generateGraphic.addDataSet('Consumido', [2500, 2900, 2780, 2450, 2400, 3200]);
+      let dateDiet: string[] = [];
+      let currentFat: number[] = [];
+      let currentProtein: number[] = [];
+      let currentCalories: number[] = [];
+      let currentCarbohydrate: number[] = [];
+      let totalDayFat: number[] = [];
+      let totalDayProtein: number[] = [];
+      let totalDayCalories: number[] = [];
+      let totalDayCarbohydrate: number[] = [];
 
-    this.dietGraphic = new Chart(this.dietDashboard.nativeElement, {
-      type: TypeGraphic.LINE,
-      data: generateGraphic.getGraphicData(),
-    });
+      this.dietList.forEach((diet) => {
+
+        dateDiet.push(diet.date)
+
+        currentFat.push(diet.dietBalance.currentFat)
+        currentProtein.push(diet.dietBalance.currentProtein)
+        currentCalories.push(diet.dietBalance.currentCalories)
+        currentCarbohydrate.push(diet.dietBalance.currentCarbohydrate)
+
+        totalDayFat.push(diet.dietBalance.totalDayFat)
+        totalDayProtein.push(diet.dietBalance.totalDayProtein)
+        totalDayCalories.push(diet.dietBalance.totalDayCalories)
+        totalDayCarbohydrate.push(diet.dietBalance.totalDayCarbohydrate)
+      })
+
+      generateGraphic.setBackgroundTransparent(true);
+
+      generateGraphic.addLabels(dateDiet);
+
+      generateGraphic.addDataSet('Esperado', totalDayCalories);
+      generateGraphic.addDataSet('Consumido', currentCalories);
+
+      this.dietGraphic = new Chart(this.dietDashboard.nativeElement, {
+        type: TypeGraphic.LINE,
+        data: generateGraphic.getGraphicData(),
+      });
+    })
   }
 }
