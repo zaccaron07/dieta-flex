@@ -42,7 +42,7 @@ export class HistoricListComponent implements OnInit {
 
   getListHistoric() {
     this.subscription = this.historicService.getHistoric().subscribe((historicData) => {
-      this.listHistoric = historicData
+      this.listHistoric = historicData.sort((a, b) => b.timeOrderBy.getDate() - a.timeOrderBy.getDate())
       this.listHistoricBase = this.listHistoric
     })
   }

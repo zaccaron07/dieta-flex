@@ -48,17 +48,17 @@ export class DashboardComponent implements OnInit {
 
   private createHistoricDashboard() {
 
-    let generateGraphic: DashboardGenerate = new DashboardGenerate();
-
-    let weightList: number[] = [];
-    let bicepsList: number[] = [];
-    let thighList: number[] = [];
-    let calfList: number[] = [];
-    let bellyList: number[] = [];
-    let chestList: number[] = [];
-    let timeList: string[] = [];
-
     this.subscriptionHistoric = this.historicService.getHistoric().subscribe((historicListReturned) => {
+
+      let generateGraphic: DashboardGenerate = new DashboardGenerate();
+
+      let weightList: number[] = [];
+      let bicepsList: number[] = [];
+      let thighList: number[] = [];
+      let calfList: number[] = [];
+      let bellyList: number[] = [];
+      let chestList: number[] = [];
+      let timeList: string[] = [];
 
       this.historicList = historicListReturned.sort((a, b) => a.timeOrderBy.getTime() - b.timeOrderBy.getTime())
 
@@ -89,11 +89,9 @@ export class DashboardComponent implements OnInit {
 
   private createDietDashboard() {
 
-    let generateGraphic: DashboardGenerate = new DashboardGenerate();
-
     this.subscriptionDiet = this.dietService.getDiet().subscribe((dietListReturned) => {
 
-      this.dietList = dietListReturned.sort((a, b) => a.dateFormatted.getTime() - b.dateFormatted.getTime());
+      let generateGraphic: DashboardGenerate = new DashboardGenerate();
 
       let dateDiet: string[] = [];
       let currentFat: number[] = [];
@@ -104,6 +102,8 @@ export class DashboardComponent implements OnInit {
       let totalDayProtein: number[] = [];
       let totalDayCalories: number[] = [];
       let totalDayCarbohydrate: number[] = [];
+
+      this.dietList = dietListReturned.sort((a, b) => a.dateFormatted.getTime() - b.dateFormatted.getTime());
 
       this.dietList.forEach((diet) => {
 
