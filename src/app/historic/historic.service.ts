@@ -53,7 +53,7 @@ export class HistoricService {
       .pipe(
         map(data => {
           return data.map(action => (
-            { ...action.payload.doc.data(), id: action.payload.doc.id } as HistoricData
+            { ...action.payload.doc.data(), id: action.payload.doc.id, timeOrderBy: this.formatDate(action.payload.doc.data()["time"]) } as HistoricData
           ));
         })
       )

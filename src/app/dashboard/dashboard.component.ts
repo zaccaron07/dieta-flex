@@ -50,25 +50,17 @@ export class DashboardComponent implements OnInit {
 
     let generateGraphic: DashboardGenerate = new DashboardGenerate();
 
-    let weightList: number[];
-    let bicepsList: number[];
-    let thighList: number[];
-    let calfList: number[];
-    let bellyList: number[];
-    let chestList: number[];
-    let timeList: string[];
+    let weightList: number[] = [];
+    let bicepsList: number[] = [];
+    let thighList: number[] = [];
+    let calfList: number[] = [];
+    let bellyList: number[] = [];
+    let chestList: number[] = [];
+    let timeList: string[] = [];
 
     this.subscriptionHistoric = this.historicService.getHistoric().subscribe((historicListReturned) => {
 
-      weightList = []
-      bicepsList = []
-      thighList = []
-      calfList = []
-      bellyList = []
-      chestList = []
-      timeList = []
-
-      this.historicList = historicListReturned
+      this.historicList = historicListReturned.sort((a, b) => a.timeOrderBy.getTime() - b.timeOrderBy.getTime())
 
       this.historicList.forEach((historic) => {
         timeList.push(historic.time)
@@ -101,7 +93,7 @@ export class DashboardComponent implements OnInit {
 
     this.subscriptionDiet = this.dietService.getDiet().subscribe((dietListReturned) => {
 
-      this.dietList = dietListReturned;
+      this.dietList = dietListReturned.sort((a, b) => a.dateFormatted.getTime() - b.dateFormatted.getTime());
 
       let dateDiet: string[] = [];
       let currentFat: number[] = [];
