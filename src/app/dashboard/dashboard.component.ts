@@ -73,7 +73,7 @@ export class DashboardComponent implements OnInit {
       })
 
       generateGraphic.addLabels(timeList);
-      generateGraphic.addDataSet('Bíceps(cm)', bicepsList);
+      generateGraphic.addDataSet('Braço(cm)', bicepsList);
       generateGraphic.addDataSet('Panturrilha(cm)', calfList);
       generateGraphic.addDataSet('Coxa(cm)', thighList);
       generateGraphic.addDataSet('Barriga(cm)', bellyList);

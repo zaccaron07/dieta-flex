@@ -25,12 +25,12 @@
             </ion-item>
 
             <ion-item>
-              <ion-label position="floating">Bíceps(cm)</ion-label>
+              <ion-label position="floating">Braço(cm)</ion-label>
               <ion-input formControlName="biceps" type="number"></ion-input>
             </ion-item>
             <ion-item
               *ngIf="!historicForm.controls.biceps.valid && (historicForm.controls.biceps.dirty || submitAttempt)">
-              <p>Biceps inválido.</p>
+              <p>Braço inválido.</p>
             </ion-item>
 
             <ion-item>
