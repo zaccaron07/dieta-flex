@@ -29,6 +29,9 @@ export class DietComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.initializeMimDate()
+
     this.activatedRoute.params.subscribe(params => {
       let date = params.date
       if (date) {
