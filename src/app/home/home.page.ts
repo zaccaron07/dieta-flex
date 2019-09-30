@@ -1,15 +1,10 @@
 import { Component } from '@angular/core';
-import { Plugins } from '@capacitor/core';
 import { Router } from '@angular/router';
-import { NotificationService } from '../notification/notification.service';
-import { Platform, AlertController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import { HistoricService } from '../historic/historic.service';
 import { HistoricData } from '../historic/historic.model';
 import { DietService } from '../diet/diet.service';
-import { Observable } from 'rxjs';
 import { Diet } from '../diet/diet-data.model';
-
-const { LocalNotifications } = Plugins;
 
 @Component({
   selector: 'app-home',
@@ -17,33 +12,22 @@ const { LocalNotifications } = Plugins;
 })
 export class HomePage {
 
-  dietToday: Observable<Diet>
+  todayDiet: Diet
 
   constructor(
     private router: Router,
-    private notificationService: NotificationService,
-    private platform: Platform,
-    private historicService: HistoricService,
+    public dietService: DietService,
     public alertController: AlertController,
-    public dietService: DietService
+    private historicService: HistoricService
   ) { }
 
   ngOnInit() {
-
-    this.startHome();
-
-    if (this.platform.is('cordova')) {
-      Plugins.LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
-        this.notificationService.setNotification(notification);
-        this.router.navigate(["/notification"]);
-      });
-    }
+    this.startHome()
   }
 
   startHome() {
-    this.dietToday = null;
-    this.scheduleNotification();
-    this.showDietToday();
+    this.getLastHistoric()
+    this.showTodayDiet()
   }
 
   openEditDiet(diet: Diet) {
@@ -55,49 +39,23 @@ export class HomePage {
   }
 
   ionViewWillEnter() {
-    this.startHome();
+    this.startHome()
   }
 
   openDashboard() {
     this.router.navigate(['dashboard'])
   }
 
-  showDietToday() {
+  showTodayDiet() {
     let dateNow = new Date();
-    let lNewDate = dateNow.getFullYear() + '-' + ('0' + (dateNow.getMonth() + 1)).slice(-2) + '-' + ('0' + dateNow.getDate()).slice(-2);
+    let lNewDate = dateNow.getFullYear() + '-' + ('0' + (dateNow.getMonth() + 1)).slice(-2) + '-' + ('0' + dateNow.getDate()).slice(-2)
 
     this.dietService.getDietByDate(lNewDate)
       .subscribe((diet) => {
         if (diet && diet.length > 0) {
-          this.dietToday = diet['0'];
+          this.todayDiet = diet['0']
         }
-      });
-  }
-
-  scheduleNotification() {
-
-    this.getLastHistoric()
-
-    if (this.platform.is('cordova')) {
-      LocalNotifications.schedule({
-        notifications: [
-          {
-            title: "Prática de exercícios para o emagrecimento",
-            body: "Acesse o app e confira a nossa nova dica do dia!",
-            id: 1,
-            schedule: {
-              at: new Date(Date.now() + 1000 * 5),
-              repeats: true
-            },
-            sound: null,
-            attachments: null,
-            actionTypeId: "",
-            extra: null,
-
-          }
-        ]
       })
-    }
   }
 
   private getLastHistoric() {

@@ -18,7 +18,6 @@ import { AuthService } from './auth/auth.service';
 import { UserProfileComponent } from './user-profile/user-profile-add/user-profile.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { NotificationComponent } from './notification/notification.component';
 import { DietComponent } from './diet/diet-add/diet-add.component';
 import { TipsAddComponent } from './tips/tips-add/tips-add.component';
 import { FoodComponent } from './food/food-add/food.component';
@@ -34,7 +33,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
   declarations: [
     AppComponent,
     UserProfileComponent,
-    NotificationComponent,
     DietComponent,
     DietListComponent,
     TipsAddComponent,

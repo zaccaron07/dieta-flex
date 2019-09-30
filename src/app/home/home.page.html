@@ -11,11 +11,11 @@
 
 <ion-content>
   <ion-card>
-    <ion-card-header *ngIf="dietToday" (click)="openEditDiet(dietToday)">
+    <ion-card-header *ngIf="todayDiet" (click)="openEditDiet(todayDiet)">
       <ion-card-title>Dieta Atual</ion-card-title>
-      <ion-card-subtitle>Visualize a sua dia atual: {{dietToday?.date}}</ion-card-subtitle>
+      <ion-card-subtitle>Visualize a sua dia atual: {{todayDiet.date}}</ion-card-subtitle>
     </ion-card-header>
-    <ion-card-header *ngIf="!dietToday" (click)="openEditDiet(dietToday)">
+    <ion-card-header *ngIf="!todayDiet" (click)="openEditDiet(todayDiet)">
       <ion-card-title>Gere sua dieta de hoje!</ion-card-title>
       <ion-card-subtitle>Ao gerar sua dieta, ajuste para que a mesma possa atingir o seu objetivo.</ion-card-subtitle>
     </ion-card-header>

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
 import { UserProfileComponent } from './user-profile/user-profile-add/user-profile.component';
-import { NotificationComponent } from './notification/notification.component';
 import { DietComponent } from './diet/diet-add/diet-add.component';
 import { TipsAddComponent } from './tips/tips-add/tips-add.component';
 import { FoodComponent } from './food/food-add/food.component';
@@ -26,7 +25,6 @@ const routes: Routes = [
   { path: 'historic-list/historic-add', component: HistoricAddComponent, canActivate: [AuthGuard] },
   { path: 'tips-list/tips-add', component: TipsAddComponent, canActivate: [AuthGuard] },
   { path: 'tips-list', component: TipsListComponent, canActivate: [AuthGuard] },
-  { path: 'notification', component: NotificationComponent, canActivate: [AuthGuard] },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] }
 ];
 
