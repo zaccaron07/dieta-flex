@@ -7,18 +7,21 @@ import { Subscription } from 'rxjs';
 import { TypeGraphic } from './graphic-constants';
 import { DietService } from '../diet/diet.service';
 import { Diet } from '../diet/diet-data.model';
+import { UserProfileService } from '../user-profile/user-profile.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
 
   @ViewChild('historicDashboard', { static: true }) historicDashboard;
   @ViewChild('dietDashboard', { static: true }) dietDashboard;
 
   historicGraphic: any;
   dietGraphic: any;
+  goalDescription: String;
 
   private historicList: HistoricData[];
   private dietList: Diet[];
@@ -28,13 +31,10 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private historicService: HistoricService,
-    private dietService: DietService
+    private dietService: DietService,
+    private authService: AuthService,
+    private userProfileService: UserProfileService
   ) { }
-
-  ngOnInit() {
-    this.createHistoricDashboard();
-    this.createDietDashboard();
-  }
 
   ionViewWillLeave() {
     this.subscriptionHistoric.unsubscribe()
@@ -44,6 +44,7 @@ export class DashboardComponent implements OnInit {
   ionViewWillEnter() {
     this.createHistoricDashboard();
     this.createDietDashboard();
+    this.goalDescription = this.userProfileService.getGoalDescriptionById(this.authService.getUser().goal);
   }
 
   private createHistoricDashboard() {

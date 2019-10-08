@@ -10,6 +10,15 @@
 </ion-header>
 
 <ion-content>
+
+  <ion-card *ngIf="isUpdateHistoric" (click)="openHistoric()">
+    <ion-card-header>
+      <ion-card-title>Atenção</ion-card-title>
+      <ion-card-subtitle>Mantenha suas medidas atualizadas para acompanhar sua evolução!</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>Atualize seu histórico de medidas!</ion-card-content>
+  </ion-card>
+
   <ion-card>
     <ion-card-header *ngIf="todayDiet" (click)="openEditDiet(todayDiet)">
       <ion-card-title>Dieta Atual</ion-card-title>
@@ -26,9 +35,7 @@
       <ion-card-title>Dashboard</ion-card-title>
       <ion-card-subtitle>Verifique sua evolução</ion-card-subtitle>
     </ion-card-header>
-    <ion-card-content>
-      Gráfico de medidas proporciona uma acompanhamento da sua evolução, demonstrando com transparencia os resultados
-      obtidos.
-    </ion-card-content>
+    <ion-card-content>Gráfico de medidas proporciona uma acompanhamento da sua evolução, demonstrando com transparencia os resultados obtidos.</ion-card-content>
   </ion-card>
+
 </ion-content>

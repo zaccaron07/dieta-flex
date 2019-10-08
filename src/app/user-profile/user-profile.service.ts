@@ -17,4 +17,33 @@ export class UserProfileService {
 
     return this.afFirestore.collection('user').doc(lUserId).update(userProfile);
   }
+
+  getGoalDescriptionById(id: number) : string {
+
+    let description: string;
+
+    switch (id) {
+      case 1:
+        description = "Emagrecer"
+        break
+
+      case 2:
+        description = "Emagrecer Agressivo"
+        break
+
+      case 3:
+        description = "Manter"
+        break
+
+      case 4:
+        description = "Ganhos “Secos”"
+        break
+
+      case 5:
+        description = "Ganhos agressivos"
+        break
+    }
+    return description;
+  }
+
 }

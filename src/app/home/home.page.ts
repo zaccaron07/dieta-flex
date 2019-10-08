@@ -13,6 +13,7 @@ import { Diet } from '../diet/diet-data.model';
 export class HomePage {
 
   todayDiet: Diet
+  isUpdateHistoric: Boolean
 
   constructor(
     private router: Router,
@@ -21,7 +22,7 @@ export class HomePage {
     private historicService: HistoricService
   ) { }
 
-  ngOnInit() {
+  ionViewWillEnter() {
     this.startHome()
   }
 
@@ -38,12 +39,12 @@ export class HomePage {
     }
   }
 
-  ionViewWillEnter() {
-    this.startHome()
-  }
-
   openDashboard() {
     this.router.navigate(['dashboard'])
+  }
+
+  openHistoric(){
+    this.router.navigate(['historic-list/historic-add'])
   }
 
   showTodayDiet() {
@@ -63,29 +64,16 @@ export class HomePage {
       .subscribe((historicList) => {
         if (historicList && historicList.length > 0) {
           historicList = historicList.sort((a, b) => b.timeOrderBy.getTime() - a.timeOrderBy.getTime())
-          this.showNotification(historicList[0])
+          this.showCardHistoric(historicList[0])
         }
       })
   }
 
-  private showNotification(historic: HistoricData) {
+  private showCardHistoric(historic: HistoricData) {
     let lDate = new Date()
     let lOneWeekAgoDate = lDate.getDate() - 7
     lDate.setDate(lOneWeekAgoDate)
 
-    if (historic.timeOrderBy.getTime() <= lDate.getTime()) {
-      this.presentAlert()
-    }
+    this.isUpdateHistoric = (historic.timeOrderBy.getTime() <= lDate.getTime())
   }
-
-  async presentAlert() {
-    const alert = await this.alertController.create({
-      header: 'Atenção',
-      message: 'Atualize seu histórico de medidas!',
-      buttons: ['OK']
-    })
-
-    await alert.present()
-  }
-
 }

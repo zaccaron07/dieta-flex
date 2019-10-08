@@ -45,22 +45,22 @@
     <!-- </ion-list> -->
     <ion-card-content>
       <ion-button expand="full" (click)="openModal()">Adicionar alimento</ion-button>
-      <div>
+      <ion-item lines="none">
         Calorias: {{ diet.dietBalance?.currentCalories | number: '1.2-2' }}KCal /
         {{ diet.dietBalance?.totalDayCalories | number: '1.2-2' }}KCal
-      </div>
-      <div>
+      </ion-item>
+      <ion-item lines="none">
         Proteinas: {{ diet.dietBalance?.currentProtein | number: '1.2-2' }}g /
         {{ diet.dietBalance?.totalDayProtein | number: '1.2-2' }}g
-      </div>
-      <div>
+      </ion-item>
+      <ion-item lines="none">
         Carboidratos: {{ diet.dietBalance?.currentCarbohydrate | number: '1.2-2' }}g /
         {{ diet.dietBalance?.totalDayCarbohydrate | number: '1.2-2' }}g
-      </div>
-      <div>
+      </ion-item>
+      <ion-item lines="none">
         Gordura: {{ diet.dietBalance?.currentFat | number: '1.2-2' }}g /
         {{ diet.dietBalance?.totalDayFat | number: '1.2-2' }}g
-      </div>
+      </ion-item>
     </ion-card-content>
   </ion-card>
   <ion-card>
