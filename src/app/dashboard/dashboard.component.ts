@@ -63,6 +63,8 @@ export class DashboardComponent {
 
       this.historicList = historicListReturned.sort((a, b) => a.timeOrderBy.getTime() - b.timeOrderBy.getTime())
 
+      this.historicList = this.historicList.slice(this.historicList.length - 5, this.historicList.length)
+
       this.historicList.forEach((historic) => {
         timeList.push(historic.time)
         weightList.push(historic.weight)
