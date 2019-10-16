@@ -19,7 +19,6 @@
     <ion-card-header>
       <ion-card-title>Minha dieta</ion-card-title>
     </ion-card-header>
-    <!-- <ion-list> -->
     <ion-card *ngFor="let item of diet.foods; let i = index">
       <ion-card-header color="dark">{{ item.name }}
         <ion-icon style="float: right" (click)="removeDiet({food: item, indice: i})" name="trash"></ion-icon>
@@ -42,12 +41,13 @@
         </ion-item>
       </ion-card-content>
     </ion-card>
-    <!-- </ion-list> -->
     <ion-card-content>
       <ion-button expand="full" (click)="openModal()">Adicionar alimento</ion-button>
       <ion-item lines="none">
         Calorias: {{ diet.dietBalance?.currentCalories | number: '1.2-2' }}KCal /
         {{ diet.dietBalance?.totalDayCalories | number: '1.2-2' }}KCal
+        ({{ diet.dietBalance?.currentCalories - diet.dietBalance?.totalDayCalories }}KCal
+        {{ diet.dietBalance?.currentCalories - diet.dietBalance?.totalDayCalories < 0 ? 'Superávit Calórico' : 'Déficit Calórico' }})
       </ion-item>
       <ion-item lines="none">
         Proteinas: {{ diet.dietBalance?.currentProtein | number: '1.2-2' }}g /
