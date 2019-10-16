@@ -18,7 +18,17 @@ export class UserProfileService {
     return this.afFirestore.collection('user').doc(lUserId).update(userProfile);
   }
 
-  getGoalDescriptionById(id: number) : string {
+  isUserProfileConfigured() {
+    let profileConfigured = false
+
+    if (this.authService.getUser().gender) {
+      profileConfigured = true
+    }
+
+    return profileConfigured;
+  }
+
+  getGoalDescriptionById(id: number): string {
 
     let description: string;
 

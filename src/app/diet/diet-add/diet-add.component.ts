@@ -6,6 +6,7 @@ import { FoodData } from '../../food/food-data.model';
 import { FoodService } from '../../food/food.service';
 import { DietService } from '../diet.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserProfileService } from 'src/app/user-profile/user-profile.service';
 
 @Component({
   selector: 'app-diet',
@@ -25,12 +26,18 @@ export class DietComponent implements OnInit {
     private dietService: DietService,
     private activatedRoute: ActivatedRoute,
     private modalController: ModalController,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private userProfileService: UserProfileService,
   ) { }
 
   ngOnInit() {
 
     this.initializeMimDate()
+
+    if (!this.userProfileService.isUserProfileConfigured()) {
+      this.presentToastInvalidProfile()
+      this.router.navigate(['user-profile']);
+    }
 
     this.activatedRoute.params.subscribe(params => {
       let date = params.date
@@ -66,7 +73,7 @@ export class DietComponent implements OnInit {
     if (this.generatedDiet) {
       this.diet = this.dietService.diet
     } else {
-      this.presentToastInvalidProfile()
+      this.presentToastInvalidProfileGoal()
     }
   }
 
@@ -136,9 +143,17 @@ export class DietComponent implements OnInit {
     toast.present();
   }
 
-  async presentToastInvalidProfile() {
+  async presentToastInvalidProfileGoal() {
     const toast = await this.toastController.create({
       message: 'Não é possível gerar a dieta pois a quantidade calórica diária é menor do que a quantidade de calorias geradas pela quantidade de proteína e gordura diária. Para ser possível gerar a dieta é necessário alterar o objetivo em "Perfil usuário".',
+      duration: 4000
+    });
+    toast.present();
+  }
+
+  async presentToastInvalidProfile() {
+    const toast = await this.toastController.create({
+      message: 'Não é possível gerar a dieta pois o perfil do usuário não está configurado.',
       duration: 4000
     });
     toast.present();
