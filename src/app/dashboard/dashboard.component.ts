@@ -108,6 +108,8 @@ export class DashboardComponent {
 
       this.dietList = dietListReturned.sort((a, b) => a.dateFormatted.getTime() - b.dateFormatted.getTime());
 
+      this.dietList = this.dietList.slice(this.dietList.length - 5, this.dietList.length)
+
       this.dietList.forEach((diet) => {
 
         dateDiet.push(diet.date)
