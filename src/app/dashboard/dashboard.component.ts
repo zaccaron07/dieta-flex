@@ -111,8 +111,7 @@ export class DashboardComponent {
       this.dietList = this.dietList.slice(this.dietList.length - 5, this.dietList.length)
 
       this.dietList.forEach((diet) => {
-
-        dateDiet.push(diet.date)
+        dateDiet.push(`${diet.date.substr(8, 2)}/${diet.date.substr(5, 2)}/${diet.date.substr(0, 4)}`)
 
         currentFat.push(diet.dietBalance.currentFat)
         currentProtein.push(diet.dietBalance.currentProtein)
