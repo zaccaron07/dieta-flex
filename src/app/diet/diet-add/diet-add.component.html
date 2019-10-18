@@ -46,8 +46,10 @@
       <ion-item lines="none">
         Calorias: {{ diet.dietBalance?.currentCalories | number: '1.2-2' }}KCal /
         {{ diet.dietBalance?.totalDayCalories | number: '1.2-2' }}KCal
-        ({{ diet.dietBalance?.currentCalories - diet.dietBalance?.totalDayCalories }}KCal
-        {{ diet.dietBalance?.currentCalories - diet.dietBalance?.totalDayCalories < 0 ? 'Déficit Calórico' : 'Superávit Calórico' }})
+        <ng-template [ngIf]="diet.dietBalance?.currentCalories">
+          ({{ diet.dietBalance?.currentCalories - diet.dietBalance?.totalDayCalories | number: '1.2-2' }}KCal
+          {{ diet.dietBalance?.currentCalories - diet.dietBalance?.totalDayCalories < 0 ? 'Déficit Calórico' : 'Superávit Calórico' }})
+        </ng-template>
       </ion-item>
       <ion-item lines="none">
         Proteinas: {{ diet.dietBalance?.currentProtein | number: '1.2-2' }}g /
