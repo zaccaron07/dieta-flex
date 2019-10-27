@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Diet } from '../diet-data.model';
 import { ModalController, ToastController } from '@ionic/angular';
 import { DietModalComponent } from '../diet-modal/diet-modal.component';
@@ -12,7 +12,7 @@ import { UserProfileService } from 'src/app/user-profile/user-profile.service';
   selector: 'app-diet',
   templateUrl: './diet-add.component.html',
 })
-export class DietComponent implements OnInit {
+export class DietComponent {
 
   public diet = {} as Diet
   public generatedDiet: boolean = true;
@@ -30,7 +30,7 @@ export class DietComponent implements OnInit {
     private userProfileService: UserProfileService,
   ) { }
 
-  ngOnInit() {
+  ionViewWillEnter() {
 
     this.initializeMimDate()
 
@@ -69,7 +69,7 @@ export class DietComponent implements OnInit {
     this.generatedDiet = false;
 
     this.generatedDiet = await this.dietService.generateDietFoods()
-
+    
     if (this.generatedDiet) {
       this.diet = this.dietService.diet
     } else {
