@@ -18,7 +18,8 @@
               <ion-label position="floating">Nome</ion-label>
               <ion-input formControlName="name" type="string"></ion-input>
             </ion-item>
-            <ion-item *ngIf="!userProfileForm.controls.name.valid && (userProfileForm.controls.name.dirty || submitAttempt)">
+            <ion-item
+              *ngIf="!userProfileForm.controls.name.valid && (userProfileForm.controls.name.dirty || submitAttempt)">
               <p>Nome inválido.</p>
             </ion-item>
 
@@ -26,7 +27,8 @@
               <ion-label position="floating">Email</ion-label>
               <ion-input formControlName="email" type="email"></ion-input>
             </ion-item>
-            <ion-item *ngIf="!userProfileForm.controls.email.valid && (userProfileForm.controls.email.dirty || submitAttempt)">
+            <ion-item
+              *ngIf="!userProfileForm.controls.email.valid && (userProfileForm.controls.email.dirty || submitAttempt)">
               <p>Email inválido.</p>
             </ion-item>
 
@@ -34,7 +36,8 @@
               <ion-label position="floating">Idade</ion-label>
               <ion-input formControlName="age" type="number"></ion-input>
             </ion-item>
-            <ion-item *ngIf="!userProfileForm.controls.age.valid && (userProfileForm.controls.age.dirty || submitAttempt)">
+            <ion-item
+              *ngIf="!userProfileForm.controls.age.valid && (userProfileForm.controls.age.dirty || submitAttempt)">
               <p>Idade inválida.</p>
             </ion-item>
 
@@ -48,12 +51,13 @@
                 <ion-radio slot="start" value="2"></ion-radio>
               </ion-item>
             </ion-radio-group>
-            
+
             <ion-item>
               <ion-label position="floating">Peso(kg)</ion-label>
               <ion-input formControlName="weight" type="number"></ion-input>
             </ion-item>
-            <ion-item *ngIf="!userProfileForm.controls.weight.valid && (userProfileForm.controls.weight.dirty || submitAttempt)">
+            <ion-item
+              *ngIf="!userProfileForm.controls.weight.valid && (userProfileForm.controls.weight.dirty || submitAttempt)">
               <p>Peso inválido.</p>
             </ion-item>
 
@@ -61,15 +65,16 @@
               <ion-label position="floating">Altura(cm)</ion-label>
               <ion-input formControlName="height" type="number"></ion-input>
             </ion-item>
-            <ion-item *ngIf="!userProfileForm.controls.height.valid && (userProfileForm.controls.height.dirty || submitAttempt)">
+            <ion-item
+              *ngIf="!userProfileForm.controls.height.valid && (userProfileForm.controls.height.dirty || submitAttempt)">
               <p>Altura inválida.</p>
             </ion-item>
 
             <ion-item>
               <ion-label position="floating">Objetivo</ion-label>
               <ion-select formControlName="goal" interface="action-sheet">
-                <ion-select-option [value]="1">Emagrecer</ion-select-option>
-                <ion-select-option [value]="2">Emagrecer Agressivo</ion-select-option>
+                <ion-select-option [value]="1">Emagrecer Agressivo</ion-select-option>
+                <ion-select-option [value]="2">Emagrecer</ion-select-option>
                 <ion-select-option [value]="3">Manter</ion-select-option>
                 <ion-select-option [value]="4">Ganhos “Secos”</ion-select-option>
                 <ion-select-option [value]="5">Ganhos agressivos</ion-select-option>

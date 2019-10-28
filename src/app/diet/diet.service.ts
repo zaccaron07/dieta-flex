@@ -5,6 +5,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { map, take } from 'rxjs/operators';
 import { FoodService } from '../food/food.service';
 import { DietFood, Diet, DietBalance } from './diet-data.model';
+import { UserProfileGoalConst, ExerciseIntensityConst, FoodTypeConst } from './diet-rules/diet-constants'
 
 @Injectable({
   providedIn: 'root'
@@ -37,43 +38,46 @@ export class DietService {
     }
 
     switch (this.userProfile.exercise_intensity) {
-      case 2:
+      case ExerciseIntensityConst.SLIGHTLY_ACTIVE:
         lIntensityExercise += 193;
         break;
 
-      case 3:
+      case ExerciseIntensityConst.MODERATELY_ACTIVE:
         lIntensityExercise += 425;
         break;
 
-      case 4:
+      case ExerciseIntensityConst.VERY_ACTIVE:
         lIntensityExercise += 676;
         break;
 
-      case 5:
+      case ExerciseIntensityConst.EXTREMELY_ACTIVE:
         lIntensityExercise += 1159;
         break;
     }
 
     switch (this.userProfile.goal) {
-      case 1:
+      case UserProfileGoalConst.AGGRESSIVE_WEIGHT_LOSS:
+        lGoal -= 695;
+
+        break;
+
+      case UserProfileGoalConst.LOSE_WEIGHT:
         lGoal -= 348;
         break;
 
-      case 2:
-        lGoal -= 695;
-        break;
-
-      case 4:
+      case UserProfileGoalConst.DRY_EARNINGS:
         lGoal += 162;
         break;
 
-      case 5:
+      case UserProfileGoalConst.AGGRESSIVE_GAINS:
         lGoal += 348;
         break;
     }
+
     dietBalance.totalDayCalories = lBasalMetabolicRate + lIntensityExercise + lGoal
     dietBalance.totalDayProtein = this.userProfile.weight * 1.5
     dietBalance.totalDayFat = this.userProfile.weight
+
     dietBalance.totalDayCarbohydrate = (dietBalance.totalDayCalories - ((dietBalance.totalDayProtein * 4) + (dietBalance.totalDayFat * 9))) / 4
 
     this.diet.dietBalance = dietBalance
@@ -89,9 +93,9 @@ export class DietService {
     }
 
     if (generatedDiet) {
-      await this.getFoodByType1()
-      await this.getFoodByType2()
-      await this.getFoodByType0()
+      await this.getFoodCarbohydrate()
+      await this.getFoodProtein()
+      await this.getFoodPortion()
 
       this.loadCurrentBalance()
     }
@@ -99,8 +103,8 @@ export class DietService {
     return generatedDiet
   }
 
-  async getFoodByType0() {
-    const food = await this.foodService.getFoodByType(0).toPromise()
+  async getFoodPortion() {
+    const food = await this.foodService.getFoodByType(FoodTypeConst.PORTION).toPromise()
 
     let lRandom: number
     let lPrevious: number
@@ -131,8 +135,8 @@ export class DietService {
     }
   }
 
-  async getFoodByType1() {
-    const food = await this.foodService.getFoodByType(1).toPromise()
+  async getFoodCarbohydrate() {
+    const food = await this.foodService.getFoodByType(FoodTypeConst.CARBOHYDRATE).toPromise()
 
     let lRandom;
     let foodAmount: number
@@ -154,9 +158,9 @@ export class DietService {
     this.diet.foods.push(JSON.parse(JSON.stringify(foodResult)))
   }
 
-  async getFoodByType2() {
+  async getFoodProtein() {
 
-    const food = await this.foodService.getFoodByType(2).toPromise()
+    const food = await this.foodService.getFoodByType(FoodTypeConst.PROTEIN).toPromise()
 
     let lRandom
     let foodAmount: number
