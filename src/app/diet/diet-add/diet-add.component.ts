@@ -1,3 +1,5 @@
+import { AuthService } from './../../auth/auth.service';
+import { DietProcess } from './../diet-rules/diet-process';
 import { Component } from '@angular/core';
 import { Diet } from '../diet-data.model';
 import { ModalController, ToastController } from '@ionic/angular';
@@ -19,6 +21,7 @@ export class DietComponent {
   public isEditing: boolean = false;
   public dateInvalid = false
   public minSelectableDate
+  //private dietProcess: DietProcess = new DietProcess(this.foodService, this.authService);
 
   constructor(
     private router: Router,
@@ -28,6 +31,7 @@ export class DietComponent {
     private modalController: ModalController,
     private toastController: ToastController,
     private userProfileService: UserProfileService,
+    private dietProcess: DietProcess
   ) { }
 
   ionViewWillEnter() {
@@ -54,24 +58,24 @@ export class DietComponent {
   }
 
   async generateDietBalance() {
-    this.dietService.diet.id = this.diet.id
-    this.dietService.diet.date = this.diet.date
-    this.dietService.diet.dateFormatted = this.diet.dateFormatted
-    this.diet.dietBalance = await this.dietService.generateDietBalance()
+    this.dietProcess.diet.id = this.diet.id
+    this.dietProcess.diet.date = this.diet.date
+    this.dietProcess.diet.dateFormatted = this.diet.dateFormatted
+    this.diet.dietBalance = await this.dietProcess.generateDietBalance()
 
     if (!this.diet.foods) {
       this.diet.foods = []
-      this.dietService.diet.foods = []
+      this.dietProcess.diet.foods = []
     }
   }
 
   async generateDietFoods() {
     this.generatedDiet = false;
 
-    this.generatedDiet = await this.dietService.generateDietFoods()
+    this.generatedDiet = await this.dietProcess.generateDietFoods()
     
     if (this.generatedDiet) {
-      this.diet = this.dietService.diet
+      this.diet = this.dietProcess.diet
     } else {
       this.presentToastInvalidProfileGoal()
     }
@@ -81,7 +85,7 @@ export class DietComponent {
     this.dietService.getDietByDate(date).subscribe((result) => {
       if (result[0]) {
         this.diet = result[0]
-        this.dietService.diet = result[0]
+        this.dietProcess.diet = result[0]
         this.verifyDateValid()
       } else {
         this.initializeDate()
@@ -241,7 +245,7 @@ export class DietComponent {
     let lFormattedDate = `${dateNow.getFullYear()}-${('0' + (dateNow.getMonth() + 1)).slice(-2)}-${('0' + dateNow.getDate()).slice(-2)}`
 
     this.diet.date = lFormattedDate
-    this.dietService.diet.date = lFormattedDate
+    this.dietProcess.diet.date = lFormattedDate
   }
 
   initializeMimDate() {
