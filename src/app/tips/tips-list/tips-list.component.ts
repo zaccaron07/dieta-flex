@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TipsService } from '../tips.service';
 import { Observable, Subject } from 'rxjs';
-import { TipsData } from '../tips-data.model';
 import { FormControl } from '@angular/forms';
 import { debounceTime, map } from 'rxjs/operators';
 

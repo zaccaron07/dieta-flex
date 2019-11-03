@@ -1,14 +1,13 @@
-import { AuthService } from './../../auth/auth.service';
-import { DietProcess } from './../diet-rules/diet-process';
-import { Component } from '@angular/core';
-import { Diet } from '../diet-data.model';
-import { ModalController, ToastController } from '@ionic/angular';
-import { DietModalComponent } from '../diet-modal/diet-modal.component';
-import { FoodData } from '../../food/food-data.model';
-import { FoodService } from '../../food/food.service';
-import { DietService } from '../diet.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { UserProfileService } from 'src/app/user-profile/user-profile.service';
+import { DietProcess } from './../diet-rules/diet-process'
+import { Component } from '@angular/core'
+import { Diet } from '../diet-data.model'
+import { ModalController, ToastController } from '@ionic/angular'
+import { DietModalComponent } from '../diet-modal/diet-modal.component'
+import { FoodData } from '../../food/food-data.model'
+import { FoodService } from '../../food/food.service'
+import { DietService } from '../diet.service'
+import { ActivatedRoute, Router } from '@angular/router'
+import { UserProfileService } from 'src/app/user-profile/user-profile.service'
 
 @Component({
   selector: 'app-diet',
@@ -17,21 +16,20 @@ import { UserProfileService } from 'src/app/user-profile/user-profile.service';
 export class DietComponent {
 
   public diet = {} as Diet
-  public generatedDiet: boolean = true;
-  public isEditing: boolean = false;
+  public generatedDiet: boolean = true
+  public isEditing: boolean = false
   public dateInvalid = false
   public minSelectableDate
-  //private dietProcess: DietProcess = new DietProcess(this.foodService, this.authService);
 
   constructor(
     private router: Router,
     private foodService: FoodService,
     private dietService: DietService,
+    private dietProcess: DietProcess,
     private activatedRoute: ActivatedRoute,
     private modalController: ModalController,
     private toastController: ToastController,
     private userProfileService: UserProfileService,
-    private dietProcess: DietProcess
   ) { }
 
   ionViewWillEnter() {
@@ -40,7 +38,7 @@ export class DietComponent {
 
     if (!this.userProfileService.isUserProfileConfigured()) {
       this.presentToastInvalidProfile()
-      this.router.navigate(['user-profile']);
+      this.router.navigate(['user-profile'])
     }
 
     this.activatedRoute.params.subscribe(params => {
@@ -54,7 +52,7 @@ export class DietComponent {
         this.initializeDate()
         this.generateDietBalance()
       }
-    });
+    })
   }
 
   async generateDietBalance() {
@@ -70,10 +68,10 @@ export class DietComponent {
   }
 
   async generateDietFoods() {
-    this.generatedDiet = false;
+    this.generatedDiet = false
 
     this.generatedDiet = await this.dietProcess.generateDietFoods()
-    
+
     if (this.generatedDiet) {
       this.diet = this.dietProcess.diet
     } else {
@@ -123,9 +121,9 @@ export class DietComponent {
         this.dietService.createDiet(this.diet)
       }
 
-      await this.presentToast();
+      await this.presentToast()
 
-      this.router.navigate(['diet-list']);
+      this.router.navigate(['diet-list'])
     } else {
       await this.presentToastFormInvalid()
     }
@@ -135,48 +133,48 @@ export class DietComponent {
     const toast = await this.toastController.create({
       message: 'Dados cadastrados com sucesso!',
       duration: 4000
-    });
-    toast.present();
+    })
+    toast.present()
   }
 
   async presentToastFormInvalid() {
     const toast = await this.toastController.create({
       message: 'Existem alimentos sem quantidade de gramas/porção informado!',
       duration: 4000
-    });
-    toast.present();
+    })
+    toast.present()
   }
 
   async presentToastInvalidProfileGoal() {
     const toast = await this.toastController.create({
       message: 'Não é possível gerar a dieta pois a quantidade calórica diária é menor do que a quantidade de calorias geradas pela quantidade de proteína e gordura diária. Para ser possível gerar a dieta é necessário alterar o objetivo em "Perfil usuário".',
       duration: 4000
-    });
-    toast.present();
+    })
+    toast.present()
   }
 
   async presentToastInvalidProfile() {
     const toast = await this.toastController.create({
       message: 'Não é possível gerar a dieta pois o perfil do usuário não está configurado.',
       duration: 4000
-    });
-    toast.present();
+    })
+    toast.present()
   }
 
   openModal() {
-    this.presentModal();
+    this.presentModal()
   }
 
   async presentModal() {
     const modal = await this.modalController.create({
       component: DietModalComponent
-    });
+    })
 
     modal.onDidDismiss().then((detail) => {
       if (detail !== null) {
-        let foodSelected: FoodData;
+        let foodSelected: FoodData
 
-        foodSelected = detail.data;
+        foodSelected = detail.data
 
         if (foodSelected.portion) {
           foodSelected.amount = 1
@@ -192,9 +190,9 @@ export class DietComponent {
         this.diet.dietBalance.currentProtein = +this.diet.dietBalance.currentProtein ? this.diet.dietBalance.currentProtein + foodSelected.protein : foodSelected.protein
         this.diet.dietBalance.currentCarbohydrate = +this.diet.dietBalance.currentCarbohydrate ? this.diet.dietBalance.currentCarbohydrate + foodSelected.carbohydrate : foodSelected.carbohydrate
       }
-    });
+    })
 
-    return await modal.present();
+    return await modal.present()
   }
 
   changedAmount(foodChange) {
@@ -273,6 +271,6 @@ export class DietComponent {
   }
 
   ionViewWillLeave() {
-    this.diet = {} as Diet;
+    this.diet = {} as Diet
   }
 }

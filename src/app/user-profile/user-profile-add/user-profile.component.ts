@@ -68,5 +68,4 @@ export class UserProfileComponent implements OnInit {
 
     toast.present();
   }
-
 }

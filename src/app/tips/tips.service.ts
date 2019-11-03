@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { TipsData } from './tips-data.model';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

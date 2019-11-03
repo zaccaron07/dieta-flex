@@ -41,5 +41,4 @@ export class TipsAddComponent implements OnInit {
     })
     toast.present();
   }
-
 }

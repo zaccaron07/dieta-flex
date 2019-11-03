@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
-import { FoodTypeConst, UserProfileGoalConst, ExerciseIntensityConst } from './diet-constants';
-import { AuthService } from 'src/app/auth/auth.service';
-import { FoodService } from 'src/app/food/food.service';
-import { Diet, DietBalance, DietFood } from './../diet-data.model';
-import { UserProfileData } from 'src/app/user-profile/user-profile.model';
+import { Injectable } from '@angular/core'
+import { FoodTypeConst, UserProfileGoalConst, ExerciseIntensityConst } from './diet-constants'
+import { AuthService } from 'src/app/auth/auth.service'
+import { FoodService } from 'src/app/food/food.service'
+import { Diet, DietBalance, DietFood } from './../diet-data.model'
+import { UserProfileData } from 'src/app/user-profile/user-profile.model'
 
 @Injectable({
   providedIn: 'root'
 })
 export class DietProcess {
   public diet = {} as Diet
-  private userProfile: UserProfileData;
+  private userProfile: UserProfileData
 
   constructor(
     private foodService: FoodService,
@@ -18,57 +18,57 @@ export class DietProcess {
   ) { }
 
   async generateDietBalance(): Promise<DietBalance> {
-    let lGoal: number = 0;
-    let lBasalMetabolicRate: number = 0;
-    let lIntensityExercise: number = 0;
+    let lGoal: number = 0
+    let lBasalMetabolicRate: number = 0
+    let lIntensityExercise: number = 0
 
     let dietBalance = {} as DietBalance
 
-    const MALE = 1;
+    const MALE = 1
 
     this.userProfile = this.authService.getUser()
 
     if (this.userProfile.gender == MALE) {
-      lBasalMetabolicRate = (10 * this.userProfile.weight) + (6.25 * this.userProfile.height) - (5 * this.userProfile.age) + 5;
+      lBasalMetabolicRate = (10 * this.userProfile.weight) + (6.25 * this.userProfile.height) - (5 * this.userProfile.age) + 5
     } else {
-      lBasalMetabolicRate = (10 * this.userProfile.weight) + (6.25 * this.userProfile.height) - (5 * this.userProfile.age) - 161;
+      lBasalMetabolicRate = (10 * this.userProfile.weight) + (6.25 * this.userProfile.height) - (5 * this.userProfile.age) - 161
     }
 
     switch (this.userProfile.exercise_intensity) {
       case ExerciseIntensityConst.SLIGHTLY_ACTIVE:
-        lIntensityExercise += 193;
-        break;
+        lIntensityExercise += 193
+        break
 
       case ExerciseIntensityConst.MODERATELY_ACTIVE:
-        lIntensityExercise += 425;
-        break;
+        lIntensityExercise += 425
+        break
 
       case ExerciseIntensityConst.VERY_ACTIVE:
-        lIntensityExercise += 676;
-        break;
+        lIntensityExercise += 676
+        break
 
       case ExerciseIntensityConst.EXTREMELY_ACTIVE:
-        lIntensityExercise += 1159;
-        break;
+        lIntensityExercise += 1159
+        break
     }
 
     switch (this.userProfile.goal) {
       case UserProfileGoalConst.AGGRESSIVE_WEIGHT_LOSS:
-        lGoal -= 695;
+        lGoal -= 695
 
-        break;
+        break
 
       case UserProfileGoalConst.LOSE_WEIGHT:
-        lGoal -= 348;
-        break;
+        lGoal -= 348
+        break
 
       case UserProfileGoalConst.DRY_EARNINGS:
-        lGoal += 162;
-        break;
+        lGoal += 162
+        break
 
       case UserProfileGoalConst.AGGRESSIVE_GAINS:
-        lGoal += 348;
-        break;
+        lGoal += 348
+        break
     }
 
     dietBalance.totalDayCalories = lBasalMetabolicRate + lIntensityExercise + lGoal
@@ -111,33 +111,33 @@ export class DietProcess {
       lRandom = Math.floor(Math.random() * food.length);
 
       while (true) {
-        let lR;
+        let lR
 
         lR = Math.floor(Math.random() * food.length);
 
         if (lR != lPrevious) {
-          lRandom = lR;
+          lRandom = lR
 
-          break;
+          break
         }
       }
 
-      foodResult = food[lRandom];
+      foodResult = food[lRandom]
       foodResult.amount = 1
 
       foodResult.calorie = Math.round((foodResult.amount * foodResult.calorie) / 100)
       this.diet.foods.push(JSON.parse(JSON.stringify(foodResult)))
 
-      lPrevious = lRandom;
+      lPrevious = lRandom
     }
   }
 
   async getFoodCarbohydrate() {
     const food = await this.foodService.getFoodByType(FoodTypeConst.CARBOHYDRATE).toPromise()
 
-    let lRandom;
+    let lRandom: number
     let foodAmount: number
-    let foodResult = {} as DietFood;
+    let foodResult = {} as DietFood
 
     lRandom = Math.floor(Math.random() * food.length)
 

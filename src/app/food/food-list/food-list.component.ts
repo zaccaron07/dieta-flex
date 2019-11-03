@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { FoodService } from '../food.service';
-import { debounceTime, map, take } from 'rxjs/operators';
+import { debounceTime, map } from 'rxjs/operators';
 import { FoodData } from '../food-data.model';
 
 @Component({
@@ -61,7 +61,7 @@ export class FoodListComponent implements OnInit {
         }))
       );
   }
-  
+
   ionViewWillEnter() {
     this.getListFood();
   }

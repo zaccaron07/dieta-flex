@@ -55,5 +55,4 @@ export class UserProfileService {
     }
     return description;
   }
-
 }
