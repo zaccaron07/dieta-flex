@@ -16,7 +16,7 @@ export class UserProfileGoalConst {
 }
 
 export class FoodTypeConst {
-  public static readonly PORTION = 0
+  public static readonly FAT = 0
   public static readonly CARBOHYDRATE = 1
   public static readonly PROTEIN = 2
 }

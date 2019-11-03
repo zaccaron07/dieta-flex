@@ -44,7 +44,6 @@ export class FoodComponent implements OnInit {
         'protein': new FormControl(lbExisteParam ? Number.parseInt(params.protein) : '', Validators.required),
         'fat': new FormControl(lbExisteParam ? Number.parseInt(params.fat) : '', Validators.required),
         'portion': new FormControl(lbExisteParam ? params.portion : false, Validators.required),
-        'food_type': new FormControl(lbExisteParam ? Number.parseInt(params.food_type) : 0, Validators.required),
       });
     });
   }

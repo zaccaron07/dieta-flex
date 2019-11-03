@@ -101,7 +101,7 @@ export class DietProcess {
   }
 
   async getFoodPortion() {
-    const food = await this.foodService.getFoodByType(FoodTypeConst.PORTION).toPromise()
+    const food = await this.foodService.getFoodByType(FoodTypeConst.FAT).toPromise()
 
     let lRandom: number
     let lPrevious: number
