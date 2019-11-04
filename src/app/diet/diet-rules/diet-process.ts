@@ -35,43 +35,47 @@ export class DietProcess {
     }
 
     switch (this.userProfile.exercise_intensity) {
+      case ExerciseIntensityConst.SEDENTARY:
+        lIntensityExercise = 1.2
+        break
+
       case ExerciseIntensityConst.SLIGHTLY_ACTIVE:
-        lIntensityExercise += 193
+        lIntensityExercise = 1.375
         break
 
       case ExerciseIntensityConst.MODERATELY_ACTIVE:
-        lIntensityExercise += 425
+        lIntensityExercise = 1.55
         break
 
       case ExerciseIntensityConst.VERY_ACTIVE:
-        lIntensityExercise += 676
+        lIntensityExercise = 1.725
         break
 
       case ExerciseIntensityConst.EXTREMELY_ACTIVE:
-        lIntensityExercise += 1159
+        lIntensityExercise = 1.9
         break
     }
 
     switch (this.userProfile.goal) {
       case UserProfileGoalConst.AGGRESSIVE_WEIGHT_LOSS:
-        lGoal -= 695
+        lGoal -= 400
 
         break
 
       case UserProfileGoalConst.LOSE_WEIGHT:
-        lGoal -= 348
+        lGoal -= 250
         break
 
       case UserProfileGoalConst.DRY_EARNINGS:
-        lGoal += 162
+        lGoal += 150
         break
 
       case UserProfileGoalConst.AGGRESSIVE_GAINS:
-        lGoal += 348
+        lGoal += 300
         break
     }
 
-    dietBalance.totalDayCalories = lBasalMetabolicRate + lIntensityExercise + lGoal
+    dietBalance.totalDayCalories = (lBasalMetabolicRate * lIntensityExercise) + lGoal
     dietBalance.totalDayProtein = this.userProfile.weight * 1.5
     dietBalance.totalDayFat = this.userProfile.weight
 
