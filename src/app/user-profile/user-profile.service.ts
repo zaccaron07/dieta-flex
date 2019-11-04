@@ -1,21 +1,27 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { UserProfileData } from './user-profile.model';
-import { AuthService } from '../auth/auth.service';
+import { UserProfileGoalConst } from "./../diet/diet-rules/diet-constants"
+import { Injectable } from "@angular/core"
+import { AngularFirestore } from "@angular/fire/firestore"
+import { UserProfileData } from "./user-profile.model"
+import { AuthService } from "../auth/auth.service"
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class UserProfileService {
-
-  constructor(private afFirestore: AngularFirestore, private authService: AuthService) { }
+  constructor(
+    private afFirestore: AngularFirestore,
+    private authService: AuthService
+  ) {}
 
   createUserProfile(userProfile: UserProfileData) {
-    let lUserId: string;
+    let lUserId: string
 
-    lUserId = this.authService.getUser().id;
+    lUserId = this.authService.getUser().id
 
-    return this.afFirestore.collection('user').doc(lUserId).update(userProfile);
+    return this.afFirestore
+      .collection("user")
+      .doc(lUserId)
+      .update(userProfile)
   }
 
   isUserProfileConfigured() {
@@ -25,34 +31,33 @@ export class UserProfileService {
       profileConfigured = true
     }
 
-    return profileConfigured;
+    return profileConfigured
   }
 
   getGoalDescriptionById(id: number): string {
-
-    let description: string;
+    let description: string
 
     switch (id) {
-      case 1:
-        description = "Emagrecer"
-        break
-
-      case 2:
+      case UserProfileGoalConst.AGGRESSIVE_WEIGHT_LOSS:
         description = "Emagrecer Agressivo"
         break
 
-      case 3:
+      case UserProfileGoalConst.LOSE_WEIGHT:
+        description = "Emagrecer"
+        break
+
+      case UserProfileGoalConst.KEEP:
         description = "Manter"
         break
 
-      case 4:
+      case UserProfileGoalConst.DRY_EARNINGS:
         description = "Ganhos “Secos”"
         break
 
-      case 5:
+      case UserProfileGoalConst.AGGRESSIVE_GAINS:
         description = "Ganhos agressivos"
         break
     }
-    return description;
+    return description
   }
 }
