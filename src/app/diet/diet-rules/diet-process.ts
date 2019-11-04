@@ -90,9 +90,12 @@ export class DietProcess {
     }
 
     if (generatedDiet) {
-      await this.getFoodCarbohydrate()
-      await this.getFoodProtein()
-      await this.getFoodPortion()
+      await this.getFood(FoodTypeConst.PROTEIN)
+      await this.getFood(FoodTypeConst.CARBOHYDRATE)
+      await this.getFood(FoodTypeConst.FAT)
+      await this.getFood(FoodTypeConst.SNACK)
+      await this.getFood(FoodTypeConst.PROTEIN)
+      await this.getFood(FoodTypeConst.CARBOHYDRATE)
 
       this.loadCurrentBalance()
     }
@@ -100,83 +103,53 @@ export class DietProcess {
     return generatedDiet
   }
 
-  async getFoodPortion() {
-    const food = await this.foodService.getFoodByType(FoodTypeConst.FAT).toPromise()
+  async getFood(foodType: number) {
+    const food = await this.foodService.getFoodByType(foodType).toPromise()
 
     let lRandom: number
-    let lPrevious: number
     let foodResult = {} as DietFood
 
-    for (let index = 0; index < 2; index++) {
-      lRandom = Math.floor(Math.random() * food.length);
+    lRandom = Math.floor(Math.random() * food.length)
 
-      while (true) {
-        let lR
+    foodResult = food[lRandom]
 
-        lR = Math.floor(Math.random() * food.length);
-
-        if (lR != lPrevious) {
-          lRandom = lR
+    if (foodResult.portion) {
+      foodResult.amount = 1
+    } else {
+      switch (foodType) {
+        case FoodTypeConst.PROTEIN:
+          foodResult.amount = Math.round((100 * (0.15 * this.diet.dietBalance.totalDayProtein)) / foodResult.protein)
 
           break
-        }
+        case FoodTypeConst.CARBOHYDRATE:
+          foodResult.amount = Math.round((100 * (0.15 * this.diet.dietBalance.totalDayCarbohydrate)) / foodResult.carbohydrate)
+
+          break
+
+        case FoodTypeConst.FAT:
+          foodResult.amount = Math.round((100 * (0.25 * this.diet.dietBalance.totalDayFat)) / foodResult.fat)
+
+          break
+
+        case FoodTypeConst.SNACK:
+          foodResult.amount = Math.round((100 * (0.08 * this.diet.dietBalance.totalDayCalories)) / foodResult.calorie)
+          break
+
       }
 
-      foodResult = food[lRandom]
-      foodResult.amount = 1
-
-      foodResult.calorie = Math.round((foodResult.amount * foodResult.calorie) / 100)
-      this.diet.foods.push(JSON.parse(JSON.stringify(foodResult)))
-
-      lPrevious = lRandom
+      this.calculateFoodProperties(foodResult)
     }
-  }
-
-  async getFoodCarbohydrate() {
-    const food = await this.foodService.getFoodByType(FoodTypeConst.CARBOHYDRATE).toPromise()
-
-    let lRandom: number
-    let foodAmount: number
-    let foodResult = {} as DietFood
-
-    lRandom = Math.floor(Math.random() * food.length)
-
-    foodResult = food[lRandom]
-
-    foodAmount = Math.round((100 * (0.15 * this.diet.dietBalance.totalDayCarbohydrate)) / foodResult.carbohydrate)
-
-    foodResult.name = foodResult.name
-    foodResult.amount = foodAmount
-    foodResult.calorie = Math.round((foodAmount * foodResult.calorie) / 100)
-    foodResult.fat = Math.round((foodAmount * foodResult.fat) / 100)
-    foodResult.protein = Math.round((foodAmount * foodResult.protein) / 100)
-    foodResult.carbohydrate = Math.round((foodAmount * foodResult.carbohydrate) / 100)
 
     this.diet.foods.push(JSON.parse(JSON.stringify(foodResult)))
   }
 
-  async getFoodProtein() {
+  private calculateFoodProperties(food: DietFood): DietFood {
+    food.calorie = (food.amount * food.calorie) / 100
+    food.fat = (food.amount * food.fat) / 100
+    food.protein = (food.amount * food.protein) / 100
+    food.carbohydrate = (food.amount * food.carbohydrate) / 100
 
-    const food = await this.foodService.getFoodByType(FoodTypeConst.PROTEIN).toPromise()
-
-    let lRandom
-    let foodAmount: number
-    let foodResult = {} as DietFood
-
-    lRandom = Math.floor(Math.random() * food.length)
-
-    foodResult = food[lRandom]
-
-    foodAmount = Math.round((100 * (0.2 * this.diet.dietBalance.totalDayProtein)) / foodResult.protein)
-
-    foodResult.name = foodResult.name
-    foodResult.amount = foodAmount
-    foodResult.calorie = Math.round((foodAmount * foodResult.calorie) / 100)
-    foodResult.fat = Math.round((foodAmount * foodResult.fat) / 100)
-    foodResult.protein = Math.round((foodAmount * foodResult.protein) / 100)
-    foodResult.carbohydrate = Math.round((foodAmount * foodResult.carbohydrate) / 100)
-
-    this.diet.foods.push(JSON.parse(JSON.stringify(foodResult)))
+    return food
   }
 
   loadCurrentBalance() {
