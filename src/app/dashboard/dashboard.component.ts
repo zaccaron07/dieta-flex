@@ -53,17 +53,22 @@ export class DashboardComponent {
 
       let generateGraphic: DashboardGenerate = new DashboardGenerate();
 
-      let weightList: number[] = [];
-      let bicepsList: number[] = [];
-      let thighList: number[] = [];
-      let calfList: number[] = [];
-      let bellyList: number[] = [];
-      let chestList: number[] = [];
-      let timeList: string[] = [];
+      let listSize: number
+      let weightList: number[] = []
+      let bicepsList: number[] = []
+      let thighList: number[] = []
+      let calfList: number[] = []
+      let bellyList: number[] = []
+      let chestList: number[] = []
+      let timeList: string[] = []
 
       this.historicList = historicListReturned.sort((a, b) => a.timeOrderBy.getTime() - b.timeOrderBy.getTime())
 
-      this.historicList = this.historicList.slice(this.historicList.length - 5, this.historicList.length)
+      listSize = this.historicList.length - 5
+
+      if (listSize > 0) {
+        this.historicList = this.historicList.slice(this.historicList.length - 5, this.historicList.length)
+      }
 
       this.historicList.forEach((historic) => {
         timeList.push(historic.time)
@@ -96,19 +101,24 @@ export class DashboardComponent {
 
       let generateGraphic: DashboardGenerate = new DashboardGenerate();
 
-      let dateDiet: string[] = [];
-      let currentFat: number[] = [];
-      let currentProtein: number[] = [];
-      let currentCalories: number[] = [];
-      let currentCarbohydrate: number[] = [];
-      let totalDayFat: number[] = [];
-      let totalDayProtein: number[] = [];
-      let totalDayCalories: number[] = [];
-      let totalDayCarbohydrate: number[] = [];
+      let listSize: number
+      let dateDiet: string[] = []
+      let currentFat: number[] = []
+      let currentProtein: number[] = []
+      let currentCalories: number[] = []
+      let currentCarbohydrate: number[] = []
+      let totalDayFat: number[] = []
+      let totalDayProtein: number[] = []
+      let totalDayCalories: number[] = []
+      let totalDayCarbohydrate: number[] = []
 
       this.dietList = dietListReturned.sort((a, b) => a.dateFormatted.getTime() - b.dateFormatted.getTime());
 
-      this.dietList = this.dietList.slice(this.dietList.length - 5, this.dietList.length)
+      listSize = this.dietList.length - 5
+
+      if (listSize > 0) {
+        this.dietList = this.dietList.slice(this.dietList.length - 5, this.dietList.length)
+      }
 
       this.dietList.forEach((diet) => {
         dateDiet.push(`${diet.date.substr(8, 2)}/${diet.date.substr(5, 2)}/${diet.date.substr(0, 4)}`)
