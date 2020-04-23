@@ -1,25 +1,30 @@
+dieta-flex
+==========
 
-Baixar VSCode https://code.visualstudio.com/Download
-Baixar Nodejs https://nodejs.org/en/ versão estavel
-https://desktop.github.com Baixar Instalar e Logar
+About this app
+---------------
+This app is just for help people get fit with a flexible diet, counting macro and micronutrients.
 
-depois de instalar tudo
-abre o VSCode
+Requirements
+------------
+* Node 10+
+* Npm 6+
+* Ionic 4+
+* Config Cloud Firestore https://firebase.google.com
 
-#aperta Ctrl + `, e roda os comandos:
+Preparing
+---------
+```
 npm install -g ionic
 npm install -g @angular/cli
+npm install
+````
 
-#Clonar projeto https://github.com/zaccaron07/dieta-flex
-executar npm install
-
-#Executar android:
-
+Running App
+-----------
+```
 npx cap add android
 npx cap sync
-ionic capacitor run android
-
-https://firebase.google.com Criar conta
-
-#Resolver problema de destruir paginas abertas anteriormente.
-https://github.com/ionic-team/ionic/issues/15935
+ionic serve // To run in your browser
+ionic capacitor run android // To run on your android device
+```
