@@ -110,6 +110,10 @@ export class DietProcess {
   async getFood(foodType: number) {
     const food = await this.foodService.getFoodByType(foodType).toPromise()
 
+    if (food.length <= 0) {
+      return
+    }
+
     let lRandom: number
     let foodResult = {} as DietFood
 

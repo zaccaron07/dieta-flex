@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, CollectionReference, Query } from '@angular/fire/firestore';
 import { HistoricData } from '../historic/historic.model';
 import { map, take } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
@@ -32,7 +32,7 @@ export class HistoricService {
 
   documentExists(historicData): Observable<any> {
     return this.afFirestore.collection(`user/${this.userId}/historic`, ref => {
-      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      let query: CollectionReference | Query = ref;
 
       query = query.where("time", "==", historicData.time)
 
@@ -41,7 +41,7 @@ export class HistoricService {
       .snapshotChanges()
       .pipe(
         map(data => {
-          return data.map(action => ({ ...action.payload.doc.data(), id: action.payload.doc.id }));
+          return data.map(action => ({ ...action.payload.doc.data() as any, id: action.payload.doc.id }));
         }),
         take(1)
       )
@@ -53,7 +53,7 @@ export class HistoricService {
       .pipe(
         map(data => {
           return data.map(action => (
-            { ...action.payload.doc.data(), id: action.payload.doc.id, timeOrderBy: this.formatDate(action.payload.doc.data()["time"]) } as HistoricData
+            { ...action.payload.doc.data() as HistoricData, id: action.payload.doc.id, timeOrderBy: this.formatDate(action.payload.doc.data()["time"]) } as HistoricData
           ));
         })
       )
@@ -65,7 +65,7 @@ export class HistoricService {
       .pipe(
         map(data => {
           return data.map(action => (
-            { ...action.payload.doc.data(), id: action.payload.doc.id, timeOrderBy: this.formatDate(action.payload.doc.data()["time"]) } as HistoricData
+            { ...action.payload.doc.data() as HistoricData, id: action.payload.doc.id, timeOrderBy: this.formatDate(action.payload.doc.data()["time"]) } as HistoricData
           ));
         }),
         take(1)

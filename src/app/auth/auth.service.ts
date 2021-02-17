@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AuthData } from './auth-data.model';
 import { map } from "rxjs/operators";
-import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore'
+import { AngularFirestoreCollection, AngularFirestore, CollectionReference, Query } from '@angular/fire/firestore'
 import { Subject, Observable } from 'rxjs';
 import { UserProfileData } from '../user-profile/user-profile.model';
 
@@ -30,7 +30,7 @@ export class AuthService {
 
   registerUser(authData: AuthData) {
     return new Promise((resolve, reject) => {
-      this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)
+      this.afAuth.createUserWithEmailAndPassword(authData.email, authData.password)
         .then(userData => {
           resolve(userData);
 
@@ -42,7 +42,7 @@ export class AuthService {
 
   login(authData: AuthData) {
     return new Promise((resolve, reject) => {
-      this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)
+      this.afAuth.signInWithEmailAndPassword(authData.email, authData.password)
         .then(userData => resolve(userData),
           err => reject(err));
     });
@@ -66,7 +66,7 @@ export class AuthService {
 
   retrieveUser(userEmail: string): Observable<UserProfileData[]> {
     return this.afFirestore.collection('user', ref => {
-      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      let query: CollectionReference | Query = ref
 
       if (userEmail) {
         query = query.where('email', '==', userEmail);
@@ -77,13 +77,13 @@ export class AuthService {
       .snapshotChanges()
       .pipe(
         map(data => {
-          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() } as UserProfileData));
+          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data() as UserProfileData }));
         })
       )
   }
 
   logout() {
-    this.afAuth.auth.signOut().then(() => {
+    this.afAuth.signOut().then(() => {
       location.reload();
     });
   }

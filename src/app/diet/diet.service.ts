@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, CollectionReference, Query } from '@angular/fire/firestore';
 import { map, take } from 'rxjs/operators';
 import { Diet } from './diet-data.model';
 
@@ -27,7 +27,7 @@ export class DietService {
       .snapshotChanges()
       .pipe(
         map(data => {
-          return data.map(action => ({ id: action.payload.doc.id, ...action.payload.doc.data(), dateFormatted: new Date(`${action.payload.doc.data()["date"]} GMT-0300`) }))
+          return data.map(action => ({...action.payload.doc.data(), id: action.payload.doc.id, dateFormatted: new Date(`${action.payload.doc.data()["date"]} GMT-0300`) }))
             .sort((a, b) => b.dateFormatted.getTime() - a.dateFormatted.getTime());
         })
       )
@@ -35,7 +35,7 @@ export class DietService {
 
   getDietByDate(date) {
     return this.afFirestore.collection(`user/${this.authService.getUser().id}/diet`, ref => {
-      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      let query: CollectionReference | Query = ref;
 
       query = query.where("date", "==", date)
 
@@ -45,7 +45,7 @@ export class DietService {
       .pipe(
         map(data => {
           return data.map(action => (
-            { ...action.payload.doc.data(), id: action.payload.doc.id, dateFormatted: new Date(`${action.payload.doc.data()["date"]} GMT-0300`) } as Diet
+            { ...action.payload.doc.data() as Diet, id: action.payload.doc.id, dateFormatted: new Date(`${action.payload.doc.data()["date"]} GMT-0300`) } as Diet
           ))
         }),
         take(1)

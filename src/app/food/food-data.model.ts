@@ -7,4 +7,5 @@ export interface FoodData {
     name: string;
     portion: boolean;
     amount: number;
+    food_type: number;
 }
